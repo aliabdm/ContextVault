@@ -47,6 +47,14 @@ export default function Hero() {
           </a>
         </div>
 
+        <div className="mx-auto mt-14 max-w-5xl overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/10">
+          <img
+            src="/demo/contextvault-demo.gif"
+            alt="ContextVault records an AI chat and exports it as Markdown"
+            className="aspect-video w-full bg-dark-900 object-cover"
+          />
+        </div>
+
         <div className="mt-12 flex items-center justify-center gap-2 text-sm text-neutral-500">
           <span className="flex items-center gap-1">
             <svg className="h-4 w-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
