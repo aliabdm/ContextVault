@@ -4,7 +4,7 @@ import Solution from '@/components/Solution'
 import Features from '@/components/Features'
 import HowItWorks from '@/components/HowItWorks'
 import Privacy from '@/components/Privacy'
-import Platforms from '@/components/Platforms'
+import CtaSection from '@/components/CtaSection'
 import Footer from '@/components/Footer'
 
 export default function Home() {
@@ -16,7 +16,7 @@ export default function Home() {
       <Features />
       <HowItWorks />
       <Privacy />
-      <Platforms />
+      <CtaSection />
       <Footer />
     </>
   )
