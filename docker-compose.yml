@@ -1,0 +1,23 @@
+services:
+  dev:
+    build: .
+    container_name: llm-history-dev
+    ports:
+      - "5173:5173"
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    environment:
+      - NODE_ENV=development
+    restart: unless-stopped
+
+  test-server:
+    image: nginx:alpine
+    container_name: llm-history-mock
+    ports:
+      - "8080:80"
+    volumes:
+      - ./test/fixtures/chatgpt-mock.html:/usr/share/nginx/html/index.html:ro
+    profiles:
+      - testing

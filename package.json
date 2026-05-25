@@ -1,0 +1,27 @@
+{
+  "name": "universal-llm-conversation-recorder",
+  "version": "1.0.0",
+  "description": "Local-first Chrome extension for recording, organizing, and exporting LLM conversations as Markdown.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "docker:build": "docker build -t llm-history-observer .",
+    "docker:dev": "docker compose up --build",
+    "docker:down": "docker compose down"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^2.0.0-beta.30",
+    "@types/chrome": "^0.0.270",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.2",
+    "vitest": "^2.1.0"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "jszip": "^3.10.1"
+  }
+}

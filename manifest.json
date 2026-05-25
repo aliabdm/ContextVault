@@ -1,0 +1,74 @@
+{
+  "manifest_version": 3,
+  "name": "Universal LLM Conversation Recorder",
+  "version": "1.0.0",
+  "description": "Zero-click, background capture of every LLM conversation across platforms — organized, searchable, and exportable.",
+  "permissions": [
+    "storage",
+    "activeTab",
+    "scripting",
+    "tabs",
+    "unlimitedStorage",
+    "downloads"
+  ],
+  "host_permissions": [
+    "*://chatgpt.com/*",
+    "*://claude.ai/*",
+    "*://gemini.google.com/*",
+    "*://perplexity.ai/*",
+    "*://poe.com/*",
+    "*://chat.deepseek.com/*",
+    "*://grok.com/*",
+    "*://copilot.microsoft.com/*"
+  ],
+  "background": {
+    "service_worker": "src/background.ts",
+    "type": "module"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "*://chatgpt.com/*",
+        "*://claude.ai/*",
+        "*://gemini.google.com/*",
+        "*://perplexity.ai/*",
+        "*://poe.com/*",
+        "*://chat.deepseek.com/*",
+        "*://grok.com/*",
+        "*://copilot.microsoft.com/*"
+      ],
+      "js": ["src/content-script.ts"],
+      "run_at": "document_start"
+    }
+  ],
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["network-inject.js"],
+      "matches": [
+        "*://chatgpt.com/*",
+        "*://claude.ai/*",
+        "*://gemini.google.com/*",
+        "*://perplexity.ai/*",
+        "*://poe.com/*",
+        "*://chat.deepseek.com/*",
+        "*://grok.com/*",
+        "*://copilot.microsoft.com/*"
+      ]
+    }
+  ]
+}
