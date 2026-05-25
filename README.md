@@ -1,282 +1,174 @@
-# Universal LLM Conversation Recorder
 
-Auto-capture LLM chats across supported web apps and export them as portable Markdown files.
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" alt="version" />
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="license" />
+  <img src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" alt="build" />
+  <img src="https://img.shields.io/badge/privacy-local-8A2BE2?style=flat-square" alt="privacy" />
+  <img src="https://img.shields.io/badge/LLM-ChatGPT%20%7C%20Claude%20%7C%20Gemini-orange?style=flat-square" alt="llm" />
+</p>
 
-## Why This Exists
+<h1 align="center">🧠 ContextVault</h1>
+<p align="center"><em>Your portable memory layer for AI chats.</em></p>
 
-Moving context between LLMs, accounts, or models is still awkward. Native exports are often too large, too delayed, account-bound, or incomplete for the moment when you actually need them. This extension records conversations as they happen, keeps them local, and lets you export clean `.md` files or a ZIP archive that can be searched, shared, versioned, or pasted into another model.
+<p align="center">
+  A local-first Chrome extension that records conversations with ChatGPT, Claude, Gemini, and other LLMs<br />
+  — and lets you export them instantly as Markdown or ZIP.
+</p>
 
-The goal is simple: when you run out of tokens, switch providers, use a different account, or need a second opinion, your working context should move with you.
+<p align="center">
+  <strong>No backend. No accounts. No tracking.</strong>
+</p>
 
-## Current Status
+---
 
-- ChatGPT capture: working
-- Claude adapter: implemented
-- Gemini adapter: implemented
-- Generic adapter: implemented for selected LLM sites
-- Local IndexedDB storage: working
-- Markdown export: working
-- ZIP export: working
-- Popup session view, tags, project labels, pause/resume: working
-- Test/build pipeline: working
+## ⚡ What it does
 
-## Supported Platforms
+ContextVault automatically captures your AI conversations in real-time and turns them into clean, structured files you own.
 
-Primary adapters:
+| Platform     | Support |
+|--------------|---------|
+| ChatGPT      | ✅      |
+| Claude       | ✅      |
+| Gemini       | ✅      |
+| Perplexity   | ✅      |
+| Poe          | ✅      |
+| DeepSeek     | ✅      |
+| Copilot      | ✅      |
 
-- ChatGPT: `chatgpt.com`
-- Claude: `claude.ai`
-- Gemini: `gemini.google.com`
+All in one place.
 
-Generic adapter targets:
+---
 
-- Perplexity: `perplexity.ai`
-- Poe: `poe.com`
-- DeepSeek Chat: `chat.deepseek.com`
-- Grok: `grok.com`
-- Microsoft Copilot: `copilot.microsoft.com`
+## 🚀 Why it exists
 
-The extension does not request `<all_urls>` access. It only runs on the explicit host list in `manifest.json`.
+AI chats are powerful — but your context is locked inside each platform.
 
-## How It Works
+| Problem                     | Consequence                        |
+|-----------------------------|------------------------------------|
+| Switch models               | Lose thread continuity             |
+| Hit token limits            | Forced truncation                  |
+| Change accounts             | Orphaned conversations             |
+| Revisit old ideas later     | No search, no access               |
 
-The extension uses a hybrid capture engine:
+ContextVault fixes this by making your conversations **portable, local, and reusable**.
 
-- DOM observer: reliable fallback and primary visible-message capture.
-- Network monitor: injected page script that observes fetch, XHR, and WebSocket traffic for supported chat endpoints.
-- Stream assembler: merges streaming assistant output into one final message.
-- Background service worker: owns tab sessions and persists conversations to IndexedDB.
-- Popup UI: shows recording state, current session metadata, recent conversations, and export actions.
+---
 
-### DOM Capture Flow
+## ✨ Features
 
-```text
-User types
-  -> DOM user element appears
-  -> DOMObserver.scanMessages()
-  -> onUserMessage(text)
-  -> StreamAssembler.processDOMComplete("user", text)
-  -> finalized Message
-  -> SimpleEngine.onCapture("user", content)
-  -> background stores a new user turn
+| Feature                        | Description                                  |
+|--------------------------------|----------------------------------------------|
+| 🧠 Real-time capture           | Records as you chat, automatically           |
+| 🔄 Hybrid tracking engine      | DOM + Network dual-path reliability          |
+| 💾 Local-first storage         | IndexedDB — stays in your browser            |
+| 📦 Export to Markdown / ZIP    | Clean structured files, one click away       |
+| 🏷️ Tags & project grouping     | Organise conversations your way              |
+| ⚡ Multi-LLM support           | 7 platforms, one extension                   |
+| 🔒 Fully private               | No backend, no analytics, no telemetry       |
 
-Assistant responds
-  -> DOM assistant element appears
-  -> onAssistantChunk(text)
-  -> StreamAssembler.processDOMContent("assistant", text)
-  -> pending message, not stored yet
-  -> DOM mutations keep firing while text grows
-  -> updated text replaces the pending assistant content
+---
 
-Streaming completes
-  -> adapter.isStreamingComplete(element) returns true
-  -> StreamAssembler.processDOMComplete("assistant", final_text)
-  -> finalized Message
-  -> SimpleEngine.onCapture("assistant", content)
-  -> background appends or updates the latest assistant turn
+## 🏗️ How it works
+
+```
+DOM Observer + Network Monitor
+         ↓
+    Stream Assembler
+         ↓
+    Capture Engine
+         ↓
+Background Service Worker
+         ↓
+   IndexedDB Storage
+         ↓
+  Markdown / ZIP Export
 ```
 
-### Network Capture Flow
+Key idea:
+- **DOM** = source of truth
+- **Network** = enhancement layer
+- **Stream Assembler** = final message builder
 
-```text
-Page calls fetch/XHR/WebSocket
-  -> network-inject.js detects a supported chat endpoint
-  -> request body can capture user text when available
-  -> streamed response chunks are posted back to the content script
-  -> content-script extracts text from provider-specific payload shapes
-  -> SimpleEngine sends text into StreamAssembler
-  -> stale timeout finalizes assistant streams that do not expose a clean finish event
-```
+---
 
-The DOM path and network path intentionally overlap. Deduplication in the engine and background prevents repeated user messages and prevents a later assistant turn from overwriting an older one.
+## 🔒 Privacy by design
 
-## Privacy And Security
+ContextVault is built around strict privacy principles:
 
-This project is designed to be local-first:
+| ❌ | ✅ |
+|---|---|
+| No backend        | Everything stays local |
+| No analytics      | You control your data  |
+| No telemetry      | Export when *you* choose |
+| No external APIs  | Full offline operation  |
+| No data leaving your browser | Zero trust required    |
 
-- No remote backend.
-- No analytics.
-- No telemetry.
-- No third-party upload.
-- Conversations are stored in the browser extension's IndexedDB database.
-- Export only happens when the user clicks `.md` or `ZIP All`.
-- Host permissions are limited to supported LLM domains.
-- Network monitoring is injected only on allowed hosts from `manifest.json`.
-- The injected script posts events only to the same page window; the content script forwards captured text to the extension background.
-- Data URLs are used for downloads, so exported files are generated locally.
+---
 
-Important limitation: by design, this extension captures conversation content you see or send on supported LLM websites. Treat the local browser profile and exported Markdown files as sensitive.
-
-## What Problems It Solves
-
-- Context portability: move a conversation into another LLM without waiting for native exports.
-- Account boundaries: keep your own local transcript even when chats live across multiple provider accounts.
-- Token overflow: export the useful history and compress or summarize it elsewhere.
-- Provider switching: keep ChatGPT, Claude, Gemini, and other LLM sessions in one local archive.
-- Research continuity: tag conversations, assign projects, and export Markdown for notes, repos, or knowledge bases.
-- Failure recovery: DOM fallback still captures visible messages when provider network formats change.
-
-## Install For Local Testing
-
-Build the extension:
+## 📦 Installation (Dev Mode)
 
 ```bash
 npm install
-npm test
 npm run build
 ```
 
-Or with Docker:
+Then:
 
-```bash
-docker compose run --rm dev sh -c "npm install && npm test && npm run build"
-```
+1. Open `chrome://extensions`
+2. Enable **Developer Mode**
+3. Click **Load unpacked**
+4. Select the `dist/` folder
 
-Load it in Chrome:
+---
 
-1. Open `chrome://extensions`.
-2. Turn on Developer mode.
-3. Click Load unpacked.
-4. Select the `dist/` folder.
-5. Open a supported LLM website and start a conversation.
+## 🧪 How to test
 
-After code changes, run `npm run build` again and press Reload on the extension card.
+1. Open **ChatGPT / Claude / Gemini**
+2. Start a conversation
+3. Open extension popup
+4. Verify messages are captured
+5. Export as `.md` or `.zip`
+6. Confirm clean structured output
 
-## How To Test Manually
+---
 
-ChatGPT smoke test:
+## 🧭 Roadmap
 
-1. Load `dist/` as an unpacked extension.
-2. Open `https://chatgpt.com`.
-3. Send a short prompt.
-4. Wait until the assistant finishes.
-5. Open the extension popup.
-6. Confirm status says `Recording: chatgpt`.
-7. Confirm message count increased.
-8. Click `Export .md`.
-9. Open the downloaded Markdown and verify it has frontmatter plus User/Assistant sections.
+- 🔍 Full-text search inside conversations
+- 🧠 Auto-tagging system
+- 🔄 Draft recovery
+- 💻 VS Code extension
+- ⚙️ CLI tool
+- 🔐 Encrypted backup exports
+- 🌐 Optional sync layer (self-hosted)
 
-Multi-turn test:
+---
 
-1. Send two user prompts in the same chat.
-2. Confirm the conversation has four messages.
-3. Export Markdown.
-4. Verify older assistant answers were not overwritten by the newest answer.
+## ⚠️ Known limitations
 
-New conversation test:
+- Provider UI changes may require selector updates
+- Generic adapter is best-effort only
+- Storage is local-only (no cross-device sync yet)
 
-1. Start one chat and export it.
-2. Click New Chat.
-3. Send another prompt.
-4. Confirm a second conversation appears in Recent Conversations.
+---
 
-Project/tags test:
+## 👤 Author
 
-1. Add a project and a few tags in the popup.
-2. Export Markdown.
-3. Verify `project:` and `tags:` appear in YAML frontmatter.
+**Muhammed Ali**
 
-## Automated Tests
+| | |
+|---|---|
+| 🐙 GitHub    | [aliabdm](https://github.com/aliabdm) |
+| 🌐 Portfolio | [senior-mohammad-ali.vercel.app](https://senior-mohammad-ali.vercel.app/) |
+| ✍️ Dev.to    | [@maliano63717738](https://dev.to/maliano63717738) |
+| 📝 Medium    | [@aliabdm](https://medium.com/@aliabdm) |
+| 🐦 X (Twitter) | [@Maliano63717738](https://x.com/Maliano63717738) |
+| 💼 LinkedIn  | [Mohammad Ali Abdul Wahed](https://www.linkedin.com/in/mohammad-ali-abdul-wahed-1533b9171/) |
 
-The test suite covers:
+---
 
-- Adapter registry and URL matching.
-- ChatGPT conversation ID detection.
-- Stream assembler behavior for DOM and SSE chunks.
-- Markdown frontmatter and filename generation.
+## 💡 Philosophy
 
-Run:
+> *“Your conversations with AI should not be trapped inside platforms.”*
 
-```bash
-npm test
-```
-
-Build verification:
-
-```bash
-npm run build
-```
-
-## Technical Architecture
-
-```text
-manifest.json
-  -> content-script.ts runs on supported LLM hosts
-  -> content-script registers platform adapters
-  -> network-inject.js is injected into page context
-
-DOMObserver
-  -> scans user and assistant selectors
-  -> detects growing assistant text
-  -> reports user messages, assistant chunks, and assistant completion
-
-StreamAssembler
-  -> keeps one pending streaming message
-  -> replaces growing DOM content instead of appending duplicates
-  -> finalizes clean Message objects
-
-SimpleEngine
-  -> coordinates DOM + network capture
-  -> emits capture events to background
-  -> watches title changes
-  -> finalizes stale assistant streams after timeout
-
-background.ts
-  -> maps tabId to active conversation session
-  -> creates/ends conversations
-  -> deduplicates user messages
-  -> prevents assistant overwrite across turns
-  -> writes IndexedDB records
-  -> exports Markdown or ZIP
-
-popup/app.ts
-  -> reads capture state from the active tab
-  -> reads conversations from background
-  -> updates project/tags
-  -> triggers downloads
-```
-
-## Repository Layout
-
-```text
-src/adapters/          Platform-specific selectors and URL rules
-src/capture/           DOM observer, stream assembler, engine, network token helper
-src/storage/           IndexedDB, Markdown, ZIP export
-src/popup/             Extension popup UI
-public/network-inject.js Page-context network monitor
-test/                  Vitest coverage
-manifest.json          Chrome extension permissions and entrypoints
-```
-
-## Open Source Notes
-
-Recommended license: MIT for maximum adoption and easy contribution.
-
-Recommended contribution policy:
-
-- Do not add telemetry.
-- Do not broaden host permissions without a clear privacy reason.
-- Prefer provider-specific adapters over generic page scraping.
-- Keep exported data user-controlled.
-- Add tests for adapters, stream assembly, and export formatting.
-- Document any new supported provider in this README and `manifest.json`.
-
-Good first issues:
-
-- Harden Claude and Gemini selectors against UI changes.
-- Add import/export of settings.
-- Add full-text search in popup.
-- Add optional encrypted backup export.
-- Add more provider adapters with narrow host permissions.
-
-## Known Limitations
-
-- Provider UIs change frequently, so DOM selectors may need maintenance.
-- Some providers compress or encode network payloads, so DOM capture remains essential.
-- Generic capture is best-effort and intentionally limited to known LLM domains.
-- Browser extension storage is local to the browser profile.
-- This is not a compliance archive; it is a personal context portability tool.
-
-## Project Title
-
-Universal LLM Conversation Recorder
+ContextVault is a step toward a portable memory layer for all LLMs.
