@@ -119,6 +119,23 @@ Then:
 3. Click **Load unpacked**
 4. Select the `dist/` folder
 
+### 🐳 Or use Docker
+
+```bash
+docker compose up dev
+```
+
+This runs the extension in dev mode on `http://localhost:5173` with hot-reload.  
+After building, load `dist/` into Chrome as an unpacked extension.
+
+To run the mock test server:
+
+```bash
+docker compose --profile testing up dev test-server
+```
+
+This starts both the dev server and an Nginx container serving the ChatGPT mock HTML at `http://localhost:8080`.
+
 ---
 
 ## 🧪 How to test
