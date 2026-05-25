@@ -15,14 +15,14 @@ const problems = [
 
 export default function Problem() {
   return (
-    <section id="problem" className="border-t border-neutral-100 px-6 py-20 sm:py-28">
+    <section id="problem" className="border-t border-dark-600 px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-widest text-neutral-400">The Problem</span>
-          <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+          <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">The Problem</span>
+          <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Your AI conversations are trapped
           </h2>
-          <p className="mt-4 text-lg leading-relaxed text-neutral-500">
+          <p className="mt-4 text-lg leading-relaxed text-neutral-400">
             Every chat you have with an AI is valuable. But today, that context is scattered across platforms,
             accounts, and sessions — with no way to own it.
           </p>
@@ -32,13 +32,13 @@ export default function Problem() {
           {problems.map((item) => (
             <div
               key={item.title}
-              className="rounded-2xl border border-neutral-200 bg-white p-6"
+              className="rounded-2xl border border-dark-500 bg-dark-700 p-6"
             >
-              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-neutral-100 text-lg">
+              <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-dark-500 text-lg text-vault-300">
                 ⚡
               </div>
-              <h3 className="font-semibold text-neutral-900">{item.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-500">{item.description}</p>
+              <h3 className="font-semibold text-neutral-100">{item.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-400">{item.description}</p>
             </div>
           ))}
         </div>

@@ -12,7 +12,11 @@
   }
 
   body {
-    @apply bg-white text-neutral-900;
+    @apply bg-[#0d0d1a] text-neutral-300;
+  }
+
+  ::selection {
+    @apply bg-vault-500/30 text-white;
   }
 }
 

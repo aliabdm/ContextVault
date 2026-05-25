@@ -1,0 +1,19 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="720" fill="#0B1020"/>
+  <rect x="86" y="72" width="1108" height="576" rx="28" fill="#111827" stroke="#2B3548"/>
+  <rect x="126" y="118" width="730" height="42" rx="12" fill="#1F2937"/>
+  <rect x="126" y="196" width="520" height="28" rx="8" fill="#334155"/>
+  <rect x="126" y="244" width="830" height="22" rx="8" fill="#263244"/>
+  <rect x="126" y="282" width="760" height="22" rx="8" fill="#263244"/>
+  <rect x="126" y="320" width="690" height="22" rx="8" fill="#263244"/>
+  <rect x="840" y="118" width="270" height="202" rx="18" fill="#182235" stroke="#36445D"/>
+  <circle cx="872" cy="150" r="6" fill="#22C55E"/>
+  <rect x="890" y="142" width="116" height="16" rx="6" fill="#9CA3AF"/>
+  <rect x="866" y="188" width="200" height="14" rx="6" fill="#64748B"/>
+  <rect x="866" y="220" width="156" height="14" rx="6" fill="#64748B"/>
+  <rect x="866" y="258" width="206" height="36" rx="10" fill="#6366F1"/>
+  <circle cx="640" cy="400" r="54" fill="#6366F1"/>
+  <path d="M622 373L676 400L622 427V373Z" fill="white"/>
+  <text x="640" y="505" text-anchor="middle" fill="#E5E7EB" font-family="Arial, sans-serif" font-size="34" font-weight="700">ContextVault Demo</text>
+  <text x="640" y="545" text-anchor="middle" fill="#94A3B8" font-family="Arial, sans-serif" font-size="20">Run npm run record:demo to generate the MP4</text>
+</svg>

@@ -28,11 +28,11 @@ const features = [
 
 export default function Features() {
   return (
-    <section id="features" className="border-t border-neutral-100 bg-neutral-50 px-6 py-20 sm:py-28">
+    <section id="features" className="border-t border-dark-600 px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
         <div className="mx-auto max-w-2xl text-center">
-          <span className="text-xs font-semibold uppercase tracking-widest text-neutral-400">Features</span>
-          <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight text-neutral-900 sm:text-4xl">
+          <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">Features</span>
+          <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
             Everything you need, nothing you don&apos;t
           </h2>
         </div>
@@ -41,11 +41,11 @@ export default function Features() {
           {features.map((feature) => (
             <div
               key={feature.title}
-              className="rounded-2xl border border-neutral-200 bg-white p-6 transition-shadow hover:shadow-md"
+              className="rounded-2xl border border-dark-500 bg-dark-700 p-6 transition-shadow hover:shadow-lg hover:shadow-vault-500/5"
             >
               <div className="mb-3 text-2xl">{feature.icon}</div>
-              <h3 className="font-semibold text-neutral-900">{feature.title}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-neutral-500">{feature.description}</p>
+              <h3 className="font-semibold text-neutral-100">{feature.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-neutral-400">{feature.description}</p>
             </div>
           ))}
         </div>

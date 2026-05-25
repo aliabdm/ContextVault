@@ -8,7 +8,7 @@ const guarantees = [
 
 export default function Privacy() {
   return (
-    <section id="privacy" className="border-t border-neutral-100 bg-neutral-900 px-6 py-20 sm:py-28">
+    <section id="privacy" className="border-t border-dark-600 bg-dark-900 px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-5xl">
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-widest text-neutral-500">Privacy</span>
@@ -25,7 +25,7 @@ export default function Privacy() {
           {guarantees.map((item) => (
             <div
               key={item.label}
-              className="flex items-center gap-3 rounded-xl border border-neutral-700 bg-neutral-800 px-4 py-3 sm:flex-col sm:items-center sm:gap-2 sm:py-6 sm:text-center"
+              className="flex items-center gap-3 rounded-xl border border-dark-500 bg-dark-700 px-4 py-3 sm:flex-col sm:items-center sm:gap-2 sm:py-6 sm:text-center"
             >
               <span className="text-xl">{item.icon}</span>
               <span className="text-sm font-medium text-neutral-300">{item.label}</span>

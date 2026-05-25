@@ -57,15 +57,15 @@ const links = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-neutral-100 bg-neutral-50 px-6 py-12">
+    <footer className="border-t border-dark-600 bg-dark-800 px-6 py-12">
       <div className="mx-auto flex max-w-5xl flex-col items-center justify-between gap-4 sm:flex-row">
-        <div className="text-sm text-neutral-400">
+        <div className="text-sm text-neutral-500">
           Built by{' '}
           <a
             href="https://senior-mohammad-ali.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
-            className="font-medium text-neutral-600 underline-offset-2 hover:underline"
+            className="font-medium text-neutral-300 underline-offset-2 hover:text-white hover:underline"
           >
             Mohammad Ali Abdul Wahed
           </a>
@@ -78,7 +78,7 @@ export default function Footer() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-neutral-400 transition-colors hover:text-neutral-700"
+              className="text-neutral-500 transition-colors hover:text-neutral-200"
               aria-label={link.label}
             >
               {link.icon}
