@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LLM History Observer</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      width: 320px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      color: #e0e0e0;
+      background: #1a1a2e;
+      overflow-x: hidden;
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      background: #16213e;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .header h1 {
+      font-size: 14px;
+      font-weight: 600;
+      color: #fff;
+    }
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 6px;
+    }
+    .status-dot.active {
+      background: #4ade80;
+      box-shadow: 0 0 6px #4ade80;
+      animation: pulse 2s infinite;
+    }
+    .status-dot.inactive {
+      background: #ef4444;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+    .status-text {
+      font-size: 12px;
+      color: #9ca3af;
+    }
+    .panel {
+      padding: 12px 16px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .panel-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+    .label {
+      color: #9ca3af;
+      font-size: 12px;
+    }
+    .value {
+      color: #f3f4f6;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    select, input[type="text"] {
+      width: 100%;
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #374151;
+      background: #1f2937;
+      color: #e5e7eb;
+      font-size: 12px;
+      outline: none;
+    }
+    select:focus, input[type="text"]:focus {
+      border-color: #6366f1;
+    }
+    .tag-input-wrap {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      padding: 4px;
+      border-radius: 6px;
+      border: 1px solid #374151;
+      background: #1f2937;
+      min-height: 30px;
+      align-items: center;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      padding: 2px 8px;
+      border-radius: 10px;
+      background: #312e81;
+      color: #c7d2fe;
+      font-size: 11px;
+    }
+    .tag-remove {
+      cursor: pointer;
+      opacity: 0.7;
+    }
+    .tag-remove:hover {
+      opacity: 1;
+    }
+    .tag-input {
+      border: none;
+      background: transparent;
+      color: #e5e7eb;
+      font-size: 12px;
+      outline: none;
+      flex: 1;
+      min-width: 60px;
+      padding: 2px;
+    }
+    .btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      border: none;
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+    .btn:hover {
+      opacity: 0.85;
+    }
+    .btn-primary {
+      background: #6366f1;
+      color: #fff;
+    }
+    .btn-secondary {
+      background: #374151;
+      color: #e5e7eb;
+    }
+    .btn-danger {
+      background: #7f1d1d;
+      color: #fca5a5;
+    }
+    .btn-sm {
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+    .btn-group {
+      display: flex;
+      gap: 6px;
+    }
+    .recent-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-bottom: 1px solid #2a2a4a;
+      transition: background 0.1s;
+    }
+    .recent-item:hover {
+      background: #1f2937;
+    }
+    .recent-item .info {
+      overflow: hidden;
+    }
+    .recent-item .title {
+      font-size: 12px;
+      color: #e5e7eb;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+    .recent-item .meta {
+      font-size: 10px;
+      color: #6b7280;
+    }
+    .recent-item .platform-badge {
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 4px;
+      background: #374151;
+      color: #9ca3af;
+      margin-left: 6px;
+    }
+    .empty-state {
+      padding: 20px 16px;
+      text-align: center;
+      color: #6b7280;
+      font-size: 12px;
+    }
+    .toast {
+      position: fixed;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 6px 14px;
+      border-radius: 6px;
+      background: #374151;
+      color: #e5e7eb;
+      font-size: 11px;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+    .toast.show {
+      opacity: 1;
+    }
+    .hidden {
+      display: none !important;
+    }
+    #settings-panel {
+      padding: 12px 16px;
+      border-bottom: 1px solid #2a2a4a;
+    }
+    .setting-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .setting-row input[type="number"] {
+      width: 60px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid #374151;
+      background: #1f2937;
+      color: #e5e7eb;
+      font-size: 12px;
+      text-align: center;
+      outline: none;
+    }
+    .toggle {
+      position: relative;
+      width: 36px;
+      height: 20px;
+    }
+    .toggle input {
+      display: none;
+    }
+    .toggle-slider {
+      position: absolute;
+      inset: 0;
+      background: #374151;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .toggle-slider::after {
+      content: "";
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #e5e7eb;
+      top: 2px;
+      left: 2px;
+      transition: transform 0.2s;
+    }
+    .toggle input:checked + .toggle-slider {
+      background: #6366f1;
+    }
+    .toggle input:checked + .toggle-slider::after {
+      transform: translateX(16px);
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>LLM Observer</h1>
+    <span id="status-indicator">
+      <span class="status-dot inactive" id="status-dot"></span>
+      <span class="status-text" id="status-label">Inactive</span>
+    </span>
+  </div>
+
+  <div id="main-panel">
+    <div class="panel">
+      <div class="panel-title">Current Session</div>
+      <div class="row">
+        <span class="label">Platform</span>
+        <span class="value" id="conv-platform">--</span>
+      </div>
+      <div class="row">
+        <span class="label">Title</span>
+        <span class="value" id="conv-title">--</span>
+      </div>
+      <div class="row">
+        <span class="label">Messages</span>
+        <span class="value" id="conv-msg-count">0</span>
+      </div>
+      <div class="row">
+        <span class="label">Duration</span>
+        <span class="value" id="conv-duration">0m</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Organization</div>
+      <div style="margin-bottom:8px;">
+        <select id="project-select">
+          <option value="">-- No project --</option>
+        </select>
+      </div>
+      <div class="tag-input-wrap" id="tag-container">
+        <input type="text" class="tag-input" id="tag-input" placeholder="Add tag..." />
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="btn-group">
+        <button class="btn btn-secondary" id="btn-pause">Pause</button>
+        <button class="btn btn-primary" id="btn-export-one">Export .md</button>
+        <button class="btn btn-primary" id="btn-export-all">ZIP All</button>
+      </div>
+      <div style="margin-top:8px;">
+        <button class="btn btn-secondary btn-sm" id="btn-settings-toggle">Settings</button>
+      </div>
+    </div>
+
+    <div id="settings-panel" class="hidden">
+      <div class="panel-title">Settings</div>
+      <div class="setting-row">
+        <span class="label">Auto-export every N</span>
+        <input type="number" id="setting-auto-export" min="0" value="0" />
+      </div>
+      <div class="setting-row">
+        <span class="label">Idle timeout (min)</span>
+        <input type="number" id="setting-idle" min="1" max="60" value="10" />
+      </div>
+      <div class="setting-row">
+        <span class="label">Max messages/file</span>
+        <input type="number" id="setting-max-msg" min="10" max="1000" value="100" />
+      </div>
+      <div class="setting-row">
+        <span class="label">Capture enabled</span>
+        <label class="toggle">
+          <input type="checkbox" id="setting-capture" checked />
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+      <button class="btn btn-primary btn-sm" id="btn-save-settings">Save</button>
+    </div>
+  </div>
+
+  <div class="panel-title" style="padding:8px 16px;">Recent Conversations</div>
+  <div id="recent-list">
+    <div class="empty-state">No conversations yet. Start chatting on a supported LLM platform.</div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script type="module" src="./app.ts"></script>
+</body>
+</html>
