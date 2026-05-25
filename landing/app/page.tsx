@@ -1,0 +1,23 @@
+import Hero from '@/components/Hero'
+import Problem from '@/components/Problem'
+import Solution from '@/components/Solution'
+import Features from '@/components/Features'
+import HowItWorks from '@/components/HowItWorks'
+import Privacy from '@/components/Privacy'
+import Platforms from '@/components/Platforms'
+import Footer from '@/components/Footer'
+
+export default function Home() {
+  return (
+    <>
+      <Hero />
+      <Problem />
+      <Solution />
+      <Features />
+      <HowItWorks />
+      <Privacy />
+      <Platforms />
+      <Footer />
+    </>
+  )
+}
