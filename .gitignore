@@ -3,6 +3,8 @@ dist/
 .DS_Store
 *.log
 coverage/
+demo-output/
 .env
 .env.*
 important_for_me.txt
+scripts/
