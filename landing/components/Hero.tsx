@@ -68,6 +68,14 @@ export default function Hero() {
             No tracking
           </span>
         </div>
+
+        <div className="mx-auto mt-14 max-w-5xl overflow-hidden rounded-2xl border border-neutral-200 bg-neutral-950 shadow-2xl shadow-neutral-900/20">
+          <img
+            src="/demo/contextvault-demo.gif"
+            alt="ContextVault records an AI chat and exports it as Markdown"
+            className="aspect-video w-full bg-neutral-950 object-cover"
+          />
+        </div>
       </div>
     </section>
   )

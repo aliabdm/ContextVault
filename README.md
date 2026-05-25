@@ -154,7 +154,7 @@ Then:
 
 ## 👤 Author
 
-**Muhammed Ali**
+**Mohammad Ali Abdul Wahed**
 
 | | |
 |---|---|
