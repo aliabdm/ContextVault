@@ -121,6 +121,7 @@ export interface ChromeMessage {
     | "updateProject"
     | "updateTags"
     | "captureMessage"
+    | "flushCapture"
     | "newConversation"
     | "endConversation"
     | "updateTitle";

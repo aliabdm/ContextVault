@@ -72,6 +72,10 @@ export class DOMObserver {
     this.isRunning = false;
   }
 
+  flush(): void {
+    this.scanMessages();
+  }
+
   private startOnBody(): void {
     if (!document.body) {
       setTimeout(() => this.startOnBody(), 500);
@@ -144,6 +148,10 @@ export class DOMObserver {
         const content = newAssistantTexts[i];
         if (content && !this.previousAssistantTexts.includes(content)) {
           this.callbacks.onAssistantChunk(content, new Date().toISOString());
+          const latestEl = assistantElements[i];
+          if (latestEl && this.adapter.isStreamingComplete(latestEl)) {
+            this.callbacks.onStreamingComplete(content, new Date().toISOString());
+          }
         }
       }
     } else if (newAssistantTexts.length > 0 && newAssistantTexts.length === this.previousAssistantTexts.length) {

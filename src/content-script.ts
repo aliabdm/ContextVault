@@ -224,6 +224,9 @@ chrome.runtime.onMessage.addListener((msg: ChromeMessage, _sender, sendResponse)
       isCapturing,
       platform: adapter?.platform || lastCapturePlatform,
     });
+  } else if (msg.action === "flushCapture") {
+    engine?.flush();
+    setTimeout(() => sendResponse({ success: true }), 500);
   }
   return true;
 });

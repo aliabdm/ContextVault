@@ -158,12 +158,24 @@ function formatDateShort(iso: string): string {
 
 async function exportOne(id: string): Promise<void> {
   try {
+    await flushActiveCapture();
     const resp = await chrome.runtime.sendMessage({ action: "exportConversation", payload: { conversationId: id } });
     if (resp?.success) {
       showToast("Exported!");
     }
   } catch {
     showToast("Export failed");
+  }
+}
+
+async function flushActiveCapture(): Promise<void> {
+  try {
+    const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
+    if (tabs[0]?.id) {
+      await chrome.tabs.sendMessage(tabs[0].id, { action: "flushCapture" });
+    }
+  } catch {
+    // The active tab may not be a supported LLM page.
   }
 }
 
@@ -242,6 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   el("btn-export-all").addEventListener("click", async () => {
     try {
+      await flushActiveCapture();
       const resp = await chrome.runtime.sendMessage({ action: "exportAll" });
       if (resp?.success) {
         showToast(`Exported ${resp.count} conversations`);

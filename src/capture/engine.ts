@@ -77,11 +77,16 @@ export class SimpleEngine {
       if (finalized && finalized.role === "assistant") {
         this.callbacks.onCapture("assistant", finalized.content);
       }
-      const msg = this.streamAssembler.processDOMContent("user", content, new Date().toISOString());
+      const msg = this.streamAssembler.processDOMComplete("user", content, new Date().toISOString());
       if (msg) {
         this.callbacks.onCapture("user", msg.content);
       }
     }
+  }
+
+  flush(): void {
+    this.domObserver.flush();
+    this.finalizeAssistant();
   }
 
   finalizeAssistant(): void {
@@ -106,7 +111,7 @@ export class SimpleEngine {
         this.lastFiredAssistantContent = msg.content;
         this.callbacks.onCapture("assistant", msg.content);
       }
-    }, 5000);
+    }, 1500);
   }
 
   private clearStaleTimeout(): void {
