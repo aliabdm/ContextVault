@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Universal LLM Conversation Recorder",
+  "name": "ContextVault",
   "version": "1.0.0",
-  "description": "Zero-click, background capture of every LLM conversation across platforms — organized, searchable, and exportable.",
+  "description": "Your portable memory layer for AI conversations — capture ChatGPT, Claude, Gemini and export as Markdown or ZIP.",
   "permissions": [
     "storage",
     "activeTab",

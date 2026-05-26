@@ -6,6 +6,9 @@ export const metadata: Metadata = {
   title: 'ContextVault — Your portable memory layer for AI conversations',
   description:
     'A local-first Chrome extension that records AI conversations across ChatGPT, Claude, Gemini, and more. Export as Markdown or ZIP. No backend. No tracking.',
+  icons: {
+    icon: '/icons/icon.svg',
+  },
 }
 
 export default function RootLayout({
