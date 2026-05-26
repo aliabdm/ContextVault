@@ -6,6 +6,6 @@
     </linearGradient>
   </defs>
   <rect width="128" height="128" rx="0" fill="#0d0d1a"/>
-  <circle cx="64" cy="64" r="45" fill="url(#g)"/>
-  <text x="64" y="69" font-family="Inter, Arial, sans-serif" font-size="42" font-weight="800" fill="white" text-anchor="middle">CV</text>
+  <circle cx="64" cy="64" r="50" fill="url(#g)"/>
+  <text x="64" y="72" font-family="Inter, Arial, sans-serif" font-size="44" font-weight="800" fill="white" text-anchor="middle">C V</text>
 </svg>

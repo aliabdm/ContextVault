@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LLM History Observer</title>
+  <title>ContextVault</title>
   <style>
     * {
       margin: 0;
@@ -283,7 +283,7 @@
 </head>
 <body>
   <div class="header">
-    <h1>LLM Observer</h1>
+    <h1><span style="color:#818cf8;">C</span><span style="color:#c7d2fe;">V</span> <span style="font-weight:500;font-size:12px;color:#6b7280;margin-left:2px;">ContextVault</span></h1>
     <span id="status-indicator">
       <span class="status-dot inactive" id="status-dot"></span>
       <span class="status-text" id="status-label">Inactive</span>
@@ -362,6 +362,13 @@
   <div class="panel-title" style="padding:8px 16px;">Recent Conversations</div>
   <div id="recent-list">
     <div class="empty-state">No conversations yet. Start chatting on a supported LLM platform.</div>
+  </div>
+
+  <div style="padding:8px 16px;border-top:1px solid #2a2a4a;display:flex;justify-content:space-between;align-items:center;background:#111128;">
+    <span style="font-size:10px;color:#4b5563;">
+      <a href="https://senior-mohammad-ali.vercel.app/" target="_blank" style="color:#6b7280;text-decoration:none;">by Mohammad Ali Abdul Wahed</a>
+    </span>
+    <span style="font-size:10px;color:#4b5563;">v1.0</span>
   </div>
 
   <div class="toast" id="toast"></div>
