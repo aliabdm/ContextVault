@@ -32,7 +32,7 @@ export default function Hero() {
 
           <div className="mt-8 flex items-center justify-center gap-3">
             <a
-              href="https://github.com/aliabdm/llmHistoryObserver"
+              href="https://github.com/aliabdm/ContextVault"
               target="_blank"
               rel="noopener noreferrer"
               className="group inline-flex h-12 items-center gap-2.5 rounded-xl bg-vault-500 px-7 text-sm font-semibold text-white shadow-lg shadow-vault-500/30 transition-all hover:bg-vault-600 hover:shadow-vault-500/40 active:scale-[0.97]"
