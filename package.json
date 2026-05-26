@@ -1,7 +1,7 @@
 {
-  "name": "universal-llm-conversation-recorder",
+  "name": "contextvault",
   "version": "1.0.0",
-  "description": "Local-first Chrome extension for recording, organizing, and exporting LLM conversations as Markdown.",
+  "description": "Your portable memory layer for AI conversations — capture, store, and export across LLMs.",
   "type": "module",
   "scripts": {
     "dev": "vite",
