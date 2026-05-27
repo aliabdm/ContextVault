@@ -1,4 +1,4 @@
-# Universal LLM Conversation Recorder - Plan
+# ContextVault - Plan
 
 ## One Line
 

@@ -2,7 +2,7 @@
 
 ## Privacy Model
 
-Universal LLM Conversation Recorder is local-first. It stores captured conversations in the browser extension's IndexedDB database and generates exports locally when the user clicks an export button.
+ContextVault is local-first. It stores captured conversations in the browser extension's IndexedDB database and generates exports locally when the user clicks an export button.
 
 The extension does not include:
 
