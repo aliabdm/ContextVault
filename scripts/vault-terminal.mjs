@@ -115,6 +115,17 @@ function heading(type) {
   return type.charAt(0).toUpperCase() + type.slice(1);
 }
 
+function createEvent(type, content) {
+  return { type, content, createdAt: nowIso() };
+}
+
+function normalizeEvent(event) {
+  return {
+    ...event,
+    createdAt: event.createdAt ?? event.created_at ?? nowIso(),
+  };
+}
+
 function sessionMarkdown(session) {
   const lines = [
     "---",
@@ -128,7 +139,7 @@ function sessionMarkdown(session) {
     "",
   ];
 
-  for (const event of session.events) {
+  for (const event of session.events.map(normalizeEvent)) {
     lines.push(`## ${heading(event.type)}`);
     lines.push("");
     lines.push(event.content);
@@ -239,7 +250,7 @@ async function record() {
   rl.on("line", (line) => {
     if (pasteMode) {
       if (line === "/endpaste") {
-        session.events.push({ type: "note", content: pasteLines.join("\n"), created_at: nowIso() });
+        session.events.push(createEvent("note", pasteLines.join("\n")));
         pasteLines.length = 0;
         pasteMode = false;
         console.log("Paste captured.");
@@ -270,7 +281,7 @@ async function record() {
 
     const match = line.match(/^\/([a-z-]+)(?:\s+([\s\S]*))?$/);
     if (!match) {
-      session.events.push({ type: "note", content: line, created_at: nowIso() });
+      session.events.push(createEvent("note", line));
       rl.prompt();
       return;
     }
@@ -291,7 +302,7 @@ async function record() {
     }
 
     if (EVENT_TYPES.has(command)) {
-      session.events.push({ type: command, content: value, created_at: nowIso() });
+      session.events.push(createEvent(command, value));
       rl.prompt();
       return;
     }
@@ -303,7 +314,7 @@ async function record() {
   await new Promise((resolve) => rl.on("close", resolve));
 
   if (pasteMode && pasteLines.length > 0) {
-    session.events.push({ type: "note", content: pasteLines.join("\n"), created_at: nowIso() });
+    session.events.push(createEvent("note", pasteLines.join("\n")));
   }
 
   session.ended_at = nowIso();
