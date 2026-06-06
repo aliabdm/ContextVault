@@ -6,12 +6,12 @@ const features = [
   {
     title: 'Browser Capture',
     description:
-      'Record conversations across ChatGPT, Claude, Gemini, Perplexity, Poe, DeepSeek, and Copilot.',
+      'A Chrome extension surface for recording LLM conversations across ChatGPT, Claude, Gemini, Perplexity, Poe, DeepSeek, and Copilot.',
   },
   {
     title: 'Terminal Capture',
     description:
-      'Use Vault Terminal to save Codex work, Claude Code sessions, Cursor workflows, human notes, and tasks.',
+      'A CLI surface for preserving Codex work, Claude Code sessions, Cursor workflows, human notes, decisions, and tasks.',
   },
   {
     title: 'Local-first by design',
@@ -21,7 +21,7 @@ const features = [
   {
     title: 'Export and search',
     description:
-      'Search saved context and export structured Markdown or ZIP files for prompts, handoffs, and archives.',
+      'Search terminal memory and export structured Markdown or ZIP files for prompts, handoffs, archives, and future context packages.',
   },
 ]
 

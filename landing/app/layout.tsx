@@ -3,9 +3,9 @@ import { Analytics } from '@vercel/analytics/next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'ContextVault - Local-first memory for AI chats and coding agents',
+  title: 'ContextVault - Browser and terminal memory for AI work',
   description:
-    'A local-first context platform that captures browser LLM conversations and terminal coding-agent sessions. Export as Markdown or ZIP. No backend. No accounts.',
+    'A local-first context platform with Browser Capture for LLM chats and Vault Terminal for coding-agent sessions. Export Markdown or ZIP. No backend. No accounts.',
   icons: {
     icon: '/icons/icon.svg',
   },

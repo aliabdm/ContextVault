@@ -1,9 +1,5 @@
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.0.0-blue?style=flat-square" alt="version" />
-  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="license" />
-  <img src="https://img.shields.io/badge/build-passing-brightgreen?style=flat-square" alt="build" />
-  <img src="https://img.shields.io/badge/privacy-local-8A2BE2?style=flat-square" alt="privacy" />
-  <img src="https://img.shields.io/badge/capture-browser%20%2B%20terminal-orange?style=flat-square" alt="capture surfaces" />
+  <img src="landing/public/icons/icon128.png" width="88" height="88" alt="ContextVault logo" />
 </p>
 
 <h1 align="center">ContextVault</h1>
@@ -16,10 +12,57 @@
 </p>
 
 <p align="center">
-  <strong>No backend. No accounts. No tracking.</strong>
+  <a href="https://context-vault-two.vercel.app/"><strong>Landing Page</strong></a>
+  &middot;
+  <a href="#installation-dev-mode"><strong>Install</strong></a>
+  &middot;
+  <a href="#vault-terminal-mvp"><strong>Vault Terminal</strong></a>
+  &middot;
+  <a href="#roadmap"><strong>Roadmap</strong></a>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/version-1.1.0-2563eb?style=for-the-badge" alt="version" />
+  <img src="https://img.shields.io/badge/license-MIT-16a34a?style=for-the-badge" alt="license" />
+  <img src="https://img.shields.io/badge/build-passing-22c55e?style=for-the-badge" alt="build" />
+  <img src="https://img.shields.io/badge/privacy-local--first-7c3aed?style=for-the-badge" alt="privacy" />
+  <img src="https://img.shields.io/badge/capture-browser%20%2B%20terminal-f97316?style=for-the-badge" alt="capture surfaces" />
+</p>
+
+<p align="center">
+  <strong>No backend.</strong>
+  <strong>No accounts.</strong>
+  <strong>No tracking.</strong>
 </p>
 
 ---
+
+## Demo
+
+<table>
+  <tr>
+    <td width="50%">
+      <h3 align="center">Browser Capture</h3>
+      <p align="center">
+        <img src="landing/public/demo/contextvault-demo.gif" alt="ContextVault browser capture demo" />
+      </p>
+    </td>
+    <td width="50%">
+      <h3 align="center">Terminal Capture</h3>
+      <p align="center">
+        <img src="landing/public/demo/vault-terminal-demo.gif" alt="ContextVault Vault Terminal demo" />
+      </p>
+    </td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><strong>Browser Capture</strong><br />ChatGPT, Claude, Gemini, Perplexity, Poe, DeepSeek, Copilot</td>
+    <td align="center"><strong>Terminal Capture</strong><br />Codex, Claude Code, Cursor workflows, human notes, decisions, tasks</td>
+    <td align="center"><strong>Local Memory</strong><br />IndexedDB, local Markdown, exportable archives, no backend</td>
+  </tr>
+</table>
 
 ## What It Does
 
@@ -33,6 +76,13 @@ Both surfaces store context locally. Both can be exported. Both are designed to 
 ---
 
 ## Two Capture Surfaces
+
+<p>
+  <img src="https://img.shields.io/badge/input-browser-3b82f6?style=flat-square" alt="browser input" />
+  <img src="https://img.shields.io/badge/input-terminal-f97316?style=flat-square" alt="terminal input" />
+  <img src="https://img.shields.io/badge/storage-local-16a34a?style=flat-square" alt="local storage" />
+  <img src="https://img.shields.io/badge/output-markdown-7c3aed?style=flat-square" alt="markdown output" />
+</p>
 
 ### Browser Capture
 
@@ -103,6 +153,13 @@ Context should survive:
 
 ## Features
 
+<p>
+  <img src="https://img.shields.io/badge/Chrome%20Extension-ready-2563eb?style=flat-square" alt="Chrome extension ready" />
+  <img src="https://img.shields.io/badge/Vault%20Terminal-MVP-f97316?style=flat-square" alt="Vault Terminal MVP" />
+  <img src="https://img.shields.io/badge/Context%20Model-shared-7c3aed?style=flat-square" alt="shared context model" />
+  <img src="https://img.shields.io/badge/Storage-local-16a34a?style=flat-square" alt="local storage" />
+</p>
+
 | Feature | Description |
 | --- | --- |
 | Browser Capture | Captures LLM conversations from supported browser platforms |
@@ -119,6 +176,13 @@ Context should survive:
 ---
 
 ## Architecture
+
+<p>
+  <img src="https://img.shields.io/badge/source-browser-3b82f6?style=flat-square" alt="browser source" />
+  <img src="https://img.shields.io/badge/source-terminal-f97316?style=flat-square" alt="terminal source" />
+  <img src="https://img.shields.io/badge/layer-shared%20context-7c3aed?style=flat-square" alt="shared context layer" />
+  <img src="https://img.shields.io/badge/export-Markdown%20%2F%20ZIP-0f766e?style=flat-square" alt="Markdown and ZIP export" />
+</p>
 
 ```text
 Browser Capture                         Terminal Capture
@@ -153,6 +217,13 @@ Terminal key idea:
 ---
 
 ## Privacy By Design
+
+<p>
+  <img src="https://img.shields.io/badge/backend-none-111827?style=flat-square" alt="no backend" />
+  <img src="https://img.shields.io/badge/accounts-none-111827?style=flat-square" alt="no accounts" />
+  <img src="https://img.shields.io/badge/API%20calls-none-111827?style=flat-square" alt="no external AI API calls" />
+  <img src="https://img.shields.io/badge/private%20by-default-16a34a?style=flat-square" alt="private by default" />
+</p>
 
 ContextVault is built around strict privacy principles:
 
@@ -298,6 +369,13 @@ Vault Terminal writes local files under `.contextvault/`:
 ---
 
 ## Roadmap
+
+<p>
+  <img src="https://img.shields.io/badge/implemented-browser%20capture-22c55e?style=flat-square" alt="browser capture implemented" />
+  <img src="https://img.shields.io/badge/implemented-terminal%20capture-22c55e?style=flat-square" alt="terminal capture implemented" />
+  <img src="https://img.shields.io/badge/next-context%20engine-f97316?style=flat-square" alt="context engine next" />
+  <img src="https://img.shields.io/badge/future-MCP%20%2B%20VS%20Code-7c3aed?style=flat-square" alt="future integrations" />
+</p>
 
 ### Implemented
 

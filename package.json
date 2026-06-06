@@ -1,6 +1,6 @@
 {
   "name": "contextvault",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Your portable memory layer for AI conversations — capture, store, and export across LLMs.",
   "type": "module",
   "scripts": {

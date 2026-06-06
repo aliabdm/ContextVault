@@ -5,33 +5,36 @@ import { motion } from 'framer-motion'
 const surfaces = [
   {
     label: 'Browser Capture',
-    title: 'Save AI conversations as they happen',
+    title: 'Use it when the work happens in an LLM web app',
     description:
-      'Capture ChatGPT, Claude, Gemini, Perplexity, Poe, DeepSeek, and Copilot conversations from the browser extension.',
-    items: ['Real-time capture', 'Markdown export', 'ZIP archive', 'Local browser storage'],
+      'Install the extension, chat normally, and export structured Markdown or ZIP files when the conversation becomes useful context.',
+    steps: ['Open ChatGPT, Claude, Gemini, or another supported LLM', 'Let ContextVault capture the conversation locally', 'Export Markdown or ZIP from the popup'],
+    proof: 'Best for prompts, answers, research threads, model comparisons, and account/platform switching.',
   },
   {
     label: 'Terminal Capture',
-    title: 'Record coding-agent context from the CLI',
+    title: 'Use it when the work happens in a coding-agent session',
     description:
-      'Use Vault Terminal to capture Codex sessions, Claude Code work, Cursor workflows, human notes, decisions, tasks, and problems.',
-    items: ['Local Markdown sessions', 'Search', 'Export', 'Project memory'],
+      'Run Vault Terminal inside a project and record the raw context that usually disappears from terminals and coding tools.',
+    steps: ['npm run vault:init', 'npm run vault:record', 'npm run vault:search -- auth'],
+    proof: 'Best for Codex sessions, Claude Code notes, Cursor workflows, decisions, tasks, bugs, and project memory.',
   },
 ]
 
 export default function CaptureSurfaces() {
   return (
-    <section className="border-t border-dark-600 bg-dark-800/30 px-6 py-20 sm:py-28">
+    <section id="capture-surfaces" className="border-t border-dark-600 bg-dark-800/30 px-6 py-20 sm:py-28">
       <div className="mx-auto max-w-6xl">
         <div className="mx-auto max-w-3xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">
             Two Capture Surfaces
           </span>
           <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Browser chats and terminal sessions belong in the same memory layer
+            Capture context where it actually happens
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-neutral-400">
-            ContextVault stores both locally, keeps them searchable, and exports clean files you can reuse across tools.
+            Browser Capture and Terminal Capture feed the same local-first context layer.
+            One preserves conversations. The other preserves agent work and project decisions.
           </p>
         </div>
 
@@ -50,42 +53,27 @@ export default function CaptureSurfaces() {
               </span>
               <h3 className="mt-3 text-2xl font-bold tracking-tight text-white">{surface.title}</h3>
               <p className="mt-3 text-sm leading-relaxed text-neutral-400">{surface.description}</p>
-              <div className="mt-6 grid gap-2 sm:grid-cols-2">
-                {surface.items.map((item) => (
+
+              <div className="mt-6 space-y-2">
+                {surface.steps.map((step, stepIndex) => (
                   <div
-                    key={item}
-                    className="rounded-xl border border-dark-500 bg-dark-800 px-4 py-3 text-sm font-medium text-neutral-300"
+                    key={step}
+                    className="flex items-center gap-3 rounded-xl border border-dark-500 bg-dark-800 px-4 py-3"
                   >
-                    {item}
+                    <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-vault-500/10 text-xs font-bold text-vault-300">
+                      {stepIndex + 1}
+                    </span>
+                    <span className="text-sm font-medium text-neutral-300">{step}</span>
                   </div>
                 ))}
               </div>
+
+              <p className="mt-5 rounded-xl border border-dark-500 bg-dark-900 px-4 py-3 text-sm leading-relaxed text-neutral-500">
+                {surface.proof}
+              </p>
             </motion.div>
           ))}
         </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.1 }}
-          viewport={{ once: true }}
-          className="mt-8 overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5"
-        >
-          <div className="flex flex-col gap-3 border-b border-dark-500 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <p className="text-sm font-semibold text-white">Vault Terminal demo</p>
-              <p className="text-xs text-neutral-500">Record decisions, tasks, problems, and agent work locally.</p>
-            </div>
-            <span className="w-fit rounded-full border border-vault-500/30 bg-vault-500/10 px-3 py-1 text-xs font-medium text-vault-300">
-              Local Markdown
-            </span>
-          </div>
-          <img
-            src="/demo/vault-terminal-demo.gif"
-            alt="Vault Terminal records a coding-agent session and exports local Markdown context"
-            className="w-full object-cover"
-          />
-        </motion.div>
       </div>
     </section>
   )
