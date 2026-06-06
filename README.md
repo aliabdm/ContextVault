@@ -299,6 +299,25 @@ Vault Terminal writes local files under `.contextvault/`:
 
 ## Roadmap
 
+### Implemented
+
+- Browser Capture
+- Terminal Capture MVP
+- Local-first browser storage
+- Local-first terminal storage
+- Markdown export
+- Browser ZIP export
+- Terminal search
+- Shared context model
+
+### In Progress
+
+- Documentation and positioning
+- Browser adapter hardening
+- Demo/storytelling assets
+
+### Future
+
 - Full-text search inside browser conversations
 - Auto-tagging system
 - Draft recovery
