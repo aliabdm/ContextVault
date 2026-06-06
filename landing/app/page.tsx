@@ -1,4 +1,5 @@
 import Hero from '@/components/Hero'
+import CaptureSurfaces from '@/components/CaptureSurfaces'
 import Problem from '@/components/Problem'
 import Solution from '@/components/Solution'
 import Features from '@/components/Features'
@@ -11,6 +12,7 @@ export default function Home() {
   return (
     <>
       <Hero />
+      <CaptureSurfaces />
       <Problem />
       <Solution />
       <Features />

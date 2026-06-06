@@ -5,18 +5,21 @@ import { motion } from 'framer-motion'
 const points = [
   {
     number: '01',
-    title: 'Captures in real-time',
-    description: 'DOM + Network hybrid engine records every message as it streams — across all major LLM platforms.',
+    title: 'Captures from two surfaces',
+    description:
+      'Browser Capture records LLM chats. Terminal Capture records agent work, notes, decisions, tasks, and problems.',
   },
   {
     number: '02',
     title: 'Stays local, stays yours',
-    description: 'IndexedDB stores everything in your browser. No cloud, no sync, no third party ever touches your data.',
+    description:
+      'Browser data stays in IndexedDB. Terminal sessions stay in local Markdown. No cloud account required.',
   },
   {
     number: '03',
-    title: 'Exports in one click',
-    description: 'Download any conversation as Markdown or ZIP. Structured, clean, ready to reuse anywhere.',
+    title: 'Exports in clean files',
+    description:
+      'Export browser conversations and terminal sessions as structured files ready to reuse anywhere.',
   },
 ]
 
@@ -27,10 +30,10 @@ export default function Solution() {
         <div className="mx-auto max-w-2xl text-center">
           <span className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">The Solution</span>
           <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
-            Meet your portable memory layer
+            Meet your local-first context platform
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-neutral-400">
-            ContextVault sits quietly in your browser, capturing AI conversations as they happen — so you never lose context again.
+            ContextVault gives browser chats and terminal sessions a shared local memory layer, so context survives tool switches.
           </p>
         </div>
 
@@ -44,7 +47,9 @@ export default function Solution() {
               viewport={{ once: true }}
               className="relative rounded-2xl border border-dark-500 bg-dark-700 p-8 pt-10"
             >
-              <span className="absolute right-4 top-3 text-[2.5rem] font-black leading-none text-dark-500">0{i + 1}</span>
+              <span className="absolute right-4 top-3 text-[2.5rem] font-black leading-none text-dark-500">
+                0{i + 1}
+              </span>
               <div className="relative z-10">
                 <h3 className="text-lg font-semibold text-white">{pt.title}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-neutral-400">{pt.description}</p>
