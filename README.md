@@ -149,6 +149,109 @@ This starts both the dev server and an Nginx container serving the ChatGPT mock 
 
 ---
 
+## Vault Terminal MVP
+
+ContextVault now has two local-first capture surfaces:
+
+1. **Browser Capture**  
+   Captures LLM chats from ChatGPT, Claude, Gemini, and other supported browser platforms.
+
+2. **Terminal Capture**  
+   Captures human, AI, and coding-agent work sessions from the terminal as raw Markdown context.
+
+Vision:
+
+> Git tracks code. ContextVault tracks context.
+
+Vault Terminal is useful for:
+
+- Preserving Codex sessions
+- Preserving Claude Code sessions
+- Capturing Cursor decisions
+- Keeping project memory outside limited context windows
+- Continuing work across agents without starting from zero
+
+### Terminal Commands
+
+Initialize local terminal memory:
+
+```bash
+npm run vault:init
+```
+
+Start an interactive recorder:
+
+```bash
+npm run vault:record
+```
+
+Inside the recorder:
+
+```text
+/source codex
+/title Fix auth middleware
+/user The login redirect is broken.
+/agent I found the issue in middleware order.
+/decision Keep auth checks in middleware and policy checks in controllers.
+/task Add regression test for redirect loop.
+/problem Session cookie is missing on callback.
+/paste
+Raw multiline content goes here.
+/endpaste
+/end
+```
+
+List saved sessions:
+
+```bash
+npm run vault:list
+```
+
+Show the latest session or a specific session:
+
+```bash
+npm run vault:show -- latest
+npm run vault:show -- <session-id>
+```
+
+Export project memory and recent sessions:
+
+```bash
+npm run vault:export
+```
+
+Search saved terminal sessions:
+
+```bash
+npm run vault:search -- auth
+npm run vault:search -- "Claude Code"
+```
+
+Vault Terminal writes local files under `.contextvault/`:
+
+```text
+.contextvault/
+  config.json
+  memory.md
+  sessions/
+  exports/
+```
+
+The `.contextvault/` folder is ignored by git by default because sessions may contain raw private context.
+
+### Technical Key Points
+
+- Vault Terminal is a plain Node.js CLI in `scripts/vault-terminal.mjs`.
+- It uses only local filesystem storage. There is no backend, auth, telemetry, analytics, or AI API call.
+- It writes Markdown sessions to `.contextvault/sessions/`.
+- It writes combined exports to `.contextvault/exports/contextvault-terminal-export.md`.
+- It keeps browser capture separate from terminal capture, so the Chrome extension adapters, popup, permissions, and IndexedDB export flow stay intact.
+- It preserves raw input exactly as typed for `/user`, `/agent`, `/note`, `/decision`, `/task`, `/problem`, and `/paste` blocks.
+- It adds a provider-agnostic context model under `src/shared/context/types.ts` for future browser, terminal, editor, or agent integrations.
+- `.contextvault/` is git-ignored by default because terminal sessions can contain private prompts, logs, paths, secrets, or customer context.
+
+---
+
 ## 🧭 Roadmap
 
 - 🔍 Full-text search inside conversations

@@ -4,7 +4,7 @@ dist/
 *.log
 coverage/
 demo-output/
+.contextvault/
 .env
 .env.*
 important_for_me.txt
-scripts/
