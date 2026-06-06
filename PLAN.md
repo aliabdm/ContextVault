@@ -63,15 +63,18 @@ Storage / Export / Search
 
 ### Future
 
+- Context normalization
+- Context retrieval engine
+- Context indexing
+- Context composer
+- Context linking
+- Context timeline
 - Automatic terminal agent capture
 - Claude Code integration
 - Codex integration
 - Cursor integration
 - VS Code extension
 - MCP server
-- Context retrieval engine
-- Context indexing
-- Context linking
 - Encrypted backups
 - Optional self-hosted sync
 
@@ -222,6 +225,214 @@ Pending:
 - Launch article series
 - Community-specific examples
 
+### Phase 9 - Context Engine - Future
+
+Goal:
+
+Move ContextVault from a context recorder into a context engine.
+
+Current state already implemented:
+
+- Browser Capture
+- Terminal Capture
+- Context Events
+- Context Sessions
+- Local Storage
+- Search
+- Export
+
+Important principle:
+
+Do not prioritize integrations before the Context Engine exists.
+
+The engine is the product. Integrations are adapters.
+
+#### Context Normalization
+
+Goal:
+
+Represent all context sources using the same internal model.
+
+Future sources:
+
+- Browser conversations
+- Codex
+- Claude Code
+- Cursor
+- VS Code agents
+- MCP integrations
+- Human notes
+
+Target:
+
+All sources should emit:
+
+- `ContextSource`
+- `ContextSession`
+- `ContextEvent`
+
+Status:
+
+- Future. A shared context model exists, but browser capture has not been migrated to it.
+
+#### Context Indexing
+
+Goal:
+
+Build a searchable knowledge index across all captured context.
+
+Examples:
+
+- Find all auth-related decisions
+- Find all sessions mentioning Redis
+- Find all open tasks
+- Find all unresolved problems
+
+Future command:
+
+```bash
+npm run vault:index
+```
+
+Status:
+
+- Future. Current terminal search is direct Markdown text search, not an index.
+
+#### Context Retrieval
+
+Goal:
+
+Automatically retrieve relevant context for a task.
+
+Example query:
+
+```text
+auth middleware
+```
+
+Expected output:
+
+- Related sessions
+- Related decisions
+- Related tasks
+- Related problems
+- Related notes
+
+Future command:
+
+```bash
+npm run vault:retrieve -- "auth middleware"
+```
+
+Status:
+
+- Future.
+
+#### Context Composer
+
+Goal:
+
+Generate ready-to-use context packages for AI tools.
+
+Examples:
+
+- Codex context package
+- Claude Code context package
+- Cursor context package
+
+Expected output:
+
+```text
+prepared-context.md
+```
+
+Containing:
+
+- Relevant memory
+- Decisions
+- Tasks
+- Problems
+- Recent sessions
+
+Future command:
+
+```bash
+npm run vault:prepare -- "auth middleware"
+```
+
+Status:
+
+- Future. Current `vault:export` creates a broad terminal export, not a query-specific prepared context package.
+
+#### Context Linking
+
+Goal:
+
+Create relationships between sessions.
+
+Examples:
+
+- Session A discovered a bug.
+- Session B fixed the bug.
+- Session C introduced a regression.
+
+Status:
+
+- Future.
+
+#### Context Memory
+
+Goal:
+
+Maintain long-term project memory.
+
+Examples:
+
+- Architectural decisions
+- Coding standards
+- Known limitations
+- Important discoveries
+- Lessons learned
+
+Stored in:
+
+```text
+.contextvault/memory.md
+```
+
+Status:
+
+- Partially implemented. `memory.md` is created by `vault:init`, but there is no automated memory maintenance yet.
+
+#### Context Timeline
+
+Goal:
+
+Track project history as context evolves.
+
+Examples:
+
+- What changed?
+- When was a decision made?
+- Who made it?
+- Which agent worked on it?
+
+Status:
+
+- Future.
+
+#### Future Integrations
+
+After Context Engine is mature:
+
+- MCP server
+- VS Code extension
+- Claude Code integration
+- Codex integration
+- Cursor integration
+- Self-hosted sync
+- Encrypted backups
+
 ## Roadmap By State
 
 ### Implemented
@@ -243,13 +454,15 @@ Pending:
 
 ### Future
 
+- Context indexing
+- Context retrieval
+- Context composer
+- Context linking
+- Context timeline
+- Automatic agent capture
 - MCP server
 - VS Code extension
 - Agent integrations
-- Context retrieval
-- Context indexing
-- Context linking
-- Automatic agent capture
 - Encrypted backups
 - Optional self-hosted sync
 

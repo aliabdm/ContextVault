@@ -318,13 +318,22 @@ Vault Terminal writes local files under `.contextvault/`:
 
 ### Future
 
+Context Engine comes before integrations. The engine is the product; integrations are adapters.
+
 - Full-text search inside browser conversations
 - Auto-tagging system
 - Draft recovery
+- Context normalization across browser, terminal, editor, agent, and human-note sources
+- Context indexing with future `npm run vault:index`
+- Context retrieval with future `npm run vault:retrieve -- "query"`
+- Context composer with future `npm run vault:prepare -- "query"`
+- Context linking between related sessions
+- Context timeline
 - MCP server
 - VS Code extension
-- Agent integrations
-- Context retrieval
+- Claude Code integration
+- Codex integration
+- Cursor integration
 - Encrypted backups
 - Optional self-hosted sync
 
