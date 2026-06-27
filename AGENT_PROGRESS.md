@@ -284,22 +284,22 @@ Resolution:
 
 - Confirmed the static landing page returned HTTP 200 from a temporary Docker server.
 - Removed the temporary server file and QA container.
-- Final Vercel deployment/content verification is still pending until after push.
+- Production deployment and content verification completed successfully.
 
 ## 7. Current Stop Point
 
-Implementation, documentation, unit tests, Docker builds, the CLI smoke test, and the final diff review are complete.
+The Context Engine MVP release is complete end to end.
 
-The work is currently stopped immediately before pushing the latest local commit.
+Implementation, documentation, unit tests, Docker builds, the CLI smoke test, Git push, Vercel deployment, and production content verification all succeeded.
 
-A local commit was created successfully. Push and Vercel verification are still pending.
+The exact stop point is after release `1.2.0` was pushed to `origin/main` in commit `47b9b8a` and the production landing page was verified. No implementation work is currently in progress.
 
 ## 8. Next Recommended Step
 
-1. Push `main`.
-2. Verify Vercel deployment reaches READY.
-3. Fetch the production landing page and confirm the Context Engine copy is present.
-4. Update this file with final push and deployment verification.
+1. Use the implemented engine in real project sessions and collect retrieval quality feedback.
+2. Harden normalization and retrieval based on real captured data.
+3. Add a dedicated Context Engine demo GIF as a focused launch asset.
+4. After engine hardening, choose the first adapter: MCP server or VS Code/Cursor integration.
 
 ## 9. Commands Run And Important Results
 
@@ -391,11 +391,18 @@ git commit -m "add local context engine MVP"
 
 Result:
 
-- Local commit created successfully.
-- The final release hash must be read from `git log` after the last amend.
+- Release commit `47b9b8a` created successfully and pushed to `origin/main`.
 - 21 files changed.
 - 1,528 insertions and 51 deletions.
-- This progress update will be amended into the same commit before push.
+
+### Production Deployment
+
+Result:
+
+- Vercel deployment `dpl_6Q8rG6ictuxmFgi6XAU4FDu1Fv9W` reached `READY`.
+- Production alias: `https://context-vault-two.vercel.app/`.
+- Production fetch returned HTTP 200.
+- Verified the updated title, hero positioning, and Context Engine section in the deployed HTML.
 
 ### Shell Line Ending Warning
 
@@ -411,8 +418,6 @@ Resolution:
 
 ## 10. Remaining TODOs
 
-- Push Context Engine MVP.
-- Verify Vercel deployment and production landing content.
 - Consider adding a dedicated Context Engine demo GIF in a later follow-up.
 - Future: migrate Browser Capture to the shared normalized engine.
 - Future: optional local semantic index.
