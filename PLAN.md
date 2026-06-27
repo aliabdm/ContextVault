@@ -478,6 +478,7 @@ After Context Engine is mature:
 
 ### Implemented
 
+- Published `@aliabdm/contextvault` npm CLI
 - Browser Capture
 - Terminal Capture MVP
 - Local-first browser storage
@@ -502,7 +503,6 @@ After Context Engine is mature:
 - Context Engine hardening
 - Browser adapter hardening
 - Demo/storytelling assets
-- npm registry publication
 
 ### Future
 

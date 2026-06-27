@@ -14,7 +14,9 @@
 <p align="center">
   <a href="https://context-vault-two.vercel.app/"><strong>Landing Page</strong></a>
   &middot;
-  <a href="#installation-dev-mode"><strong>Install</strong></a>
+  <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><strong>npm</strong></a>
+  &middot;
+  <a href="#installation"><strong>Install</strong></a>
   &middot;
   <a href="#vault-terminal"><strong>Vault Terminal</strong></a>
   &middot;
@@ -29,6 +31,7 @@
   <img src="https://img.shields.io/badge/build-passing-22c55e?style=for-the-badge" alt="build" />
   <img src="https://img.shields.io/badge/privacy-local--first-7c3aed?style=for-the-badge" alt="privacy" />
   <img src="https://img.shields.io/badge/capture-browser%20%2B%20terminal-f97316?style=for-the-badge" alt="capture surfaces" />
+  <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/v/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm package" /></a>
 </p>
 
 <p align="center">
@@ -38,6 +41,23 @@
 </p>
 
 ---
+
+## Installation
+
+Run Vault Terminal immediately with npm:
+
+```bash
+npx @aliabdm/contextvault init
+```
+
+Or install the CLI globally:
+
+```bash
+npm install -g @aliabdm/contextvault
+contextvault init
+```
+
+Browser Capture is installed from the extension build as described in [Installation (Dev Mode)](#installation-dev-mode). The npm package provides Vault Terminal and the Unified Context Engine; it does not replace the browser extension.
 
 ## Demo
 
@@ -315,15 +335,26 @@ It is intentionally independent from the Chrome extension so browser adapters, p
 
 The package exposes a standard `contextvault` binary. The existing `npm run vault:*` scripts remain available for repository development.
 
-To use the packaged CLI from a local clone:
+Install the published CLI:
+
+```bash
+npm install -g @aliabdm/contextvault
+contextvault init
+```
+
+Or run it without a global install:
+
+```bash
+npx @aliabdm/contextvault init
+```
+
+To develop the packaged CLI from a local clone:
 
 ```bash
 npm install
 npm link
 contextvault init
 ```
-
-The package is prepared for npm distribution, but registry publication is intentionally tracked as a separate release action.
 
 Initialize local terminal memory:
 
@@ -579,6 +610,7 @@ No backend, account, vector database, embedding API, or cloud service is require
 
 ### Implemented
 
+- Published `@aliabdm/contextvault` npm CLI
 - Browser Capture
 - Terminal Capture MVP
 - Local-first browser storage
@@ -601,7 +633,6 @@ No backend, account, vector database, embedding API, or cloud service is require
 
 ### In Progress
 
-- npm registry publication
 - Browser adapter hardening
 - Demo/storytelling assets
 
@@ -634,7 +665,7 @@ The unified Context Engine now exists. The next work is hardening retrieval and 
 - Terminal capture records explicitly entered context; it does not automatically intercept every shell process.
 - Context Engine retrieval is currently lexical and deterministic; it does not use embeddings or semantic model calls.
 - Browser conversations enter the Context Engine through explicit Markdown/ZIP import; automatic synchronization from IndexedDB is not implemented.
-- The `contextvault` package binary is implemented and locally testable, but npm registry publication is a separate release action requiring npm credentials.
+- Vault Terminal is published as `@aliabdm/contextvault`; the installed executable remains `contextvault`.
 - Natural-language answer generation is not built in; current commands retrieve grounded local evidence and prepare it for an agent.
 
 ---

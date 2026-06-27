@@ -82,6 +82,15 @@ export default function Hero() {
             <span className="h-1 w-1 rounded-full bg-dark-500" />
             <span>Open source</span>
           </div>
+
+          <a
+            href="https://www.npmjs.com/package/@aliabdm/contextvault"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mx-auto mt-5 block w-fit rounded-lg border border-dark-500 bg-dark-900 px-4 py-2 font-mono text-sm text-neutral-300 transition-colors hover:border-vault-500/50 hover:text-white"
+          >
+            npx @aliabdm/contextvault init
+          </a>
         </motion.div>
 
         <motion.div

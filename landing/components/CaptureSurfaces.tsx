@@ -16,7 +16,7 @@ const surfaces = [
     title: 'Use it when the work happens in a coding-agent session',
     description:
       'Run Vault Terminal inside a project and record the raw context that usually disappears from terminals and coding tools.',
-    steps: ['npm run vault:init', 'npm run vault:record', 'npm run vault:search -- auth'],
+    steps: ['npx @aliabdm/contextvault init', 'contextvault record', 'contextvault search auth'],
     proof: 'Best for Codex sessions, Claude Code notes, Cursor workflows, decisions, tasks, bugs, and project memory.',
   },
 ]

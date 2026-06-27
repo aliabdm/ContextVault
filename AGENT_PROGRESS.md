@@ -2,7 +2,49 @@
 
 Last updated: 2026-06-27
 Current branch: `main`
-Current working phase: ContextVault 1.3.0 release packaging complete; npm publication pending user confirmation
+Current working phase: `@aliabdm/contextvault@1.3.0` publish accepted by npm; waiting for first-package registry visibility
+
+## 0D. Scoped npm Publication Follow-up
+
+Objective:
+
+- Publish ContextVault 1.3.0 to npm without changing the `contextvault` executable or extension behavior.
+- Use the npm-recommended scoped name because the unscoped `contextvault` name was rejected as too similar to the existing `context-vault` package.
+
+Completed:
+
+- Changed the package identity from `contextvault` to `@aliabdm/contextvault` in `package.json` and `package-lock.json`.
+- Preserved the executable mapping as `contextvault -> scripts/vault-terminal.mjs`.
+- Rebuilt and clean-tested `release/contextvault-1.3.0.tgz` in Docker.
+- Verified global installation, `contextvault init`, `contextvault --help`, and `contextvault history --since 2w` from the tarball.
+- Published with `npm publish /release/contextvault-1.3.0.tgz --access public`.
+- npm returned `+ @aliabdm/contextvault@1.3.0`, confirming that the publish request was accepted.
+
+Current issue / exact stop:
+
+- The user confirmed that the published npm package now installs and runs successfully.
+- Updated the project README with the npm badge, scoped `npx` and global-install commands, and accurate publication status.
+- Updated the landing page with a direct npm command/link while keeping Browser Capture visible as an equal product surface.
+- Updated the project roadmap and `PLAN.md` to mark npm publication as implemented.
+- Updated the personal profile README with the npm badge and a direct quick-start command.
+- Verified the public registry from a clean `node:22-alpine` container: `npx @aliabdm/contextvault@1.3.0 init`, help, and history all passed (`NPM_REGISTRY_NPX_OK`).
+- Reinstalled Docker development dependencies, then verified all 56 tests and the extension production build.
+- Verified the landing-page production build, including TypeScript and static generation.
+- `git diff --check` passed; unrelated existing untracked files remain excluded.
+- Commit, push, deployment check, and GitHub release-note refresh remain.
+
+Release checksums:
+
+- `contextvault-1.3.0.tgz`: `8ef1d1b0253d1f06fd81ac5f0d0487a4cc6c245201a6280093e7a25aed6aff20`
+- `contextvault-extension-v1.3.0.zip`: `e69ee8eff57fb2263a73bc5eb3d498e02c6686889eb9612c5ca771d13fc36de9`
+
+Next command:
+
+```bash
+npm view @aliabdm/contextvault@1.3.0 version
+```
+
+Once visible, test from a clean Docker container with `npx --yes @aliabdm/contextvault@1.3.0 init` before updating public documentation.
 
 ## 0A. Unified Context Engine Follow-up
 
@@ -286,6 +328,16 @@ Exact stop point:
 - No npm publish command was run.
 - Source changes (`--help`, release ignore rule, progress log) still need commit/push.
 - User must upload the tarball and extension ZIP to release `v1.3.0`; `SHA256SUMS.txt` is recommended as a third asset.
+- Post-push tag audit found remote `v1.3.0` points to `db3d4cbfcbc96c46b4a446f4b2e4de5960cd27b2`, while verified artifacts were built after the CLI help fix from `a7204a383f6e32abc1c233d4b156ed3f03e355d2`.
+- User authorized completing the release workflow. Remote tag `v1.3.0` was moved to verified package commit `a7204a383f6e32abc1c233d4b156ed3f03e355d2` and confirmed remotely.
+- npm web authentication was started in a persistent Docker volume. The user completed the npm authorization page and reported `Authentication Successful`.
+- The first authorization token was lost because npm stored `.npmrc` outside the initially mounted cache volume. No package was published. Authentication was repeated with the complete Docker `/root` persisted.
+- `npm whoami` now succeeds as `aliabdm` from the persisted clean Docker environment.
+- `npm publish /release/contextvault-1.3.0.tgz --access public` reached the registry but returned `E403`: npm requires a publish-time two-factor OTP or a granular token with 2FA bypass.
+- A granular write token was configured and authenticated successfully, but npm rejected the unscoped package name because `contextvault` is too similar to the existing `context-vault` package.
+- npm explicitly recommended the scoped name `@aliabdm/contextvault`.
+- Decision: rename only the npm package identity to `@aliabdm/contextvault`; preserve the product name ContextVault and executable bin name `contextvault`.
+- No package version has been published yet. Next action: update package metadata/docs, rebuild and retest the tarball, then publish the scoped public package.
 
 ## 0. Current Follow-up Task
 
