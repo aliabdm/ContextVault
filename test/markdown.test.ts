@@ -23,7 +23,7 @@ function makeConversation(overrides: Partial<Conversation> = {}): Conversation {
     previousConversationId: null,
     nextConversationId: null,
     messages,
-    adapterVersion: "1.1.0",
+    adapterVersion: "1.2.0",
     ...overrides,
   };
 }

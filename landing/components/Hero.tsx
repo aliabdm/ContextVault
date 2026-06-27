@@ -45,8 +45,8 @@ export default function Hero() {
           </h1>
 
           <p className="mx-auto mt-5 max-w-2xl text-balance text-lg leading-relaxed text-neutral-400 sm:text-xl">
-            ContextVault captures browser conversations and terminal work sessions, stores them locally,
-            and exports portable Markdown so context survives model switches, agent switches, and token limits.
+            ContextVault captures browser conversations and terminal work sessions, turns them into searchable
+            project memory, and prepares portable context for the next model or coding agent.
           </p>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">

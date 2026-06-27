@@ -29,6 +29,15 @@ Shared Context Layer
   - Browser/terminal/editor/agent-compatible event concepts
         |
         v
+Context Engine
+  - Terminal session normalization
+  - Local event index
+  - Query-ranked retrieval
+  - Prepared context composer
+  - Project memory maintenance
+  - Session links and timeline
+        |
+        v
 Storage / Export / Search
   - IndexedDB for browser conversations
   - .contextvault/ for terminal sessions
@@ -54,6 +63,14 @@ Storage / Export / Search
 - Vault Terminal MVP
 - Shared context model
 - Local-first storage architecture
+- Context Engine MVP
+- Terminal context normalization
+- Local context index
+- Query-based retrieval
+- Prepared context packages
+- Project memory maintenance
+- Session linking
+- Context timeline
 
 ### In Progress
 
@@ -63,12 +80,10 @@ Storage / Export / Search
 
 ### Future
 
-- Context normalization
-- Context retrieval engine
-- Context indexing
-- Context composer
-- Context linking
-- Context timeline
+- Browser context normalization
+- Optional local semantic retrieval
+- Automatic context-link suggestions
+- Stale task and memory conflict detection
 - Automatic terminal agent capture
 - Claude Code integration
 - Codex integration
@@ -225,13 +240,13 @@ Pending:
 - Launch article series
 - Community-specific examples
 
-### Phase 9 - Context Engine - Future
+### Phase 9 - Context Engine MVP - Implemented
 
 Goal:
 
 Move ContextVault from a context recorder into a context engine.
 
-Current state already implemented:
+Completed:
 
 - Browser Capture
 - Terminal Capture
@@ -240,6 +255,13 @@ Current state already implemented:
 - Local Storage
 - Search
 - Export
+- Terminal session normalization
+- Local event index
+- Query-based retrieval
+- Prepared agent context packages
+- Generated memory maintenance
+- Explicit session links
+- Context timeline export
 
 Important principle:
 
@@ -273,7 +295,8 @@ All sources should emit:
 
 Status:
 
-- Future. A shared context model exists, but browser capture has not been migrated to it.
+- Implemented for terminal Markdown sessions, including backward-compatible snake_case metadata.
+- Browser capture has not been migrated to the normalized engine yet.
 
 #### Context Indexing
 
@@ -288,7 +311,7 @@ Examples:
 - Find all open tasks
 - Find all unresolved problems
 
-Future command:
+Implemented command:
 
 ```bash
 npm run vault:index
@@ -296,7 +319,8 @@ npm run vault:index
 
 Status:
 
-- Future. Current terminal search is direct Markdown text search, not an index.
+- Implemented. The index is stored at `.contextvault/index/context-index.json`.
+- Existing `vault:search` remains available for direct Markdown text search.
 
 #### Context Retrieval
 
@@ -318,7 +342,7 @@ Expected output:
 - Related problems
 - Related notes
 
-Future command:
+Implemented command:
 
 ```bash
 npm run vault:retrieve -- "auth middleware"
@@ -326,7 +350,8 @@ npm run vault:retrieve -- "auth middleware"
 
 Status:
 
-- Future.
+- Implemented with local deterministic ranking based on phrase matches, token matches, event type, and recency.
+- Semantic embeddings remain future work.
 
 #### Context Composer
 
@@ -354,7 +379,7 @@ Containing:
 - Problems
 - Recent sessions
 
-Future command:
+Implemented command:
 
 ```bash
 npm run vault:prepare -- "auth middleware"
@@ -362,7 +387,8 @@ npm run vault:prepare -- "auth middleware"
 
 Status:
 
-- Future. Current `vault:export` creates a broad terminal export, not a query-specific prepared context package.
+- Implemented. Query-specific output is written to `.contextvault/exports/prepared-context.md`.
+- Existing `vault:export` remains the broad terminal export.
 
 #### Context Linking
 
@@ -378,7 +404,13 @@ Examples:
 
 Status:
 
-- Future.
+- Implemented through explicit local links:
+
+```bash
+npm run vault:link -- <from-session-id> <to-session-id> "fixed by"
+```
+
+- Automatic link suggestions remain future work.
 
 #### Context Memory
 
@@ -402,7 +434,8 @@ Stored in:
 
 Status:
 
-- Partially implemented. `memory.md` is created by `vault:init`, but there is no automated memory maintenance yet.
+- Implemented through `npm run vault:memory`.
+- Manual memory content is preserved; ContextVault only replaces its marked generated block.
 
 #### Context Timeline
 
@@ -419,7 +452,8 @@ Examples:
 
 Status:
 
-- Future.
+- Implemented through `npm run vault:timeline`.
+- Output is written to `.contextvault/exports/context-timeline.md`.
 
 #### Future Integrations
 
@@ -445,20 +479,27 @@ After Context Engine is mature:
 - Browser ZIP export
 - Terminal search
 - Shared context model
+- Terminal context normalization
+- Local context index
+- Context retrieval
+- Context composer
+- Context memory maintenance
+- Explicit session linking
+- Context timeline
 
 ### In Progress
 
-- Documentation and positioning
+- Context Engine hardening
+- Browser normalization design
 - Browser adapter hardening
 - Demo/storytelling assets
 
 ### Future
 
-- Context indexing
-- Context retrieval
-- Context composer
-- Context linking
-- Context timeline
+- Browser context migration to the shared engine
+- Optional local semantic indexing
+- Automatic context-link suggestions
+- Stale task and memory conflict detection
 - Automatic agent capture
 - MCP server
 - VS Code extension
@@ -467,6 +508,18 @@ After Context Engine is mature:
 - Optional self-hosted sync
 
 ## Changelog
+
+### 2026-06-27 - Context Engine MVP
+
+- Added terminal session normalization into `ContextSession` and `ContextEvent`.
+- Added `vault:index` with a local JSON index.
+- Added query-ranked `vault:retrieve`.
+- Added `vault:prepare` and `prepared-context.md`.
+- Added generated long-term memory maintenance with `vault:memory`.
+- Added explicit session relationships with `vault:link`.
+- Added chronological context export with `vault:timeline`.
+- Added backward compatibility for legacy snake_case session metadata.
+- Confirmed browser extension behavior remains unchanged.
 
 ### 2026-06-06 - Vault Terminal MVP
 
@@ -502,6 +555,17 @@ Vault Terminal smoke test:
 npm run vault:init
 npm run vault:list
 npm run vault:export
+npm run vault:index
+npm run vault:retrieve -- "auth middleware"
+npm run vault:prepare -- "auth middleware"
+npm run vault:memory
+npm run vault:timeline
+```
+
+Automated Docker smoke test:
+
+```bash
+docker compose run --rm dev sh test/context-engine-smoke.sh
 ```
 
 ## Load Browser Extension In Chrome

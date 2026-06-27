@@ -2,6 +2,16 @@ import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 import { execSync } from "node:child_process";
+import {
+  buildContextIndex,
+  buildTimeline,
+  ensureEngineStorage,
+  linkSessions,
+  prepareContext,
+  renderRetrieval,
+  retrieveContext,
+  updateProjectMemory,
+} from "./context-engine.mjs";
 
 const ROOT = process.cwd();
 const VAULT_DIR = path.join(ROOT, ".contextvault");
@@ -55,6 +65,7 @@ function ensureVault() {
   ensureDir(VAULT_DIR);
   ensureDir(SESSIONS_DIR);
   ensureDir(EXPORTS_DIR);
+  ensureEngineStorage(ROOT);
 
   writeIfMissing(
     CONFIG_PATH,
@@ -134,6 +145,8 @@ function sessionMarkdown(session) {
     `source: ${yamlValue(session.source)}`,
     `started_at: ${yamlValue(session.started_at)}`,
     `ended_at: ${yamlValue(session.ended_at)}`,
+    `cwd: ${yamlValue(session.cwd)}`,
+    `git_branch: ${yamlValue(session.git_branch)}`,
     `event_count: ${session.events.length}`,
     "---",
     "",
@@ -142,6 +155,7 @@ function sessionMarkdown(session) {
   for (const event of session.events.map(normalizeEvent)) {
     lines.push(`## ${heading(event.type)}`);
     lines.push("");
+    lines.push(`<!-- context-event: ${JSON.stringify({ createdAt: event.createdAt, metadata: event.metadata })} -->`);
     lines.push(event.content);
     lines.push("");
   }
@@ -457,6 +471,72 @@ function search(queryParts) {
   if (found === 0) console.log("No matches.");
 }
 
+function indexContext() {
+  ensureVault();
+  const index = buildContextIndex(ROOT);
+  console.log(`Indexed ${index.sessionCount} sessions and ${index.eventCount} events.`);
+  console.log(`Saved ${path.relative(ROOT, path.join(VAULT_DIR, "index", "context-index.json"))}`);
+}
+
+function retrieve(queryParts) {
+  const query = queryParts.join(" ").trim();
+  if (!query) {
+    console.error('Usage: npm run vault:retrieve -- "query"');
+    process.exitCode = 1;
+    return;
+  }
+  try {
+    const result = retrieveContext(ROOT, query);
+    console.log(renderRetrieval(result));
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  }
+}
+
+function prepare(queryParts) {
+  const query = queryParts.join(" ").trim();
+  if (!query) {
+    console.error('Usage: npm run vault:prepare -- "query"');
+    process.exitCode = 1;
+    return;
+  }
+  try {
+    const result = prepareContext(ROOT, query);
+    console.log(`Prepared ${path.relative(ROOT, result.outputPath)}`);
+    console.log(`Included ${result.retrieval.results.length} relevant events from ${result.retrieval.sessions.length} sessions.`);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  }
+}
+
+function memory() {
+  const result = updateProjectMemory(ROOT);
+  console.log(`Updated ${path.relative(ROOT, result.memoryPath)} with ${result.eventCount} decisions, tasks, and problems.`);
+}
+
+function link(args) {
+  const [from, to, ...relationshipParts] = args;
+  if (!from || !to) {
+    console.error('Usage: npm run vault:link -- <from-session-id> <to-session-id> "relationship"');
+    process.exitCode = 1;
+    return;
+  }
+  try {
+    const result = linkSessions(ROOT, from, to, relationshipParts.join(" ") || "related");
+    console.log(`Linked ${result.from} -> ${result.to}: ${result.relationship}`);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  }
+}
+
+function timeline() {
+  const result = buildTimeline(ROOT);
+  console.log(`Generated ${path.relative(ROOT, result.outputPath)} with ${result.eventCount} events.`);
+}
+
 async function main() {
   const [command, ...args] = process.argv.slice(2);
 
@@ -479,15 +559,39 @@ async function main() {
     case "search":
       search(args);
       break;
+    case "index":
+      indexContext();
+      break;
+    case "retrieve":
+      retrieve(args);
+      break;
+    case "prepare":
+      prepare(args);
+      break;
+    case "memory":
+      memory();
+      break;
+    case "link":
+      link(args);
+      break;
+    case "timeline":
+      timeline();
+      break;
     default:
-      console.log(`Usage: node scripts/vault-terminal.mjs <init|record|list|show|export|search>
+      console.log(`Usage: node scripts/vault-terminal.mjs <init|record|list|show|export|search|index|retrieve|prepare|memory|link|timeline>
 
 Examples:
   npm run vault:init
   npm run vault:record
   npm run vault:list
   npm run vault:show -- latest
-  npm run vault:search -- auth`);
+  npm run vault:search -- auth
+  npm run vault:index
+  npm run vault:retrieve -- "auth middleware"
+  npm run vault:prepare -- "auth middleware"
+  npm run vault:memory
+  npm run vault:link -- <from-id> <to-id> "fixed by"
+  npm run vault:timeline`);
       if (command) process.exitCode = 1;
   }
 }

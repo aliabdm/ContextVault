@@ -19,9 +19,9 @@ const features = [
       'IndexedDB for browser conversations and local Markdown for terminal sessions. Your context stays on your machine.',
   },
   {
-    title: 'Export and search',
+    title: 'Context Engine',
     description:
-      'Search terminal memory and export structured Markdown or ZIP files for prompts, handoffs, archives, and future context packages.',
+      'Normalize, index, retrieve, link, and prepare focused project context for prompts, handoffs, and future agent workflows.',
   },
 ]
 

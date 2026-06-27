@@ -43,3 +43,49 @@ export interface ContextMemory {
   updatedAt: string;
   sessions: ContextSession[];
 }
+
+export interface ContextLink {
+  from: string;
+  to: string;
+  relationship: string;
+  createdAt: string;
+}
+
+export interface ContextIndexEntry {
+  id: string;
+  sessionId: string;
+  sessionTitle: string;
+  source: ContextSource | string;
+  type: ContextEventType;
+  content: string;
+  createdAt: string;
+  file?: string;
+  terms: string[];
+}
+
+export interface ContextIndex {
+  version: number;
+  generatedAt: string;
+  sessionCount: number;
+  eventCount: number;
+  sessions: Array<{
+    id: string;
+    title: string;
+    source: ContextSource | string;
+    startedAt: string;
+    endedAt?: string;
+    eventCount: number;
+    file?: string;
+    terms: string[];
+  }>;
+  events: ContextIndexEntry[];
+  links: ContextLink[];
+}
+
+export interface ContextRetrievalResult {
+  query: string;
+  generatedAt: string;
+  results: Array<ContextIndexEntry & { score: number }>;
+  sessions: ContextIndex["sessions"];
+  links: ContextLink[];
+}

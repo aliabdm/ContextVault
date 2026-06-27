@@ -22,7 +22,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.1.0-2563eb?style=for-the-badge" alt="version" />
+  <img src="https://img.shields.io/badge/version-1.2.0-2563eb?style=for-the-badge" alt="version" />
   <img src="https://img.shields.io/badge/license-MIT-16a34a?style=for-the-badge" alt="license" />
   <img src="https://img.shields.io/badge/build-passing-22c55e?style=for-the-badge" alt="build" />
   <img src="https://img.shields.io/badge/privacy-local--first-7c3aed?style=for-the-badge" alt="privacy" />
@@ -199,7 +199,11 @@ IndexedDB Storage                      Local Filesystem Storage
          \                                    /
           -------- Shared Context Layer ------
                           |
-                  Markdown / ZIP Export
+                    Context Engine
+            Normalize / Index / Retrieve
+             Prepare / Memory / Link
+                          |
+             Markdown / ZIP / Timeline
 ```
 
 Browser key idea:
@@ -368,6 +372,110 @@ Vault Terminal writes local files under `.contextvault/`:
 
 ---
 
+## Context Engine MVP
+
+The Context Engine turns recorded terminal sessions into searchable, reusable project memory while keeping Markdown as the source of truth.
+
+### Normalize And Index
+
+Normalize legacy and current session files into the shared `ContextSession` and `ContextEvent` model, then build a local JSON index:
+
+```bash
+npm run vault:index
+```
+
+Output:
+
+```text
+.contextvault/index/context-index.json
+```
+
+The normalizer supports existing snake_case session fields such as `started_at`, `ended_at`, and `git_branch`. New event timestamps use `createdAt` internally, while old sessions fall back to the session timestamp.
+
+### Retrieve Relevant Context
+
+Retrieve decisions, tasks, problems, notes, and messages related to a query:
+
+```bash
+npm run vault:retrieve -- "auth middleware"
+```
+
+Retrieval is local and deterministic. It ranks phrase matches, token matches, event importance, and recency without sending context to an external model or API.
+
+### Prepare An Agent Context Package
+
+Generate a focused context package for Codex, Claude Code, Cursor, or another AI tool:
+
+```bash
+npm run vault:prepare -- "auth middleware"
+```
+
+Output:
+
+```text
+.contextvault/exports/prepared-context.md
+```
+
+The package contains project memory, relevant sessions, decisions, tasks, problems, notes, source metadata, and guidance for the next agent.
+
+### Maintain Project Memory
+
+Refresh the generated decisions, tasks, and problems section in `memory.md`:
+
+```bash
+npm run vault:memory
+```
+
+Manual content in `memory.md` is preserved. ContextVault only replaces its marked generated block.
+
+### Link Sessions
+
+Create an explicit relationship between two sessions:
+
+```bash
+npm run vault:link -- <from-session-id> <to-session-id> "fixed by"
+```
+
+Links are stored locally in:
+
+```text
+.contextvault/links.json
+```
+
+### Generate A Timeline
+
+Create a chronological project-context timeline:
+
+```bash
+npm run vault:timeline
+```
+
+Output:
+
+```text
+.contextvault/exports/context-timeline.md
+```
+
+### Engine Storage
+
+```text
+.contextvault/
+  config.json
+  memory.md
+  links.json
+  index/
+    context-index.json
+  sessions/
+  exports/
+    contextvault-terminal-export.md
+    prepared-context.md
+    context-timeline.md
+```
+
+No backend, account, vector database, embedding API, or cloud service is required.
+
+---
+
 ## Roadmap
 
 <p>
@@ -387,6 +495,13 @@ Vault Terminal writes local files under `.contextvault/`:
 - Browser ZIP export
 - Terminal search
 - Shared context model
+- Context normalization for terminal sessions
+- Local context index
+- Query-based context retrieval
+- Prepared agent context packages
+- Generated project memory block
+- Explicit session links
+- Context timeline export
 
 ### In Progress
 
@@ -396,17 +511,15 @@ Vault Terminal writes local files under `.contextvault/`:
 
 ### Future
 
-Context Engine comes before integrations. The engine is the product; integrations are adapters.
+The Context Engine MVP now exists. The next work is hardening retrieval and adding adapters that emit the same shared context model.
 
 - Full-text search inside browser conversations
 - Auto-tagging system
 - Draft recovery
-- Context normalization across browser, terminal, editor, agent, and human-note sources
-- Context indexing with future `npm run vault:index`
-- Context retrieval with future `npm run vault:retrieve -- "query"`
-- Context composer with future `npm run vault:prepare -- "query"`
-- Context linking between related sessions
-- Context timeline
+- Browser context migration to the shared normalized model
+- Retrieval ranking improvements and optional local semantic indexing
+- Automatic context linking suggestions
+- Memory conflict and stale-task detection
 - MCP server
 - VS Code extension
 - Claude Code integration
@@ -424,6 +537,8 @@ Context Engine comes before integrations. The engine is the product; integration
 - Browser storage is local to the browser profile.
 - Terminal storage is local to the repository where `.contextvault/` is initialized.
 - Terminal capture records explicitly entered context; it does not automatically intercept every shell process.
+- Context Engine retrieval is currently lexical and deterministic; it does not use embeddings or semantic model calls.
+- Browser conversations are not yet migrated into the Context Engine index.
 
 ---
 
