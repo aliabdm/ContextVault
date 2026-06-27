@@ -190,8 +190,30 @@ Current stop point:
 Current stop point:
 
 - Productization implementation and local QA are complete.
-- Latest profile evidence-query edit needs its own commit/push.
-- Main release needs commit/push, Vercel production verification, final progress checkpoint, and user-facing launch copy.
+- Profile evidence-query update was committed and pushed in `40cf711` (`add ContextVault evidence query examples`).
+- Main ContextVault 1.3.0 release was committed and pushed in `d08910b` (`unify browser and terminal context engine`).
+- Vercel production deployment `dpl_7JQNBHYcHfRqFdPKfot2zC1VA2zm` reached `READY` for commit `d08910b56a5cd5e9ce3deca294c0cbedd6dcb381`.
+- Production root `https://context-vault-two.vercel.app/` returned HTTP 200 with unified-engine copy and demo markup.
+- Production FAQ `https://context-vault-two.vercel.app/faq` returned HTTP 200 with the technical FAQ and evidence-query examples.
+- Production MP4 returned HTTP 200, `Content-Type: video/mp4`, and `Content-Length: 219409`.
+
+Final verification summary:
+
+- 56 tests passed.
+- Unified Docker smoke test passed.
+- Extension TypeScript/Vite production build passed.
+- Landing Next 16 production build passed with `/` and `/faq` static routes.
+- Root and landing `npm audit` checks report zero vulnerabilities.
+- Packaged `contextvault` CLI tarball installed and ran successfully in a clean temporary project.
+- Desktop/mobile landing QA passed without horizontal overflow.
+- Extension capture/storage behavior was not changed; only release metadata changed in extension runtime files.
+
+Exact stop point:
+
+- ContextVault 1.3.0 unified-engine/productization release is complete, pushed, deployed, and verified.
+- No implementation work remains in progress.
+- External follow-up: npm registry publication requires the owner's npm credentials and is intentionally not performed automatically.
+- Future product work: optional grounded answer adapter, direct automatic capture adapters, semantic retrieval, MCP, and editor integrations.
 
 ## 0. Current Follow-up Task
 
