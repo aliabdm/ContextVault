@@ -2,7 +2,7 @@
 
 Last updated: 2026-06-27
 Current branch: `main`
-Current working phase: Unified Context Engine implementation in progress
+Current working phase: ContextVault 1.3.0 release packaging complete; npm publication pending user confirmation
 
 ## 0A. Unified Context Engine Follow-up
 
@@ -214,6 +214,78 @@ Exact stop point:
 - No implementation work remains in progress.
 - External follow-up: npm registry publication requires the owner's npm credentials and is intentionally not performed automatically.
 - Future product work: optional grounded answer adapter, direct automatic capture adapters, semantic retrieval, MCP, and editor integrations.
+
+## 0C. Release Packaging Follow-up
+
+Objective:
+
+- Prepare verified GitHub Release assets for existing release `v1.3.0` without publishing to npm.
+- Confirm npm package metadata, package contents, local/private exclusions, extension archive structure, and clean-install CLI behavior.
+
+Plan:
+
+1. Audit `package.json`, `.gitignore`, npm package allowlist, CLI help behavior, and current git state.
+2. Fix `contextvault --help` to exit successfully if required.
+3. Run `npm install`, all tests, extension build, audit, and `npm pack` inside Docker.
+4. Place generated assets under a dedicated local release directory.
+5. Create an extension ZIP whose root contains the built `dist/` contents, including `manifest.json` at archive root.
+6. Install the tarball globally in a clean Docker environment and run `init`, `--help`, and `history --since 2w`.
+7. Inspect tarball and ZIP file lists and generate SHA-256 checksums.
+8. Update this file with exact artifact paths/results. Do not run `npm publish`.
+
+Expected files:
+
+- `scripts/vault-terminal.mjs`: successful `--help` handling if needed.
+- `release/contextvault-1.3.0.tgz`: npm package artifact.
+- `release/contextvault-extension-v1.3.0.zip`: unpacked-extension artifact.
+- `release/SHA256SUMS.txt`: integrity hashes for both assets.
+- `AGENT_PROGRESS.md`: packaging checkpoint.
+
+Guardrails:
+
+- Do not publish to npm until the user explicitly confirms login and readiness.
+- Do not include `.contextvault`, local sessions, unrelated untracked files, source screenshots, or private files in either artifact.
+- Keep `manifest.json` at the extension ZIP root so users can unzip and select that directory with Chrome `Load unpacked`.
+
+Audit checkpoint:
+
+- Release packaging task documented.
+- Confirmed `package.json`: name `contextvault`, version `1.3.0`, Node `>=20`, and `contextvault` bin mapped to `scripts/vault-terminal.mjs`.
+- Confirmed npm `files` allowlist contains only the two CLI scripts, README, and LICENSE; npm-required `package.json` is added automatically.
+- Confirmed `.contextvault`, environment files, logs, build output, and local/private files are excluded.
+- Fixed `contextvault --help`, `contextvault -h`, and `contextvault help` to exit successfully while unknown commands still exit with failure.
+- Added `release/` to `.gitignore` so generated release binaries are not accidentally committed or included as source changes.
+
+Packaging results:
+
+- Package metadata/help behavior is ready.
+- Docker `npm install` completed with zero audit vulnerabilities.
+- All 56 tests passed.
+- Extension TypeScript/Vite production build passed.
+- `npm pack` created `release/contextvault-1.3.0.tgz` (19.1 KB package output; 5 packaged files).
+- Created `release/contextvault-extension-v1.3.0.zip` (54.0 KB) from the contents of `dist/`; `manifest.json` is at ZIP root.
+- Tarball inspection confirmed only:
+  - `package/LICENSE`
+  - `package/package.json`
+  - `package/README.md`
+  - `package/scripts/context-engine.mjs`
+  - `package/scripts/vault-terminal.mjs`
+- Extension ZIP inspection confirmed only built extension assets, icons, popup HTML, scripts, and root manifest; no source/private/local context files.
+- Generated `release/SHA256SUMS.txt`.
+- SHA-256 tarball: `3debc7160759d00579a09c1c03880741436c02289be1bcb677a71dccab9bfc19`.
+- SHA-256 extension ZIP: `e69ee8eff57fb2263a73bc5eb3d498e02c6686889eb9612c5ca771d13fc36de9`.
+- Clean Node 22 container test installed the tarball globally and successfully ran:
+  - `contextvault init`
+  - `contextvault --help`
+  - `contextvault history --since 2w`
+- Clean install created local memory, sessions, and browser-import directories and finished with `CLEAN_GLOBAL_INSTALL_OK`.
+
+Exact stop point:
+
+- GitHub Release assets are complete and verified under local ignored `release/`.
+- No npm publish command was run.
+- Source changes (`--help`, release ignore rule, progress log) still need commit/push.
+- User must upload the tarball and extension ZIP to release `v1.3.0`; `SHA256SUMS.txt` is recommended as a third asset.
 
 ## 0. Current Follow-up Task
 

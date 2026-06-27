@@ -598,6 +598,29 @@ function timeline() {
   console.log(`Generated ${path.relative(ROOT, result.outputPath)} with ${result.eventCount} events.`);
 }
 
+function usageText() {
+  return `Usage: contextvault <init|record|list|show|export|search|import|index|retrieve|prepare|memory|link|timeline|history|tasks|decisions|problems>
+
+Examples:
+  contextvault init
+  contextvault record
+  contextvault import ./chatgpt-export.md
+  contextvault import ./contextvault-export.zip
+  contextvault index
+  contextvault retrieve "auth middleware"
+  contextvault retrieve "auth" --type decision --source codex --since 14d
+  contextvault prepare "auth middleware"
+  contextvault history --since 14d
+  contextvault tasks --since 2w
+  contextvault decisions auth --source codex
+  contextvault problems redis --since 30d
+  contextvault memory
+  contextvault link <from-id> <to-id> "fixed by"
+  contextvault timeline
+
+The existing npm run vault:* commands remain supported.`;
+}
+
 async function main() {
   const [command, ...args] = process.argv.slice(2);
 
@@ -653,28 +676,15 @@ async function main() {
     case "history":
       history(args);
       break;
+    case undefined:
+    case "help":
+    case "--help":
+    case "-h":
+      console.log(usageText());
+      break;
     default:
-      console.log(`Usage: contextvault <init|record|list|show|export|search|import|index|retrieve|prepare|memory|link|timeline|history|tasks|decisions|problems>
-
-Examples:
-  contextvault init
-  contextvault record
-  contextvault import ./chatgpt-export.md
-  contextvault import ./contextvault-export.zip
-  contextvault index
-  contextvault retrieve "auth middleware"
-  contextvault retrieve "auth" --type decision --source codex --since 14d
-  contextvault prepare "auth middleware"
-  contextvault history --since 14d
-  contextvault tasks --since 2w
-  contextvault decisions auth --source codex
-  contextvault problems redis --since 30d
-  contextvault memory
-  contextvault link <from-id> <to-id> "fixed by"
-  contextvault timeline
-
-The existing npm run vault:* commands remain supported.`);
-      if (command) process.exitCode = 1;
+      console.log(usageText());
+      process.exitCode = 1;
   }
 }
 
