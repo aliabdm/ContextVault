@@ -31,7 +31,10 @@ Current issue / exact stop:
 - Reinstalled Docker development dependencies, then verified all 56 tests and the extension production build.
 - Verified the landing-page production build, including TypeScript and static generation.
 - `git diff --check` passed; unrelated existing untracked files remain excluded.
-- Commit, push, deployment check, and GitHub release-note refresh remain.
+- Project changes committed as `299915c` (`publish ContextVault CLI on npm`) and pushed to `origin/main`.
+- Personal profile README committed as `072421a` (`add ContextVault npm quick start`) and pushed to its `origin/main`.
+- Vercel production deployment `dpl_2Efu8kovpe7Lydwah8xFUQRML7Nk` reached `READY` for commit `299915c`.
+- Only the existing GitHub Release text/assets require a manual UI update; the final copy and exact asset paths are provided to the user.
 
 Release checksums:
 
