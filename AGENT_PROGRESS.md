@@ -2,7 +2,63 @@
 
 Last updated: 2026-06-27
 Current branch: `main`
-Current working phase: Context Engine MVP committed, push pending
+Current working phase: Context Engine MVP released; preparing launch communication and profile README update
+
+## 0. Current Follow-up Task
+
+Objective:
+
+- Explain the Context Engine MVP in clear non-technical language.
+- Verify that the main repository README documents the released functionality.
+- Update the personal GitHub profile README so ContextVault reflects Browser Capture, Terminal Capture, and the Context Engine.
+- Prepare a LinkedIn release update and a reusable prompt for generating technical articles.
+
+Plan:
+
+1. Verify the current Context Engine claims against the implementation and main README.
+2. Inspect the local `profile-readme` repository and its Git remote/status.
+3. Update only the ContextVault positioning in the personal README while preserving the rest of the profile.
+4. Review the diff, then commit and push the profile update if its remote is configured.
+5. Record all outcomes and the exact stopping point in this file.
+
+Expected files:
+
+- `AGENT_PROGRESS.md`: continuity log for this follow-up.
+- `profile-readme/README.md`: personal GitHub profile positioning for ContextVault.
+
+Technical decisions:
+
+- Do not claim semantic or embedding-based retrieval; the released engine is lexical and deterministic.
+- Clearly distinguish implemented Terminal Engine support from Browser Capture, which remains functional but is not yet normalized into the engine index.
+- Preserve all unrelated personal profile content.
+
+Current stop point:
+
+- Main README verification completed: the full engine commands, storage, limitations, and roadmap entries are present.
+- One stale roadmap badge still says the Context Engine is next; it must be corrected to implemented.
+- `profile-readme` is a clean standalone clone of `https://github.com/aliabdm/aliabdm.git` on `main`.
+- The personal README already presents Browser and Terminal Capture, but it does not yet describe the released Context Engine capabilities.
+- Next edit: correct the main README badge and expand the ContextVault section in the personal README.
+
+Completed follow-up edits:
+
+- Corrected the main README roadmap badge from `next-context engine` to `implemented-context engine`.
+- Expanded the personal README with a Context Engine badge and accurate release positioning.
+- Added implemented engine capabilities to the personal feature table: indexing/retrieval, prepared agent context packages, project memory, session links, and timeline.
+- Added the `Git tracks code. ContextVault tracks context.` positioning and a compact architecture flow.
+- Updated the Open Source Projects description to describe ContextVault as a local-first context engine.
+
+Decision notes:
+
+- Kept Browser Capture and Terminal Capture visible as equal inputs while describing the engine as the layer operating over normalized terminal context today.
+- Used `indexes and retrieves` instead of semantic-search language because current retrieval is lexical and deterministic.
+
+Current stop point:
+
+- Both Markdown diffs passed `git diff --check`; no whitespace errors or unsupported claims were found.
+- Personal profile README was committed and pushed to `aliabdm/aliabdm` in commit `7f5c104` (`update ContextVault profile positioning`).
+- Main ContextVault README badge correction and this progress update are not yet committed.
+- Next step: commit and push the ContextVault repository changes, then record the final release-communication checkpoint.
 
 ## 1. Current Objective
 

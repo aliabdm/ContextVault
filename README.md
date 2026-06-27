@@ -481,7 +481,7 @@ No backend, account, vector database, embedding API, or cloud service is require
 <p>
   <img src="https://img.shields.io/badge/implemented-browser%20capture-22c55e?style=flat-square" alt="browser capture implemented" />
   <img src="https://img.shields.io/badge/implemented-terminal%20capture-22c55e?style=flat-square" alt="terminal capture implemented" />
-  <img src="https://img.shields.io/badge/next-context%20engine-f97316?style=flat-square" alt="context engine next" />
+  <img src="https://img.shields.io/badge/implemented-context%20engine-22c55e?style=flat-square" alt="context engine implemented" />
   <img src="https://img.shields.io/badge/future-MCP%20%2B%20VS%20Code-7c3aed?style=flat-square" alt="future integrations" />
 </p>
 
