@@ -2,14 +2,18 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
+import JSZip from "jszip";
 
 // The context engine is intentionally plain ESM so the CLI can run without a build step.
 // @ts-ignore No declaration file is needed for the local CLI module.
 import {
   buildContextIndex,
   buildTimeline,
+  importBrowserExports,
   linkSessions,
+  listContextEvents,
   normalizeSessionMarkdown,
+  parseSince,
   prepareContext,
   retrieveContext,
   updateProjectMemory,
@@ -58,6 +62,131 @@ Keep authentication checks in middleware.
       content: "Keep authentication checks in middleware.",
       createdAt: "2026-06-01T10:00:00.000Z",
     });
+  });
+
+  it("normalizes browser exports into the shared context model", () => {
+    const session = normalizeSessionMarkdown(`---
+title: Auth discussion
+platform: chatgpt
+model: ChatGPT
+date: 2026-06-10T10:00:00.000Z
+message_count: 2
+conversation_id: conv-auth
+url: "https://chatgpt.com/c/conv-auth"
+---
+
+## User
+
+Why does the login redirect loop?
+
+## Assistant
+
+The authentication middleware order is incorrect.
+`);
+
+    expect(session).toMatchObject({
+      id: "browser-conv-auth",
+      title: "Auth discussion",
+      source: "browser",
+      startedAt: "2026-06-10T10:00:00.000Z",
+      metadata: { platform: "chatgpt", model: "ChatGPT" },
+    });
+    expect(session.events).toHaveLength(2);
+    expect(session.events[0]).toMatchObject({ type: "user", metadata: { platform: "chatgpt", role: "user" } });
+    expect(session.events[1]).toMatchObject({ type: "agent", metadata: { platform: "chatgpt", role: "assistant" } });
+  });
+
+  it("imports browser Markdown idempotently and retrieves browser and terminal context together", async () => {
+    const { root, sessions } = tempVault();
+    writeSession(sessions, "terminal-auth.md", `---
+id: terminal-auth
+title: Implement auth fix
+source: codex
+started_at: 2026-06-11T10:00:00.000Z
+---
+
+## Decision
+
+Keep auth checks in middleware.
+`);
+    const exportPath = path.join(root, "chatgpt-auth.md");
+    fs.writeFileSync(exportPath, `---
+title: Diagnose auth redirect
+platform: chatgpt
+date: 2026-06-10T10:00:00.000Z
+message_count: 2
+conversation_id: conv-auth
+---
+
+## User
+
+Why does auth redirect loop?
+
+## Assistant
+
+Check the middleware order before the login callback.
+`, "utf8");
+
+    const first = await importBrowserExports(root, exportPath);
+    const second = await importBrowserExports(root, exportPath);
+    const index = buildContextIndex(root);
+    const retrieval = retrieveContext(root, "auth middleware");
+
+    expect(first).toMatchObject({ imported: 1, updated: 0, skipped: 0 });
+    expect(second).toMatchObject({ imported: 0, updated: 0, skipped: 1 });
+    expect(index.sessionCount).toBe(2);
+    expect(index.events.filter((event: { sessionId: string }) => event.sessionId === "browser-conv-auth")).toHaveLength(2);
+    expect(retrieval.sessions.map((session: { id: string }) => session.id).sort()).toEqual(["browser-conv-auth", "terminal-auth"]);
+    expect(retrieval.results.some((event: { source: string; platform?: string }) => event.source === "browser" && event.platform === "chatgpt")).toBe(true);
+  });
+
+  it("imports browser conversations from ZIP exports", async () => {
+    const { root } = tempVault();
+    const zip = new JSZip();
+    zip.file("llm-history/chat.md", `---
+title: Redis browser research
+platform: claude
+date: 2026-06-10T10:00:00.000Z
+message_count: 2
+conversation_id: zip-redis
+---
+
+## User
+
+How should Redis invalidation work?
+
+## Assistant
+
+Use explicit cache tags and measure stale reads.
+`);
+    zip.file("llm-history/readme.txt", "not an export");
+    const zipPath = path.join(root, "browser-export.zip");
+    fs.writeFileSync(zipPath, await zip.generateAsync({ type: "nodebuffer" }));
+
+    const result = await importBrowserExports(root, zipPath);
+    const index = buildContextIndex(root);
+
+    expect(result).toMatchObject({ imported: 1, updated: 0, skipped: 0, errors: [] });
+    expect(index.sessions[0]).toMatchObject({ id: "browser-zip-redis", source: "browser", platform: "claude" });
+    expect(index.eventCount).toBe(2);
+  });
+
+  it("rejects oversized browser Markdown imports", async () => {
+    const { root } = tempVault();
+    const exportPath = path.join(root, "oversized.md");
+    fs.writeFileSync(exportPath, `---
+title: Oversized
+platform: chatgpt
+date: 2026-06-10T10:00:00.000Z
+conversation_id: oversized
+---
+
+## User
+
+${"x".repeat(10 * 1024 * 1024)}
+`, "utf8");
+
+    await expect(importBrowserExports(root, exportPath)).rejects.toThrow("10 MB Markdown import limit");
   });
 
   it("indexes sessions and ranks relevant decisions, tasks, and problems", () => {
@@ -189,5 +318,73 @@ Reorder authentication middleware.
     expect(output.indexOf("Discover redirect bug")).toBeLessThan(output.indexOf("Fix redirect bug"));
     expect(output).toContain("discover-1 -> fix-1: fixed by");
     expect(timeline.eventCount).toBe(2);
+  });
+
+  it("lists focused tasks, decisions, and problems from the unified index", async () => {
+    const { root, sessions } = tempVault();
+    writeSession(sessions, "work.md", `---
+id: work-1
+title: Auth follow-up
+source: human
+started_at: 2026-06-12T10:00:00.000Z
+---
+
+## Task
+
+Add a login regression test.
+
+## Decision
+
+Keep redirects in middleware.
+
+## Problem
+
+Callback can loop.
+`);
+
+    expect(listContextEvents(root, "task").map((event: { content: string }) => event.content)).toEqual(["Add a login regression test."]);
+    expect(listContextEvents(root, "decision")).toHaveLength(1);
+    expect(listContextEvents(root, "problem")).toHaveLength(1);
+  });
+
+  it("filters project evidence by query, source, type, and time", async () => {
+    const { root, sessions } = tempVault();
+    writeSession(sessions, "codex-auth.md", `---
+id: codex-auth
+title: Auth architecture
+source: codex
+started_at: 2026-06-20T10:00:00.000Z
+---
+
+## Decision
+
+Keep authentication in middleware.
+`);
+    writeSession(sessions, "human-redis.md", `---
+id: human-redis
+title: Redis investigation
+source: human
+started_at: 2026-05-01T10:00:00.000Z
+---
+
+## Problem
+
+Redis invalidation attempt failed under concurrent writes.
+`);
+
+    const decisions = listContextEvents(root, "decision", {
+      query: "auth",
+      sources: ["codex"],
+      since: "2026-06-15T00:00:00.000Z",
+    });
+    const oldProblems = listContextEvents(root, "problem", { query: "redis", since: "2026-06-01" });
+    const typedHistory = listContextEvents(root, undefined, { types: ["decision"], sources: ["codex"] });
+    const retrieval = retrieveContext(root, "auth", { types: ["decision"], sources: ["codex"] });
+
+    expect(decisions.map((event: { sessionId: string }) => event.sessionId)).toEqual(["codex-auth"]);
+    expect(oldProblems).toHaveLength(0);
+    expect(typedHistory.map((event: { type: string }) => event.type)).toEqual(["decision"]);
+    expect(retrieval.results).toHaveLength(1);
+    expect(parseSince("2w", Date.parse("2026-06-27T00:00:00.000Z"))).toBe("2026-06-13T00:00:00.000Z");
   });
 });

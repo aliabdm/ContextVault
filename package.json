@@ -1,8 +1,20 @@
 {
   "name": "contextvault",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A local-first context platform for AI chats, coding agents, and project memory.",
   "type": "module",
+  "files": [
+    "scripts/context-engine.mjs",
+    "scripts/vault-terminal.mjs",
+    "README.md",
+    "LICENSE"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "bin": {
+    "contextvault": "scripts/vault-terminal.mjs"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -14,11 +26,16 @@
     "vault:export": "node scripts/vault-terminal.mjs export",
     "vault:search": "node scripts/vault-terminal.mjs search",
     "vault:index": "node scripts/vault-terminal.mjs index",
+    "vault:import": "node scripts/vault-terminal.mjs import",
     "vault:retrieve": "node scripts/vault-terminal.mjs retrieve",
     "vault:prepare": "node scripts/vault-terminal.mjs prepare",
     "vault:memory": "node scripts/vault-terminal.mjs memory",
     "vault:link": "node scripts/vault-terminal.mjs link",
     "vault:timeline": "node scripts/vault-terminal.mjs timeline",
+    "vault:history": "node scripts/vault-terminal.mjs history",
+    "vault:tasks": "node scripts/vault-terminal.mjs tasks",
+    "vault:decisions": "node scripts/vault-terminal.mjs decisions",
+    "vault:problems": "node scripts/vault-terminal.mjs problems",
     "demo:vault-terminal": "python scripts/generate-vault-terminal-demo-gif.py",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -27,14 +44,14 @@
     "docker:down": "docker compose down"
   },
   "devDependencies": {
-    "@crxjs/vite-plugin": "^2.0.0-beta.30",
+    "@crxjs/vite-plugin": "^2.7.0",
     "@types/chrome": "^0.0.270",
     "typescript": "^5.5.4",
-    "vite": "^5.4.2",
-    "vitest": "^2.1.0"
+    "vite": "^7.3.6",
+    "vitest": "^4.1.9"
   },
   "dependencies": {
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^5.2.0",
     "jszip": "^3.10.1"
   }
 }

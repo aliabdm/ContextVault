@@ -19,6 +19,8 @@ export interface ContextEvent {
   type: ContextEventType;
   content: string;
   createdAt: string;
+  fingerprint?: string;
+  platform?: string;
   metadata?: Record<string, unknown>;
 }
 
@@ -32,6 +34,13 @@ export interface ContextSession {
   metadata?: {
     cwd?: string;
     gitBranch?: string;
+    collection?: "browser" | "terminal";
+    platform?: string;
+    model?: string;
+    url?: string;
+    project?: string;
+    tags?: string[];
+    importedFrom?: string;
     [key: string]: unknown;
   };
 }
@@ -60,6 +69,8 @@ export interface ContextIndexEntry {
   content: string;
   createdAt: string;
   file?: string;
+  platform?: string;
+  fingerprint?: string;
   terms: string[];
 }
 
@@ -76,6 +87,7 @@ export interface ContextIndex {
     endedAt?: string;
     eventCount: number;
     file?: string;
+    platform?: string;
     terms: string[];
   }>;
   events: ContextIndexEntry[];

@@ -36,6 +36,10 @@ export default function CtaSection() {
         <p className="mt-4 text-xs text-neutral-600">
           Browser Capture + Terminal Capture - Open source - MIT license
         </p>
+
+        <a href="/faq" className="mt-5 inline-block text-sm font-medium text-vault-300 transition-colors hover:text-white">
+          Read the technical FAQ
+        </a>
       </motion.div>
     </section>
   )

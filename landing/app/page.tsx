@@ -1,6 +1,7 @@
 import Hero from '@/components/Hero'
 import CaptureSurfaces from '@/components/CaptureSurfaces'
 import ContextEngine from '@/components/ContextEngine'
+import EngineDemo from '@/components/EngineDemo'
 import Problem from '@/components/Problem'
 import Solution from '@/components/Solution'
 import Features from '@/components/Features'
@@ -15,6 +16,7 @@ export default function Home() {
       <Hero />
       <CaptureSurfaces />
       <ContextEngine />
+      <EngineDemo />
       <Problem />
       <Solution />
       <Features />

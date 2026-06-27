@@ -5,7 +5,7 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'ContextVault - Local-first context engine for AI work',
   description:
-    'Capture browser LLM chats and terminal agent sessions, index them locally, retrieve relevant memory, and prepare portable context packages. No backend. No accounts.',
+    'Capture browser LLM chats and terminal agent sessions, combine them in one local index, retrieve relevant memory, and prepare portable context packages. No backend. No accounts.',
   icons: {
     icon: '/icons/icon.svg',
   },

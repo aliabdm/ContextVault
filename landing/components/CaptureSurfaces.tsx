@@ -8,7 +8,7 @@ const surfaces = [
     title: 'Use it when the work happens in an LLM web app',
     description:
       'Install the extension, chat normally, and export structured Markdown or ZIP files when the conversation becomes useful context.',
-    steps: ['Open ChatGPT, Claude, Gemini, or another supported LLM', 'Let ContextVault capture the conversation locally', 'Export Markdown or ZIP from the popup'],
+    steps: ['Capture a supported LLM conversation locally', 'Export Markdown or ZIP from the popup', 'Import it with contextvault import'],
     proof: 'Best for prompts, answers, research threads, model comparisons, and account/platform switching.',
   },
   {
@@ -33,7 +33,7 @@ export default function CaptureSurfaces() {
             Capture context where it actually happens
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-neutral-400">
-            Browser Capture and Terminal Capture feed the same local-first context layer.
+            Browser exports and Terminal Capture feed the same local-first Context Engine.
             One preserves conversations. The other preserves agent work and project decisions.
           </p>
         </div>

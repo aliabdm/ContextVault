@@ -16,13 +16,15 @@
   &middot;
   <a href="#installation-dev-mode"><strong>Install</strong></a>
   &middot;
-  <a href="#vault-terminal-mvp"><strong>Vault Terminal</strong></a>
+  <a href="#vault-terminal"><strong>Vault Terminal</strong></a>
+  &middot;
+  <a href="https://context-vault-two.vercel.app/faq"><strong>Technical FAQ</strong></a>
   &middot;
   <a href="#roadmap"><strong>Roadmap</strong></a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-1.2.0-2563eb?style=for-the-badge" alt="version" />
+  <img src="https://img.shields.io/badge/version-1.3.0-2563eb?style=for-the-badge" alt="version" />
   <img src="https://img.shields.io/badge/license-MIT-16a34a?style=for-the-badge" alt="license" />
   <img src="https://img.shields.io/badge/build-passing-22c55e?style=for-the-badge" alt="build" />
   <img src="https://img.shields.io/badge/privacy-local--first-7c3aed?style=for-the-badge" alt="privacy" />
@@ -56,6 +58,16 @@
   </tr>
 </table>
 
+### Unified Context Engine
+
+<p align="center">
+  <img src="landing/public/demo/context-engine-demo.gif" alt="ContextVault imports browser exports, combines them with terminal sessions, retrieves project evidence, and prepares context for the next agent" />
+</p>
+
+<p align="center">
+  <a href="landing/public/demo/context-engine-demo.mp4"><strong>Watch the MP4 demo</strong></a>
+</p>
+
 <table>
   <tr>
     <td align="center"><strong>Browser Capture</strong><br />ChatGPT, Claude, Gemini, Perplexity, Poe, DeepSeek, Copilot</td>
@@ -71,7 +83,7 @@ ContextVault is a local-first context platform with two first-class capture surf
 - **Browser Capture** records conversations from supported LLM web apps.
 - **Terminal Capture** records human, AI, and coding-agent work sessions from the terminal.
 
-Both surfaces store context locally. Both can be exported. Both are designed to help you continue work without losing memory when you switch models, platforms, accounts, tools, agents, or context windows.
+Both surfaces store context locally. Browser exports can now be imported into the same Context Engine used by terminal sessions, so retrieval and prepared context packages can combine conversations and agent work without changing extension behavior.
 
 ---
 
@@ -171,6 +183,9 @@ Context should survive:
 | Tags and project grouping | Organize captured browser conversations |
 | Raw terminal memory | Preserve `/user`, `/agent`, `/decision`, `/task`, `/problem`, and `/paste` blocks without rewriting |
 | Shared context model | Provider-agnostic context types for future browser, terminal, editor, and agent integrations |
+| Unified browser import | Import ContextVault Markdown, ZIP, or export directories into the shared local engine |
+| Cross-surface retrieval | Retrieve relevant browser messages and terminal events in one query |
+| Focused context views | List recorded tasks, decisions, and problems across the unified index |
 | Private by default | No backend, no accounts, no telemetry, no external AI API calls |
 
 ---
@@ -195,6 +210,8 @@ Capture Engine                         Markdown Sessions
 Background Service Worker              .contextvault/
         |                                      |
 IndexedDB Storage                      Local Filesystem Storage
+        |                                      |
+ Markdown / ZIP Export                 Sessions
         \                                      /
          \                                    /
           -------- Shared Context Layer ------
@@ -288,13 +305,25 @@ This starts both the dev server and an Nginx container serving the ChatGPT mock 
 
 ---
 
-## Vault Terminal MVP
+## Vault Terminal
 
 Vault Terminal captures terminal-based human, AI, and coding-agent work sessions as raw Markdown context.
 
 It is intentionally independent from the Chrome extension so browser adapters, popup behavior, permissions, IndexedDB storage, Markdown export, and ZIP export remain intact.
 
 ### Terminal Commands
+
+The package exposes a standard `contextvault` binary. The existing `npm run vault:*` scripts remain available for repository development.
+
+To use the packaged CLI from a local clone:
+
+```bash
+npm install
+npm link
+contextvault init
+```
+
+The package is prepared for npm distribution, but registry publication is intentionally tracked as a separate release action.
 
 Initialize local terminal memory:
 
@@ -356,6 +385,8 @@ Vault Terminal writes local files under `.contextvault/`:
 .contextvault/
   config.json
   memory.md
+  imports/
+    browser/
   sessions/
   exports/
 ```
@@ -372,9 +403,29 @@ Vault Terminal writes local files under `.contextvault/`:
 
 ---
 
-## Context Engine MVP
+## Unified Context Engine
 
-The Context Engine turns recorded terminal sessions into searchable, reusable project memory while keeping Markdown as the source of truth.
+The Context Engine turns imported browser conversations and recorded terminal sessions into searchable, reusable project memory while keeping Markdown as the source of truth.
+
+### Import Browser Conversations
+
+Export a conversation as Markdown or all conversations as ZIP from the extension, then import it into the project vault:
+
+```bash
+npm run vault:import -- ./chatgpt-export.md
+npm run vault:import -- ./contextvault-export.zip
+npm run vault:import -- ./browser-exports/
+```
+
+Direct package command:
+
+```bash
+contextvault import ./contextvault-export.zip
+```
+
+Imported source files are stored under `.contextvault/imports/browser/`. Re-importing identical content is skipped. A changed export with the same `conversation_id` updates the existing imported source instead of creating another session.
+
+Import does not extract ZIP paths to disk. It reads Markdown entries in memory, validates ContextVault frontmatter, sanitizes generated filenames, and enforces limits of 100 MB per input archive, 10 MB per Markdown file, and 1,000 Markdown files per import.
 
 ### Normalize And Index
 
@@ -390,7 +441,7 @@ Output:
 .contextvault/index/context-index.json
 ```
 
-The normalizer supports existing snake_case session fields such as `started_at`, `ended_at`, and `git_branch`. New event timestamps use `createdAt` internally, while old sessions fall back to the session timestamp.
+The normalizer supports terminal snake_case fields such as `started_at`, `ended_at`, and `git_branch`, plus the browser export fields `platform`, `date`, and `conversation_id`. Browser `User` and `Assistant` sections become shared `user` and `agent` events with platform and role metadata.
 
 ### Retrieve Relevant Context
 
@@ -401,6 +452,45 @@ npm run vault:retrieve -- "auth middleware"
 ```
 
 Retrieval is local and deterministic. It ranks phrase matches, token matches, event importance, and recency without sending context to an external model or API.
+
+The result can include browser conversations and terminal sessions in the same response.
+
+### Investigate Project Questions
+
+ContextVault returns dated source evidence instead of generating an unsupported answer:
+
+```bash
+# What happened in the project during the last two weeks?
+npm run vault:history -- --since 2w
+
+# What did Codex decide about authentication?
+npm run vault:decisions -- auth --source codex
+
+# Show captured Redis problems from the last 30 days.
+npm run vault:problems -- redis --since 30d
+
+# Retrieve only Codex decisions related to auth.
+npm run vault:retrieve -- auth --type decision --source codex --since 30d
+```
+
+Supported filters:
+
+- `--type decision,task,problem,note,user,agent`
+- `--source codex`, `--source browser`, or a browser platform such as `--source chatgpt`
+- `--since 24h`, `--since 14d`, `--since 2w`, or an ISO date
+- `--limit 10`
+
+The engine does not currently call an LLM to synthesize prose answers. `vault:prepare` packages the relevant evidence for the agent you choose.
+
+### Inspect Tasks, Decisions, And Problems
+
+```bash
+npm run vault:tasks
+npm run vault:decisions
+npm run vault:problems
+```
+
+Equivalent package commands are `contextvault tasks`, `contextvault decisions`, and `contextvault problems`.
 
 ### Prepare An Agent Context Package
 
@@ -463,6 +553,8 @@ Output:
   config.json
   memory.md
   links.json
+  imports/
+    browser/
   index/
     context-index.json
   sessions/
@@ -495,31 +587,34 @@ No backend, account, vector database, embedding API, or cloud service is require
 - Browser ZIP export
 - Terminal search
 - Shared context model
-- Context normalization for terminal sessions
+- Context normalization for terminal sessions and browser exports
+- Markdown, ZIP, and directory browser import
+- Deterministic duplicate import prevention
 - Local context index
-- Query-based context retrieval
+- Cross-surface query-based context retrieval
 - Prepared agent context packages
+- Focused task, decision, and problem views
+- Filtered project history and evidence queries by source, type, and time
 - Generated project memory block
 - Explicit session links
 - Context timeline export
 
 ### In Progress
 
-- Documentation and positioning
+- npm registry publication
 - Browser adapter hardening
 - Demo/storytelling assets
 
 ### Future
 
-The Context Engine MVP now exists. The next work is hardening retrieval and adding adapters that emit the same shared context model.
+The unified Context Engine now exists. The next work is hardening retrieval and adding direct adapters that emit the same shared context model without manual export/import.
 
-- Full-text search inside browser conversations
 - Auto-tagging system
 - Draft recovery
-- Browser context migration to the shared normalized model
 - Retrieval ranking improvements and optional local semantic indexing
 - Automatic context linking suggestions
 - Memory conflict and stale-task detection
+- Optional local-model or user-configured provider adapter for grounded natural-language answers
 - MCP server
 - VS Code extension
 - Claude Code integration
@@ -538,7 +633,9 @@ The Context Engine MVP now exists. The next work is hardening retrieval and addi
 - Terminal storage is local to the repository where `.contextvault/` is initialized.
 - Terminal capture records explicitly entered context; it does not automatically intercept every shell process.
 - Context Engine retrieval is currently lexical and deterministic; it does not use embeddings or semantic model calls.
-- Browser conversations are not yet migrated into the Context Engine index.
+- Browser conversations enter the Context Engine through explicit Markdown/ZIP import; automatic synchronization from IndexedDB is not implemented.
+- The `contextvault` package binary is implemented and locally testable, but npm registry publication is a separate release action requiring npm credentials.
+- Natural-language answer generation is not built in; current commands retrieve grounded local evidence and prepare it for an agent.
 
 ---
 

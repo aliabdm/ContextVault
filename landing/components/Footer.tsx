@@ -72,6 +72,9 @@ export default function Footer() {
         </div>
 
         <div className="flex items-center gap-4">
+          <a href="/faq" className="text-sm font-medium text-neutral-400 transition-colors hover:text-white">
+            Technical FAQ
+          </a>
           {links.map((link) => (
             <a
               key={link.label}

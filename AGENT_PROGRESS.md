@@ -2,7 +2,196 @@
 
 Last updated: 2026-06-27
 Current branch: `main`
-Current working phase: Context Engine MVP released; launch documentation and profile positioning completed
+Current working phase: Unified Context Engine implementation in progress
+
+## 0A. Unified Context Engine Follow-up
+
+Objective:
+
+- Complete the important non-editor gaps identified after the Context Engine MVP.
+- Unify exported Browser Capture conversations and Terminal Capture sessions under the shared `ContextSource`, `ContextSession`, and `ContextEvent` model.
+- Make indexing, retrieval, and prepared context packages operate across both capture surfaces.
+- Add duplicate protection and focused views for tasks, decisions, and problems.
+- Make Vault Terminal usable as a conventional package CLI rather than requiring repository-specific `npm run` commands.
+- Preserve current extension behavior and browser storage behavior.
+- Update tests, Docker verification, documentation, landing/profile positioning, and launch copy only after implementation is verified.
+
+Execution plan:
+
+1. Audit browser export formats, terminal parser, shared types, package configuration, tests, and current documentation.
+2. Define a backward-compatible browser import path into the engine without modifying extension capture behavior.
+3. Add normalization and deterministic deduplication across imported browser and terminal context.
+4. Extend index/retrieve/prepare to include both sources.
+5. Add focused `tasks`, `decisions`, and `problems` CLI commands.
+6. Add a package `bin` entry and direct CLI command shape suitable for `npx contextvault` after publication.
+7. Add unit coverage and extend the Docker smoke test to cover browser import and focused views.
+8. Run all tests and builds in Docker.
+9. Update README, PLAN, landing page, version metadata, and personal profile only for verified functionality.
+10. Commit, push, verify production deployment, and refresh LinkedIn/article prompts.
+
+Expected files (subject to audit):
+
+- `scripts/context-engine.mjs`: source normalization, deduplication, and unified indexing.
+- `scripts/vault-terminal.mjs`: new import/focused-view CLI commands and direct CLI entry behavior.
+- `src/shared/context/types.ts`: shared source/import/index metadata if required.
+- `package.json` and lockfiles: CLI `bin`, scripts, and release version.
+- `test/context-engine.test.ts` and `test/context-engine-smoke.sh`: unified-engine coverage.
+- `README.md`, `PLAN.md`, landing content, and `profile-readme/README.md`: verified release positioning.
+- `AGENT_PROGRESS.md`: immediate progress checkpoints.
+
+Technical guardrails:
+
+- Browser extension capture, storage, and export behavior must remain unchanged.
+- Browser data enters the engine through explicit local import of existing exports; no hidden interception or backend is introduced.
+- Markdown remains the source of truth; generated JSON remains rebuildable.
+- Deduplication must be deterministic and must not delete source files.
+- Do not claim automatic semantic retrieval or automatic agent interception.
+
+Current stop point:
+
+- Follow-up scope and plan recorded.
+- Audit completed across browser Markdown export, Context Engine, Vault Terminal, shared types, package metadata, unit tests, and Docker smoke test.
+- Implemented explicit Browser Capture import for `.md`, `.zip`, and directories into `.contextvault/imports/browser/`.
+- Browser exports now normalize into shared sessions/events with `source: browser`, platform metadata, `User -> user`, and `Assistant -> agent`.
+- Import is deterministic by browser conversation id: identical imports are skipped and changed exports update the existing source file.
+- Unified indexing/retrieval now reads terminal sessions and imported browser conversations together.
+- Added focused `tasks`, `decisions`, and `problems` views.
+- Added the direct `contextvault` package binary and retained all `npm run vault:*` compatibility.
+- Bumped engine index schema to version 2; project release version update has started at `1.3.0` in the root package.
+- Added unit coverage for browser normalization/import, unified retrieval, duplicate import prevention, and focused event views.
+- Extended the Docker smoke test with browser import, duplicate re-import, unified prepared context, and focused views.
+
+Technical decisions made:
+
+- Imported browser Markdown is retained unchanged as source material; the generated JSON index is always rebuildable.
+- Browser session ids are namespaced as `browser-<conversation_id>` to avoid collisions with terminal ids.
+- Deduplication operates at import/session identity level and never deletes original external exports.
+- Browser message timestamps fall back to the exported conversation date because the current extension Markdown format does not include per-message timestamps.
+- `Assistant` messages map to the shared `agent` event type while retaining `role: assistant` and platform metadata.
+
+Current stop point:
+
+- Core implementation and initial tests are edited but have not been executed yet.
+- Next action: run tests in Docker, fix failures, then complete version/docs/landing/profile updates only after verification.
+
+Verification checkpoint:
+
+- Initial implementation passed all 53 tests.
+- Unified Docker smoke test passed with 3 sessions and 9 events across Browser Capture, Codex, and Claude Code sources.
+- Duplicate browser re-import correctly reported `1 unchanged` and did not increase session/event counts.
+- `npm audit` initially reported 8 development dependency advisories, including outdated Vite/Vitest/CRXJS tooling and `js-yaml`.
+- Upgraded `@crxjs/vite-plugin`, Vite, Vitest, and `js-yaml`; install then reported `0 vulnerabilities`.
+- First post-upgrade test run exposed a `js-yaml` v5 ESM API change: the default import became undefined.
+- Fixed the parser to use the supported named `load` export.
+
+Current stop point:
+
+- Dependency compatibility fix is applied.
+- Full post-upgrade verification passed: 53 tests, extension TypeScript/Vite build, zero `npm audit` findings, and unified smoke test.
+- Vite 8 initially built with a CRXJS Rolldown compatibility warning; pinned current secure Vite 7.3.6 instead, then rebuilt without the warning.
+- Built `contextvault-1.3.0.tgz`, installed it in an empty temporary project, and successfully ran the packaged binary (`contextvault init` and `contextvault tasks`).
+- Package tarball contains only `LICENSE`, `README.md`, package metadata, and the two CLI engine scripts.
+- Updated root/extension/landing release metadata to `1.3.0`.
+- Updated README, PLAN, and landing copy for explicit browser Markdown/ZIP import and unified retrieval.
+- Added a dedicated ZIP import regression test after package verification.
+
+Current stop point:
+
+- Core feature set, security dependency updates, package binary, and primary documentation are implemented.
+- ZIP regression test passed; full suite is now 54 passing tests.
+- Extension production build passed on Vite 7.3.6.
+- Landing copy was updated for browser import and unified retrieval.
+- Landing dependency audit found outdated Next 14 advisories; upgraded to Next 16.2.9 and forced patched PostCSS 8.5.10 through a direct dependency override.
+- Next 16 exposed an invalid CSS import order; moved the Google Fonts import before Tailwind rules.
+- Added an explicit Turbopack root to avoid incorrect monorepo root inference from the two lockfiles.
+- Landing audit now reports zero vulnerabilities and the Next 16 static production build passes.
+- Personal profile README was updated for browser Markdown/ZIP import, cross-surface retrieval, and unified project memory.
+
+Current stop point:
+
+- Implementation, dependency security work, tests, package verification, docs, landing, and profile edits are complete locally.
+- Next.js generated configuration changes were reviewed and retained because they are required/recommended for Next 16.
+- Added import safety limits: 100 MB archive, 10 MB Markdown entry, and 1,000 Markdown files; ZIP entries are never extracted to filesystem paths.
+- The first oversized-input test revealed that all-invalid imports returned a successful result with errors. Changed behavior so an import fails when every candidate is rejected while still allowing partial success for mixed archives/directories.
+- Final root verification: 55 tests passed, `npm audit` reports zero vulnerabilities, and unified smoke test returns `SMOKE_OK`.
+- Browser visual QA passed at 1280x720 and 390x844: no horizontal overflow, both demo images loaded, all five engine stages rendered, and command labels fit their containers.
+- Temporary Nginx QA container was stopped and removed.
+
+Current stop point:
+
+- All implementation, security, test, package, documentation, landing, and profile work is complete and verified locally.
+- Final diff checks passed and no stale 1.2.0/unified-engine claims remain.
+- Personal profile README was committed and pushed to `aliabdm/aliabdm` in commit `57b2319` (`document unified ContextVault engine`).
+- ContextVault repository changes are not yet committed.
+- Next action: commit/push ContextVault, verify Vercel production, then record the exact final checkpoint and provide refreshed launch copy.
+
+## 0B. Productization Follow-up
+
+New user goal:
+
+- Make ContextVault feel like a marketable product that can answer evidence-oriented project questions, explain itself deeply, and demonstrate the complete workflow without paid infrastructure.
+- Add a technical FAQ/explanation surface, a unified-engine demo video, and polished launch material.
+
+Product decision:
+
+- Implement deterministic evidence queries now: time-bounded history plus type/source/query filtering for decisions, problems, tasks, and related context.
+- Keep generative natural-language answers as future work. Producing synthesized answers today would require an external API or local model and would conflict with the current zero-backend, no-external-AI architecture unless introduced as an explicit optional adapter.
+- Position current behavior honestly: ContextVault retrieves the evidence needed to answer questions; it does not pretend to reason over context with a hidden model.
+
+Additional plan:
+
+1. Extend retrieval/list/timeline APIs with practical filters (`query`, `source`, `since`).
+2. Add CLI usage that directly supports questions such as Codex auth decisions and Redis problems from the last two weeks.
+3. Add tests and Docker smoke coverage for filtered evidence queries.
+4. Add a dedicated technical FAQ section/page with architecture, privacy, limits, imports, deduplication, and honest boundaries.
+5. Produce and add a concise demo video showing Browser export -> import -> unified index -> retrieve -> prepare.
+6. Refine README, landing, PLAN, profile README, LinkedIn copy, and article-generation prompt without duplicative marketing filler.
+7. Re-run all verification, then commit/push/deploy.
+
+Files expected to change in addition to the current release diff:
+
+- `scripts/context-engine.mjs` and `scripts/vault-terminal.mjs`: query filters.
+- `test/context-engine.test.ts` and smoke test: filter coverage.
+- Landing page/components/assets: technical FAQ and demo video.
+- README/PLAN/profile README: concise product usage and future generative-answer boundary.
+
+Current stop point:
+
+- Personal profile commit `57b2319` is already pushed from the earlier verified scope.
+- Main ContextVault release remains uncommitted, so the new productization work can be included in one coherent 1.3.0 release.
+
+Productization implementation completed so far:
+
+- Added deterministic evidence filters for query, source/browser platform, event type, and time (`24h`, `14d`, `2w`, or ISO date).
+- Added `contextvault history` plus filtered `retrieve`, `prepare`, `tasks`, `decisions`, and `problems` commands.
+- Added examples matching the product questions: recent project history, Codex auth decisions, and Redis problems.
+- Evidence-query tests and extended Docker smoke test pass; total suite reached 56 tests at that checkpoint.
+- Added a dedicated `/faq` landing route covering architecture, storage, import flow, deduplication, retrieval ranking, privacy, security limits, source of truth, and honest product boundaries.
+- Updated README and PLAN to distinguish grounded evidence retrieval from future optional generative answers.
+- Updated the personal profile README with evidence-query positioning; this latest profile edit is not yet committed.
+- Generated a 23-second 1280x720 unified-engine demo in GIF and MP4 formats showing Browser export -> import -> terminal events -> index -> history/decisions/problems -> prepared context -> privacy.
+- Only the finished demo assets are retained; the temporary generation script was deleted and will not be committed.
+- Added the demo to the landing page and README.
+
+Technical decision:
+
+- Current product retrieves grounded evidence and prepares it for an agent. Built-in synthesized natural-language answers remain future work because they require an explicit local-model or provider adapter.
+
+Current stop point:
+
+- FAQ, evidence queries, and demo assets are implemented locally.
+- Full verification passed after productization: 56 tests, extension build, unified smoke test, root audit zero, landing audit zero, and Next 16 static build with `/` and `/faq` routes.
+- Home-page QA confirmed the MP4 loaded at 1280x720 with the expected 1280x720 video metadata.
+- FAQ QA confirmed 8 expandable questions, 5 command/code elements, correct heading, 2,192 px page height, and no horizontal overflow.
+- A temporary static-server redirect dropped the non-default port for `/faq`; this was isolated to the basic Nginx QA setup. Direct static `faq.html` rendered correctly, and Vercel route verification remains required after deploy.
+- Final filter review found `history --type` was parsed but not applied; added event-type filtering to the shared filter predicate and a regression assertion. All 56 tests still pass.
+- Fixed the README Vault Terminal anchor after the heading rename.
+
+Current stop point:
+
+- Productization implementation and local QA are complete.
+- Latest profile evidence-query edit needs its own commit/push.
+- Main release needs commit/push, Vercel production verification, final progress checkpoint, and user-facing launch copy.
 
 ## 0. Current Follow-up Task
 

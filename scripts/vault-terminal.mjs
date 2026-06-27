@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
@@ -6,9 +8,13 @@ import {
   buildContextIndex,
   buildTimeline,
   ensureEngineStorage,
+  importBrowserExports,
   linkSessions,
+  listContextEvents,
   prepareContext,
+  renderHistory,
   renderRetrieval,
+  renderEventList,
   retrieveContext,
   updateProjectMemory,
 } from "./context-engine.mjs";
@@ -90,7 +96,7 @@ This file is the durable memory for this repo.
 
 ## What this project is
 
-ContextVault is a local-first context recorder. It preserves browser LLM chats and terminal-based human/AI work sessions as portable Markdown.
+ContextVault is a local-first context engine. It preserves browser LLM chats and terminal-based human/AI work sessions as portable Markdown, then indexes and retrieves that context locally.
 
 ## What context should be preserved
 
@@ -108,7 +114,7 @@ Before continuing work, read this file and the latest sessions under \`.contextv
 
 ## How to continue previous sessions
 
-Use \`npm run vault:list\` to find sessions, \`npm run vault:show -- latest\` to inspect the latest session, and \`npm run vault:export\` to build a portable context bundle.
+Use \`contextvault list\` to find sessions, \`contextvault show latest\` to inspect the latest session, and \`contextvault prepare "topic"\` to build a focused context package.
 `
   );
 }
@@ -478,15 +484,70 @@ function indexContext() {
   console.log(`Saved ${path.relative(ROOT, path.join(VAULT_DIR, "index", "context-index.json"))}`);
 }
 
+function parseFilterArgs(args) {
+  const filters = { types: [], sources: [] };
+  const query = [];
+  for (let index = 0; index < args.length; index += 1) {
+    const arg = args[index];
+    const value = args[index + 1];
+    if ((arg === "--type" || arg === "--types") && value) {
+      filters.types.push(...value.split(",").map((item) => item.trim()).filter(Boolean));
+      index += 1;
+    } else if ((arg === "--source" || arg === "--sources") && value) {
+      filters.sources.push(...value.split(",").map((item) => item.trim()).filter(Boolean));
+      index += 1;
+    } else if (arg === "--since" && value) {
+      filters.since = value;
+      index += 1;
+    } else if (arg === "--limit" && value) {
+      filters.limit = Number.parseInt(value, 10);
+      index += 1;
+    } else {
+      query.push(arg);
+    }
+  }
+  return { query: query.join(" ").trim(), filters };
+}
+
+async function importContext(args) {
+  const inputPath = args.join(" ").trim();
+  if (!inputPath) {
+    console.error("Usage: contextvault import <export.md|export.zip|directory>");
+    process.exitCode = 1;
+    return;
+  }
+  try {
+    const result = await importBrowserExports(ROOT, inputPath);
+    console.log(`Browser import: ${result.imported} imported, ${result.updated} updated, ${result.skipped} unchanged.`);
+    for (const error of result.errors) console.warn(`Skipped ${error.file}: ${error.error}`);
+    console.log(`Unified index now includes ${buildContextIndex(ROOT).sessionCount} sessions.`);
+  } catch (error) {
+    console.error(error instanceof Error ? error.message : String(error));
+    process.exitCode = 1;
+  }
+}
+
+function focusedEvents(type, args = []) {
+  ensureVault();
+  const { query, filters } = parseFilterArgs(args);
+  console.log(renderEventList(type, listContextEvents(ROOT, type, { ...filters, query })));
+}
+
+function history(args) {
+  ensureVault();
+  const { query, filters } = parseFilterArgs(args);
+  console.log(renderHistory(listContextEvents(ROOT, undefined, { ...filters, query }), { ...filters, query }));
+}
+
 function retrieve(queryParts) {
-  const query = queryParts.join(" ").trim();
+  const { query, filters } = parseFilterArgs(queryParts);
   if (!query) {
     console.error('Usage: npm run vault:retrieve -- "query"');
     process.exitCode = 1;
     return;
   }
   try {
-    const result = retrieveContext(ROOT, query);
+    const result = retrieveContext(ROOT, query, filters);
     console.log(renderRetrieval(result));
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
@@ -495,14 +556,14 @@ function retrieve(queryParts) {
 }
 
 function prepare(queryParts) {
-  const query = queryParts.join(" ").trim();
+  const { query, filters } = parseFilterArgs(queryParts);
   if (!query) {
     console.error('Usage: npm run vault:prepare -- "query"');
     process.exitCode = 1;
     return;
   }
   try {
-    const result = prepareContext(ROOT, query);
+    const result = prepareContext(ROOT, query, filters);
     console.log(`Prepared ${path.relative(ROOT, result.outputPath)}`);
     console.log(`Included ${result.retrieval.results.length} relevant events from ${result.retrieval.sessions.length} sessions.`);
   } catch (error) {
@@ -562,6 +623,9 @@ async function main() {
     case "index":
       indexContext();
       break;
+    case "import":
+      await importContext(args);
+      break;
     case "retrieve":
       retrieve(args);
       break;
@@ -577,21 +641,39 @@ async function main() {
     case "timeline":
       timeline();
       break;
+    case "tasks":
+      focusedEvents("task", args);
+      break;
+    case "decisions":
+      focusedEvents("decision", args);
+      break;
+    case "problems":
+      focusedEvents("problem", args);
+      break;
+    case "history":
+      history(args);
+      break;
     default:
-      console.log(`Usage: node scripts/vault-terminal.mjs <init|record|list|show|export|search|index|retrieve|prepare|memory|link|timeline>
+      console.log(`Usage: contextvault <init|record|list|show|export|search|import|index|retrieve|prepare|memory|link|timeline|history|tasks|decisions|problems>
 
 Examples:
-  npm run vault:init
-  npm run vault:record
-  npm run vault:list
-  npm run vault:show -- latest
-  npm run vault:search -- auth
-  npm run vault:index
-  npm run vault:retrieve -- "auth middleware"
-  npm run vault:prepare -- "auth middleware"
-  npm run vault:memory
-  npm run vault:link -- <from-id> <to-id> "fixed by"
-  npm run vault:timeline`);
+  contextvault init
+  contextvault record
+  contextvault import ./chatgpt-export.md
+  contextvault import ./contextvault-export.zip
+  contextvault index
+  contextvault retrieve "auth middleware"
+  contextvault retrieve "auth" --type decision --source codex --since 14d
+  contextvault prepare "auth middleware"
+  contextvault history --since 14d
+  contextvault tasks --since 2w
+  contextvault decisions auth --source codex
+  contextvault problems redis --since 30d
+  contextvault memory
+  contextvault link <from-id> <to-id> "fixed by"
+  contextvault timeline
+
+The existing npm run vault:* commands remain supported.`);
       if (command) process.exitCode = 1;
   }
 }

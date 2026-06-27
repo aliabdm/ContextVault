@@ -17,9 +17,9 @@ const points = [
   },
   {
     number: '03',
-    title: 'Exports in clean files',
+    title: 'Becomes reusable memory',
     description:
-      'Export browser conversations and terminal sessions as structured files ready to reuse anywhere.',
+      'Import browser exports, index both sources, and prepare focused context for the next agent.',
   },
 ]
 

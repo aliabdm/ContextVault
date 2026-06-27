@@ -5,27 +5,33 @@ import { motion } from 'framer-motion'
 const stages = [
   {
     number: '01',
-    title: 'Normalize',
-    description: 'Convert terminal sessions into shared ContextSession and ContextEvent records.',
-    command: 'vault:index',
+    title: 'Import',
+    description: 'Bring extension Markdown or ZIP exports into the local project vault without changing browser capture.',
+    command: 'contextvault import chats.zip',
   },
   {
     number: '02',
-    title: 'Index',
-    description: 'Build a local knowledge index across decisions, tasks, problems, notes, and messages.',
-    command: '.contextvault/index',
+    title: 'Normalize',
+    description: 'Convert browser conversations and terminal sessions into shared ContextSession and ContextEvent records.',
+    command: 'contextvault index',
   },
   {
     number: '03',
-    title: 'Retrieve',
-    description: 'Rank relevant project context for a task without sending data to an external model.',
-    command: 'vault:retrieve -- "auth"',
+    title: 'Index',
+    description: 'Build one local knowledge index across both capture surfaces.',
+    command: '.contextvault/index',
   },
   {
     number: '04',
+    title: 'Retrieve',
+    description: 'Rank relevant project context for a task without sending data to an external model.',
+    command: 'contextvault retrieve "auth"',
+  },
+  {
+    number: '05',
     title: 'Prepare',
     description: 'Create a focused Markdown context package ready for the next coding agent.',
-    command: 'vault:prepare -- "auth"',
+    command: 'contextvault prepare "auth"',
   },
 ]
 
@@ -41,12 +47,12 @@ export default function ContextEngine() {
             Capture is the input. Reusable context is the product.
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-neutral-400">
-            ContextVault turns raw terminal sessions into indexed project memory, retrieves what matters,
+            ContextVault combines exported browser conversations with terminal sessions, retrieves what matters,
             and prepares focused context packages for Codex, Claude Code, Cursor, or another agent.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-3 md:grid-cols-4">
+        <div className="mt-14 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {stages.map((stage, index) => (
             <motion.div
               key={stage.title}

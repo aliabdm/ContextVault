@@ -161,7 +161,7 @@ async function captureMessage(
       previousConversationId: session.previousConversationId,
       nextConversationId: null,
       messages: [message],
-      adapterVersion: "1.2.0",
+      adapterVersion: "1.3.0",
     };
   }
 

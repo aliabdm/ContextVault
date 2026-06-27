@@ -240,7 +240,7 @@ Pending:
 - Launch article series
 - Community-specific examples
 
-### Phase 9 - Context Engine MVP - Implemented
+### Phase 9 - Unified Context Engine - Implemented
 
 Goal:
 
@@ -256,9 +256,13 @@ Completed:
 - Search
 - Export
 - Terminal session normalization
+- Browser Markdown, ZIP, and directory import
+- Browser export normalization into shared context events
+- Deterministic duplicate import prevention
 - Local event index
-- Query-based retrieval
+- Cross-surface query-based retrieval
 - Prepared agent context packages
+- Focused task, decision, and problem views
 - Generated memory maintenance
 - Explicit session links
 - Context timeline export
@@ -275,7 +279,7 @@ Goal:
 
 Represent all context sources using the same internal model.
 
-Future sources:
+Supported sources:
 
 - Browser conversations
 - Codex
@@ -296,7 +300,9 @@ All sources should emit:
 Status:
 
 - Implemented for terminal Markdown sessions, including backward-compatible snake_case metadata.
-- Browser capture has not been migrated to the normalized engine yet.
+- Implemented for exported Browser Capture Markdown and ZIP files through explicit local import.
+- Browser import preserves the original Markdown and maps messages into shared `ContextSession` and `ContextEvent` records.
+- Automatic synchronization from extension IndexedDB remains future work.
 
 #### Context Indexing
 
@@ -320,6 +326,7 @@ npm run vault:index
 Status:
 
 - Implemented. The index is stored at `.contextvault/index/context-index.json`.
+- The index combines terminal sessions and imported browser conversations.
 - Existing `vault:search` remains available for direct Markdown text search.
 
 #### Context Retrieval
@@ -479,10 +486,13 @@ After Context Engine is mature:
 - Browser ZIP export
 - Terminal search
 - Shared context model
-- Terminal context normalization
+- Terminal and browser-export context normalization
+- Browser Markdown/ZIP/directory import
+- Duplicate import prevention
 - Local context index
-- Context retrieval
+- Cross-surface context retrieval
 - Context composer
+- Focused task, decision, and problem views
 - Context memory maintenance
 - Explicit session linking
 - Context timeline
@@ -490,14 +500,15 @@ After Context Engine is mature:
 ### In Progress
 
 - Context Engine hardening
-- Browser normalization design
 - Browser adapter hardening
 - Demo/storytelling assets
+- npm registry publication
 
 ### Future
 
-- Browser context migration to the shared engine
+- Automatic browser-to-engine synchronization
 - Optional local semantic indexing
+- Optional grounded answer adapter using a local model or explicitly configured provider
 - Automatic context-link suggestions
 - Stale task and memory conflict detection
 - Automatic agent capture
@@ -508,6 +519,19 @@ After Context Engine is mature:
 - Optional self-hosted sync
 
 ## Changelog
+
+### 2026-06-27 - Unified Context Engine 1.3.0
+
+- Added explicit Browser Capture import for Markdown, ZIP, and export directories.
+- Normalized browser conversations and terminal sessions into the same shared context model.
+- Added cross-surface indexing, retrieval, and prepared context packages.
+- Added deterministic duplicate import prevention by browser conversation id and content.
+- Added bounded import validation for archive size, Markdown size, and file count without extracting ZIP paths to disk.
+- Added `vault:tasks`, `vault:decisions`, and `vault:problems`.
+- Added source, event-type, and time filters plus `vault:history` for evidence-oriented project questions.
+- Added the package-ready `contextvault` binary while preserving all `npm run vault:*` commands.
+- Upgraded build/test/parser dependencies and reduced `npm audit` findings to zero.
+- Kept extension capture, IndexedDB storage, and browser export behavior unchanged.
 
 ### 2026-06-27 - Context Engine MVP
 

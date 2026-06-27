@@ -21,7 +21,7 @@ const features = [
   {
     title: 'Context Engine',
     description:
-      'Normalize, index, retrieve, link, and prepare focused project context for prompts, handoffs, and future agent workflows.',
+      'Import browser exports, then normalize, index, retrieve, link, and prepare context across browser and terminal work.',
   },
 ]
 

@@ -14,9 +14,14 @@ const steps = [
       'Run Vault Terminal when you want to preserve agent work, decisions, tasks, problems, and project notes.',
   },
   {
-    title: 'Search and export anytime',
+    title: 'Import browser exports',
     description:
-      'Find saved context by topic and export clean Markdown or ZIP files ready to reuse or archive.',
+      'Bring exported Markdown or ZIP conversations into the same local project vault without changing extension behavior.',
+  },
+  {
+    title: 'Retrieve and prepare',
+    description:
+      'Search both sources together and generate a focused context package for the next model or coding agent.',
   },
 ]
 
@@ -30,11 +35,11 @@ export default function HowItWorks() {
             One memory layer, two inputs
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-neutral-400">
-            Capture context where it happens, then search it, export it, and carry it into the next tool.
+            Capture context where it happens, unify it locally, and carry only the relevant memory into the next tool.
           </p>
         </div>
 
-        <div className="mt-14 grid gap-4 sm:grid-cols-3">
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {steps.map((step, i) => (
             <motion.div
               key={step.title}
