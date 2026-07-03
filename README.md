@@ -59,6 +59,8 @@ Download the latest installer for your platform:
 
 The download links always point to the latest release. No admin required. Works offline. Auto-updates are built in.
 
+> **macOS note:** The Desktop app builds successfully on macOS locally. To build the macOS `.dmg` yourself, run `cd desktop && npm run package:mac`. GitHub Actions does not include macOS installers because code signing requires an Apple Developer account. A future update may add notarized builds.
+
 ### CLI (npm)
 
 Run Vault Terminal immediately without installing:

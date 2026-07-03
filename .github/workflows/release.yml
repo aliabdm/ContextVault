@@ -38,55 +38,6 @@ jobs:
           tag_name: ${{ github.ref_name }}
           fail_on_unmatched_files: false
 
-  build-macos:
-    runs-on: macos-latest
-    continue-on-error: true
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: desktop/package-lock.json
-      - name: Install system dependencies
-        run: |
-          which python3 || which python || echo "no python"
-          xcode-select --print-path || echo "xcode not found"
-          xcrun --show-sdk-path || echo "no SDK"
-      - name: Install dependencies
-        working-directory: desktop
-        run: npm ci
-      - name: Build
-        working-directory: desktop
-        run: npm run build
-        env:
-          NODE_ENV: production
-      - name: Package
-        working-directory: desktop
-        run: npx electron-builder --config electron-builder.yml --publish never 2>&1 || true
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_IDENTITY_AUTO_DISCOVERY: false
-          CSC_LINK: ''
-          CSC_KEY_PASSWORD: ''
-          APPLE_ID: ''
-          APPLE_ID_PASSWORD: ''
-          ELECTRON_BUILDER_ALLOW_UNRESOLVED_DEPENDENCIES: true
-      - name: List dist contents
-        run: |
-          echo "=== desktop/dist contents ==="
-          find desktop/dist -type f 2>/dev/null || echo "No files in dist"
-          echo "=== dist/mac ==="
-          find desktop/dist/mac -type f 2>/dev/null || echo "No mac dir"
-          echo "=== any .dmg ==="
-          find . -name "*.dmg" 2>/dev/null || echo "No dmg found"
-      - name: Upload Release Asset
-        uses: softprops/action-gh-release@v2
-        with:
-          files: desktop/dist/ContextVault-*.dmg
-          tag_name: ${{ github.ref_name }}
-          fail_on_unmatched_files: false
-
   build-linux:
     runs-on: ubuntu-latest
     steps:
@@ -123,7 +74,7 @@ jobs:
           fail_on_unmatched_files: false
 
   release:
-    needs: [build-windows, build-linux, build-macos]
+    needs: [build-windows, build-linux]
     if: always()
     runs-on: ubuntu-latest
     steps:
