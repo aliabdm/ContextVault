@@ -58,8 +58,7 @@ jobs:
           NODE_ENV: production
       - name: Package
         working-directory: desktop
-        run: npx electron-builder --config electron-builder.yml --publish never 2>&1
-        shell: bash
+        run: npx electron-builder --config electron-builder.yml --publish never 2>&1; echo "EXIT_CODE=$?"
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
@@ -67,6 +66,8 @@ jobs:
           CSC_KEY_PASSWORD: ''
           APPLE_ID: ''
           APPLE_ID_PASSWORD: ''
+      - name: List dist contents
+        run: find desktop/dist -type f -name "*.dmg" -o -name "*.AppImage" -o -name "*.exe" -o -name "*.yml" 2>/dev/null || echo "No files found"
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
