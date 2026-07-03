@@ -25,26 +25,6 @@ export default function DesktopSection() {
           </p>
         </div>
 
-        <div className="mx-auto mt-12 max-w-5xl overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 p-2 shadow-2xl shadow-vault-500/10">
-          <video
-            className="aspect-video w-full rounded-xl bg-dark-800 object-cover"
-            controls
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-label="ContextVault Desktop complete product walkthrough"
-          >
-            <source src="/demo/contextvault-desktop-demo.mp4" type="video/mp4" />
-            Your browser does not support the ContextVault Desktop demo video.
-          </video>
-          <div className="flex flex-col gap-1 px-4 py-3 sm:flex-row sm:items-center sm:justify-between">
-            <p className="text-sm font-medium text-neutral-200">See the complete local-first workflow</p>
-            <p className="text-xs text-neutral-500">Sessions · Search · Prepare · Memory · Export</p>
-          </div>
-        </div>
-
         <div className="mt-12 grid gap-6 lg:grid-cols-2">
           <div className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
             <div className="border-b border-dark-500 bg-gradient-to-r from-vault-500/20 to-purple-500/10 px-4 py-3">

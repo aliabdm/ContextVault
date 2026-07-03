@@ -934,3 +934,11 @@ desktop/dist/ContextVault-Setup-1.5.4.exe
 Verification results for this release: root tests `56/56`, extension build passed, Desktop build passed, Windows `1.5.5` installer packaging passed, landing production build passed, workflow YAML parsed successfully, Docker extension preview healthy, landing Desktop MP4 loaded at 1280×720, and macOS build guidance rendered without browser errors.
 
 Release result: GitHub Action run `28638914646` completed successfully. GitHub Release `v1.5.5` is public with `ContextVault-Setup-1.5.5.exe` and `ContextVault-1.5.5.AppImage`. Vercel preview deployment `dpl_3W5CavGTNw6unr7tFh7BF8wU6Ps4` is READY for the release branch.
+
+### Production landing video hotfix
+
+1. `[done]` Promote the Desktop walkthrough to a prominent Hero position.
+2. `[done]` Build and visually verify the landing page locally.
+3. `[in progress]` Commit and push the release branch.
+4. `[pending]` Merge the release branch into `main` and push production.
+5. `[pending]` Verify the public landing URL serves and plays the Desktop MP4.
