@@ -31,14 +31,12 @@ jobs:
         run: npx electron-builder --config electron-builder.yml --publish never 2>&1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload installer
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
         with:
-          name: installer-windows
-          path: |
-            desktop/dist/ContextVault-Setup-*.exe
-            desktop/dist/latest.yml
+          files: desktop/dist/ContextVault-Setup-*.exe
+          tag_name: ${{ github.ref_name }}
+          fail_on_unmatched_files: false
 
   build-macos:
     runs-on: macos-latest
@@ -50,12 +48,6 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: desktop/package-lock.json
-      - name: Debug environment
-        run: |
-          node --version
-          npm --version
-          which npx || echo "npx not found"
-          ls -la desktop/resources/
       - name: Install dependencies
         working-directory: desktop
         run: npm ci
@@ -66,8 +58,7 @@ jobs:
           NODE_ENV: production
       - name: Package
         working-directory: desktop
-        run: |
-          npx electron-builder --config electron-builder.yml --publish never 2>&1 || true
+        run: npx electron-builder --config electron-builder.yml --publish never 2>&1
         shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -76,14 +67,12 @@ jobs:
           CSC_KEY_PASSWORD: ''
           APPLE_ID: ''
           APPLE_ID_PASSWORD: ''
-          APPLE_TEAM_ID: ''
-          APPLE_APP_SPECIFIC_PASSWORD: ''
-      - name: Upload installer
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
         with:
-          name: installer-macos
-          path: desktop/dist/ContextVault-*.dmg
+          files: desktop/dist/ContextVault-*.dmg
+          tag_name: ${{ github.ref_name }}
+          fail_on_unmatched_files: false
 
   build-linux:
     runs-on: ubuntu-latest
@@ -99,7 +88,7 @@ jobs:
           sudo apt-get update -qq || true
           sudo apt-get install -y libgtk-3-0 libnotify4 libnss3 libxkbcommon0 \
             libxcomposite1 libxdamage1 libxrandr2 libxrender1 \
-            libxtst6 libasound2 2>&1 || echo "Some deps may be missing, continuing..."
+            libxtst6 libasound2 2>&1 || echo "Some deps may be missing"
       - name: Install dependencies
         working-directory: desktop
         run: npm ci
@@ -113,12 +102,12 @@ jobs:
         run: npx electron-builder --config electron-builder.yml --publish never 2>&1
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Upload installer
-        if: success() || failure()
-        uses: actions/upload-artifact@v4
+      - name: Upload Release Asset
+        uses: softprops/action-gh-release@v2
         with:
-          name: installer-linux
-          path: desktop/dist/ContextVault-*.AppImage
+          files: desktop/dist/ContextVault-*.AppImage
+          tag_name: ${{ github.ref_name }}
+          fail_on_unmatched_files: false
 
   release:
     needs: [build-windows, build-linux, build-macos]
@@ -126,23 +115,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-        with:
-          pattern: installer-*
-          merge-multiple: true
-        continue-on-error: true
-      - name: Move artifacts to root
-        run: |
-          find . -name "*.exe" -exec mv {} . \; 2>/dev/null || true
-          find . -name "*.dmg" -exec mv {} . \; 2>/dev/null || true
-          find . -name "*.AppImage" -exec mv {} . \; 2>/dev/null || true
-          find . -name "latest.yml" -exec mv {} . \; 2>/dev/null || true
-          ls -la *.exe *.dmg *.AppImage latest.yml 2>/dev/null || echo "No installers found in root"
-      - name: Create Release
+      - name: Finalize Release
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: ${{ github.ref_name }}
           name: ContextVault ${{ github.ref_name }}
+          generate_release_notes: true
+          make_latest: true
           body: |
             ## ContextVault ${{ github.ref_name }}
 
@@ -150,13 +129,3 @@ jobs:
             - [Windows](https://context-vault-two.vercel.app/download/windows)
             - [macOS](https://context-vault-two.vercel.app/download/macos)
             - [Linux](https://context-vault-two.vercel.app/download/linux)
-
-            ### Changelog
-            See the commits for details.
-          files: |
-            *.exe
-            *.dmg
-            *.AppImage
-          generate_release_notes: true
-          fail_on_unmatched_files: false
-          make_latest: true
