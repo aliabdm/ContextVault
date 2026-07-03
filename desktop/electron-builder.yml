@@ -8,7 +8,6 @@ directories:
 
 files:
   - out/**/*
-  - "!node_modules/**/*"
 
 extraResources:
   - from: ../scripts/
@@ -24,11 +23,9 @@ win:
   artifactName: ContextVault-Setup-${version}.${ext}
 
 nsis:
-  oneClick: false
-  allowToChangeInstallationDirectory: true
+  oneClick: true
+  perMachine: false
   deleteAppDataOnUninstall: false
-  installerIcon: resources/icon.ico
-  uninstallerIcon: resources/icon.ico
   shortcutName: ContextVault
 
 mac:
