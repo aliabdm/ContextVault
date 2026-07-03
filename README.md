@@ -132,6 +132,34 @@ Supported filters: `--type`, `--source`, `--since` (`24h`, `14d`, `2w`, or ISO d
 
 ---
 
+## Demo
+
+<table>
+  <tr>
+    <td width="50%">
+      <h3 align="center">Browser Capture</h3>
+      <p align="center"><img src="landing/public/demo/contextvault-demo.gif" alt="ContextVault capturing a browser LLM conversation" /></p>
+    </td>
+    <td width="50%">
+      <h3 align="center">Terminal Capture</h3>
+      <p align="center"><img src="landing/public/demo/vault-terminal-demo.gif" alt="ContextVault Vault Terminal recording a coding-agent session" /></p>
+    </td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="landing/public/demo/context-engine-demo.gif" alt="ContextVault unified Context Engine workflow: import, index, retrieve, prepare" />
+</p>
+
+<table>
+  <tr>
+    <td width="50%"><img src="landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop recorder with automatic classification" /></td>
+    <td width="50%"><img src="landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop GUI screens with filters and results" /></td>
+  </tr>
+</table>
+
+---
+
 ## Features
 
 | Feature | Description |
@@ -312,7 +340,6 @@ docker compose --profile testing up dev test-server  # + ChatGPT mock on :8080
 
 - [I Built a Local-First Recorder for AI Coding Sessions](docs/medium-vault-terminal.md) — Vault Terminal philosophy
 - [ContextVault Desktop: From CLI Wrapper to Full GUI Product](docs/contextvault-desktop-gui.md) — Desktop launch article
-- [Desktop v1.8.0 social launch kit](docs/launch-v1.8.0-social-kit.md) — ready-to-post copy for LinkedIn, X, Dev.to, Medium, Reddit, Product Hunt, and Hacker News
 
 ### Community
 
