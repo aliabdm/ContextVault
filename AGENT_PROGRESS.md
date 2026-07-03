@@ -939,6 +939,8 @@ Release result: GitHub Action run `28638914646` completed successfully. GitHub R
 
 1. `[done]` Promote the Desktop walkthrough to a prominent Hero position.
 2. `[done]` Build and visually verify the landing page locally.
-3. `[in progress]` Commit and push the release branch.
-4. `[pending]` Merge the release branch into `main` and push production.
-5. `[pending]` Verify the public landing URL serves and plays the Desktop MP4.
+3. `[done]` Commit and push the release branch (`a51a15f`).
+4. `[done]` Merge the release branch into `main` and push production (`ddc6d4c`).
+5. `[done]` Verify the public landing URL serves and plays the Desktop MP4.
+
+Production result: Vercel deployment `dpl_HXBiDaNhvGjW6a1aVuuqS6cLbNsD` reached READY and aliases to `https://context-vault-two.vercel.app/`. The Hero displays the `New · Desktop v1.5.5` badge and centered walkthrough at approximately 514px from the top. The production MP4 loaded at 1280×720, reached `readyState: 4`, autoplayed, and produced no page errors.
