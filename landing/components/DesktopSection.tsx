@@ -58,30 +58,44 @@ export default function DesktopSection() {
           </div>
         </div>
 
-        <div className="mt-6 grid gap-6 lg:grid-cols-2">
+        <div className="mt-6 space-y-6">
           <figure className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
             <img
-              src="/demo/contextvault-desktop-recorder.png"
-              alt="ContextVault Desktop recorder automatically classifying User, Agent, Decision, Task, and Problem events"
+              src="/demo/desktop-walkthrough/step-11.png"
+              alt="ContextVault Desktop dashboard with full project context — sessions, events, decisions, problems, and tasks"
               className="aspect-video w-full object-cover object-top"
             />
             <figcaption className="border-t border-dark-500 px-5 py-4">
-              <p className="text-sm font-semibold text-white">The real package recorder</p>
-              <p className="mt-1 text-xs leading-5 text-neutral-500">Start launches the bundled `contextvault record`; entries and output flow through the same CLI code.</p>
+              <p className="text-sm font-semibold text-white">Dashboard with full project context</p>
+              <p className="mt-1 text-xs leading-5 text-neutral-500">Sessions, events, decisions, problems, and tasks aggregated from the local index — no cloud, no telemetry.</p>
             </figcaption>
           </figure>
 
-          <figure className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
-            <img
-              src="/demo/contextvault-desktop-commands.png"
-              alt="ContextVault Desktop History screen with source, type, time, and result filters"
-              className="aspect-video w-full object-cover object-top"
-            />
-            <figcaption className="border-t border-dark-500 px-5 py-4">
-              <p className="text-sm font-semibold text-white">GUI first, commands optional</p>
-              <p className="mt-1 text-xs leading-5 text-neutral-500">Dedicated History, Decisions, Problems, Tasks, Retrieve, Search, and Prepare screens with copy/export. Raw arguments stay under Advanced CLI Mode.</p>
-            </figcaption>
-          </figure>
+          <div className="grid gap-6 lg:grid-cols-2">
+            <figure className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
+              <img
+                src="/demo/contextvault-desktop-recorder.png"
+                alt="ContextVault Desktop recorder automatically classifying User, Agent, Decision, Task, and Problem events"
+                className="aspect-video w-full object-cover object-top"
+              />
+              <figcaption className="border-t border-dark-500 px-5 py-4">
+                <p className="text-sm font-semibold text-white">The real package recorder</p>
+                <p className="mt-1 text-xs leading-5 text-neutral-500">Start launches the bundled `contextvault record`; entries and output flow through the same CLI code.</p>
+              </figcaption>
+            </figure>
+
+            <figure className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
+              <img
+                src="/demo/contextvault-desktop-commands.png"
+                alt="ContextVault Desktop History screen with source, type, time, and result filters"
+                className="aspect-video w-full object-cover object-top"
+              />
+              <figcaption className="border-t border-dark-500 px-5 py-4">
+                <p className="text-sm font-semibold text-white">GUI first, commands optional</p>
+                <p className="mt-1 text-xs leading-5 text-neutral-500">Dedicated History, Decisions, Problems, Tasks, Retrieve, Search, and Prepare screens with copy/export. Raw arguments stay under Advanced CLI Mode.</p>
+              </figcaption>
+            </figure>
+          </div>
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
