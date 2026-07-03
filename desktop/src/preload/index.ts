@@ -37,6 +37,12 @@ const api = {
   updateSettings: (settings: any): Promise<any> =>
     ipcRenderer.invoke('contextvault:update-settings', settings),
 
+  rebuildIndex: (): Promise<any> => ipcRenderer.invoke('contextvault:rebuild-index'),
+  updateMemory: (): Promise<any> => ipcRenderer.invoke('contextvault:update-memory'),
+  buildTimeline: (): Promise<any> => ipcRenderer.invoke('contextvault:build-timeline'),
+  exportAll: (): Promise<any> => ipcRenderer.invoke('contextvault:export-all'),
+  openVaultFolder: (): Promise<boolean> => ipcRenderer.invoke('contextvault:open-vault-folder'),
+
   openExternal: (url: string): Promise<void> =>
     ipcRenderer.invoke('contextvault:open-external', url),
 

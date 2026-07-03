@@ -18,6 +18,11 @@ interface ContextVaultAPI {
   importConversation: () => Promise<any>
   getSettings: () => Promise<any>
   updateSettings: (settings: any) => Promise<any>
+  rebuildIndex: () => Promise<any>
+  updateMemory: () => Promise<any>
+  buildTimeline: () => Promise<any>
+  exportAll: () => Promise<any>
+  openVaultFolder: () => Promise<boolean>
   openExternal: (url: string) => Promise<void>
   getProjectPath: () => Promise<string | null>
 

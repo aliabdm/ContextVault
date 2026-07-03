@@ -1,12 +1,12 @@
 {
   "name": "contextvault-desktop",
-  "version": "1.0.0",
+  "version": "1.5.5",
   "description": "ContextVault Desktop — Visual context manager for AI chats, coding agents, and project memory",
   "main": "./out/main/index.js",
   "author": {
     "name": "Mohammad Ali Abdul Wahed",
     "email": "aliabdm@gmail.com",
-    "url": "https://github.com/aliabdm"
+    "url": "https://senior-mohammad-ali.vercel.app/"
   },
   "type": "module",
   "license": "MIT",
@@ -16,6 +16,7 @@
   },
   "scripts": {
     "dev": "electron-vite dev",
+    "dev:record": "electron-vite dev -- --remote-debugging-port=9333",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
     "package": "electron-vite build && electron-builder --win --mac --linux",
@@ -30,6 +31,7 @@
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "puppeteer": "^25.3.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",

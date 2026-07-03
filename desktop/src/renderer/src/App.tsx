@@ -7,6 +7,7 @@ import SessionDetail from './pages/SessionDetail'
 import Search from './pages/Search'
 import PrepareContext from './pages/PrepareContext'
 import Settings from './pages/Settings'
+import VaultTools from './pages/VaultTools'
 
 export default function App() {
   return (
@@ -21,6 +22,7 @@ export default function App() {
             <Route path="/sessions/:id" element={<SessionDetail />} />
             <Route path="/search" element={<Search />} />
             <Route path="/prepare" element={<PrepareContext />} />
+            <Route path="/tools" element={<VaultTools />} />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </main>

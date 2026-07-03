@@ -22,7 +22,7 @@ const demos = [
   {
     label: 'Desktop App',
     title: 'Visual context manager',
-    detail: 'Windows, macOS, Linux — manage sessions, search, and prepare context',
+    detail: 'Windows and Linux installers, macOS source build — search, prepare, and export',
     image: null,
     alt: 'ContextVault Desktop app provides a visual interface for project context',
     accent: 'from-green-500/20 to-vault-500/10',
@@ -56,6 +56,33 @@ export default function Hero() {
             ContextVault captures browser conversations and terminal work sessions, combines them in one local
             index, and prepares portable context for the next model or coding agent.
           </p>
+
+          <div className="mt-8 text-left">
+            <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <div>
+                <span className="inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">
+                  New · Desktop v1.5.5
+                </span>
+                <h2 className="mt-2 text-xl font-bold text-white sm:text-2xl">Watch the complete workflow</h2>
+              </div>
+              <p className="text-xs text-neutral-500">Sessions · Search · Prepare · Memory · Export</p>
+            </div>
+            <div className="overflow-hidden rounded-2xl border border-vault-500/30 bg-dark-900 p-2 shadow-2xl shadow-vault-500/15">
+              <video
+                className="aspect-video w-full rounded-xl bg-dark-800 object-cover"
+                controls
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                aria-label="ContextVault Desktop v1.5.5 complete product walkthrough"
+              >
+                <source src="/demo/contextvault-desktop-demo.mp4" type="video/mp4" />
+                Your browser does not support the ContextVault Desktop demo video.
+              </video>
+            </div>
+          </div>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a

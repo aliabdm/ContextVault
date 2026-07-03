@@ -1,0 +1,32 @@
+name: Publish npm package
+
+on:
+  push:
+    tags:
+      - 'npm-v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+          cache: npm
+      - name: Verify tag matches package version
+        run: node -e "const p=require('./package.json'); if ('npm-v'+p.version !== process.env.GITHUB_REF_NAME) { console.error('Tag must be npm-v'+p.version); process.exit(1) }"
+      - name: Install dependencies
+        run: npm ci
+      - name: Test
+        run: npm test
+      - name: Build extension and package sources
+        run: npm run build
+      - name: Publish public package
+        run: npm publish --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

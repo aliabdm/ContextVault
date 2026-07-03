@@ -16,6 +16,12 @@ function showToast(msg: string): void {
 }
 
 async function loadState(): Promise<void> {
+  if (typeof chrome === 'undefined' || !chrome.runtime?.sendMessage) {
+    el("status-dot").className = "status-dot inactive";
+    el("status-label").textContent = "Preview mode";
+    renderRecent();
+    return;
+  }
   try {
     const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
     if (tabs[0]?.id) {
