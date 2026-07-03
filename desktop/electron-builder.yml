@@ -33,8 +33,7 @@ mac:
     - target: dmg
       arch:
         - x64
-        - arm64
-  artifactName: ContextVault-${version}-${arch}.${ext}
+  artifactName: ContextVault-${version}.${ext}
   category: public.app-category.developer-tools
   identity: null
 

@@ -40,7 +40,6 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
-    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -67,7 +66,13 @@ jobs:
           APPLE_ID: ''
           APPLE_ID_PASSWORD: ''
       - name: List dist contents
-        run: find desktop/dist -type f -name "*.dmg" -o -name "*.AppImage" -o -name "*.exe" -o -name "*.yml" 2>/dev/null || echo "No files found"
+        run: |
+          echo "=== desktop/dist contents ==="
+          find desktop/dist -type f 2>/dev/null || echo "No files in dist"
+          echo "=== dist/mac ==="
+          find desktop/dist/mac -type f 2>/dev/null || echo "No mac dir"
+          echo "=== any .dmg ==="
+          find . -name "*.dmg" 2>/dev/null || echo "No dmg found"
       - name: Upload Release Asset
         uses: softprops/action-gh-release@v2
         with:
