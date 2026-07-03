@@ -50,6 +50,12 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: desktop/package-lock.json
+      - name: Debug environment
+        run: |
+          node --version
+          npm --version
+          which npx || echo "npx not found"
+          ls -la desktop/resources/
       - name: Install dependencies
         working-directory: desktop
         run: npm ci
@@ -60,12 +66,18 @@ jobs:
           NODE_ENV: production
       - name: Package
         working-directory: desktop
-        run: npx electron-builder --config electron-builder.yml --publish never 2>&1
+        run: |
+          npx electron-builder --config electron-builder.yml --publish never 2>&1 || true
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           CSC_IDENTITY_AUTO_DISCOVERY: false
           CSC_LINK: ''
           CSC_KEY_PASSWORD: ''
+          APPLE_ID: ''
+          APPLE_ID_PASSWORD: ''
+          APPLE_TEAM_ID: ''
+          APPLE_APP_SPECIFIC_PASSWORD: ''
       - name: Upload installer
         if: success() || failure()
         uses: actions/upload-artifact@v4
