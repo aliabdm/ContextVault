@@ -32,7 +32,17 @@ const questions = [
   {
     question: 'Is there a Desktop app?',
     answer:
-      'Yes. ContextVault Desktop provides a visual interface for managing sessions, searching project memory, preparing AI context packages, and exporting context — all without the terminal. Windows and Linux installers are published on GitHub Releases; macOS is currently available as a local source build. It uses the same local .contextvault directory as the CLI, so you can switch between both tools freely.',
+      'Yes. ContextVault Desktop provides a visual recorder plus session browsing, project search, prepared AI context packages, and exports — all without requiring the terminal. Windows and Linux installers are published on GitHub Releases; macOS is currently available as a local source build. It uses the same local .contextvault directory as the CLI, so both tools remain compatible.',
+  },
+  {
+    question: 'How do I start recording in the Desktop app?',
+    answer:
+      'Add or select a project, then click the red Start recording button on the Dashboard or Record Session in the sidebar. Name the session, choose its source, and add User, Agent, Decision, Task, Problem, or Note events. Finish & save writes compatible Markdown under that project\'s .contextvault/sessions directory and rebuilds the local index.',
+  },
+  {
+    question: 'Can Desktop manage more than one project?',
+    answer:
+      'Yes. Use + Add beside the project selector to register multiple local project folders, then switch between them from the sidebar. Each project keeps an independent .contextvault directory. Removing a project from the recent list never deletes its folder or vault data.',
   },
   {
     question: 'Does it automatically record every terminal or coding agent?',

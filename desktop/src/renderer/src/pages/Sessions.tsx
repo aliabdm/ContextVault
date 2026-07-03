@@ -52,11 +52,16 @@ export default function Sessions() {
 
   return (
     <div className="mx-auto max-w-5xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-white">Sessions</h1>
-        <p className="mt-1 text-sm text-neutral-500">
-          {sessions.length} session{sessions.length !== 1 ? 's' : ''}
-        </p>
+      <div className="mb-6 flex items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-white">Sessions</h1>
+          <p className="mt-1 text-sm text-neutral-500">
+            {sessions.length} session{sessions.length !== 1 ? 's' : ''}
+          </p>
+        </div>
+        <button onClick={() => navigate('/record')} className="inline-flex h-10 items-center gap-2 rounded-xl bg-red-500 px-5 text-sm font-semibold text-white transition-colors hover:bg-red-600">
+          <span className="h-2.5 w-2.5 rounded-full bg-white" /> Start recording
+        </button>
       </div>
 
       <div className="mb-4">
@@ -70,8 +75,11 @@ export default function Sessions() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="flex items-center justify-center rounded-xl border border-dashed border-dark-600 py-16 text-sm text-neutral-500">
-          {sessions.length === 0 ? 'No sessions yet. Record a session or import browser exports.' : 'No matches'}
+        <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-dark-600 py-14 text-center">
+          <p className="text-sm text-neutral-500">{sessions.length === 0 ? 'No sessions yet. Start a recording or import a browser export.' : 'No matches'}</p>
+          {sessions.length === 0 && (
+            <button onClick={() => navigate('/record')} className="mt-4 text-sm font-semibold text-vault-400 hover:text-vault-300">Record your first session →</button>
+          )}
         </div>
       ) : (
         <div className="overflow-hidden rounded-xl border border-dark-600">

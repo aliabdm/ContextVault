@@ -1,8 +1,9 @@
 import { app, BrowserWindow, ipcMain, dialog, shell, Notification } from 'electron'
-import { join } from 'path'
+import { basename, join } from 'path'
 import { pathToFileURL } from 'url'
 import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from 'fs'
 import electronUpdater from 'electron-updater'
+import { createDesktopSessionDocument, parseSessionEvents } from './session-format'
 
 const { autoUpdater } = electronUpdater
 
@@ -11,10 +12,11 @@ let engine: any = null
 
 type DesktopSettings = {
   projectPath: string
+  recentProjects: string[]
   indexingMode: 'manual'
 }
 
-const defaultSettings: DesktopSettings = { projectPath: '', indexingMode: 'manual' }
+const defaultSettings: DesktopSettings = { projectPath: '', recentProjects: [], indexingMode: 'manual' }
 
 function settingsPath(): string {
   return join(app.getPath('userData'), 'settings.json')
@@ -23,12 +25,18 @@ function settingsPath(): string {
 function readSettings(): DesktopSettings {
   try {
     const value = JSON.parse(readFileSync(settingsPath(), 'utf-8'))
+    const projectPath = ensureProjectPath(value.projectPath)
+    const recentProjects = Array.from(new Set([
+      projectPath,
+      ...(Array.isArray(value.recentProjects) ? value.recentProjects : []),
+    ].map((item) => ensureProjectPath(item)).filter(Boolean))).slice(0, 12)
     return {
-      projectPath: ensureProjectPath(value.projectPath),
+      projectPath,
+      recentProjects,
       indexingMode: 'manual',
     }
   } catch {
-    return defaultSettings
+    return { ...defaultSettings, recentProjects: [] }
   }
 }
 
@@ -154,6 +162,42 @@ function ensureProjectPath(_path?: string): string {
   return ''
 }
 
+async function activateProject(projectPath: string): Promise<string> {
+  const eng = await getEngine()
+  const paths = eng.ensureEngineStorage(projectPath)
+  if (!existsSync(paths.memoryPath)) {
+    writeFileSync(paths.memoryPath, '# ContextVault Project Memory\n\nAdd durable project context here.\n', 'utf-8')
+  }
+  eng.buildContextIndex(projectPath)
+
+  const current = readSettings()
+  const previousProjectPath = ensureProjectPath(global.__projectPath)
+  const recentProjects = Array.from(new Set([
+    projectPath,
+    previousProjectPath,
+    ...current.recentProjects,
+  ].filter(Boolean))).slice(0, 12)
+  global.__projectPath = projectPath
+  saveSettings({ projectPath, recentProjects, indexingMode: 'manual' })
+  return projectPath
+}
+
+function projectInfo(projectPath: string) {
+  return {
+    path: projectPath,
+    name: basename(projectPath),
+    active: projectPath === global.__projectPath,
+  }
+}
+
+function saveDesktopSession(projectPath: string, input: any) {
+  const document = createDesktopSessionDocument(projectPath, input)
+  const sessionsPath = join(getVaultPath(projectPath), 'sessions')
+  mkdirSync(sessionsPath, { recursive: true })
+  writeFileSync(join(sessionsPath, document.session.filename), document.markdown, 'utf-8')
+  return document.session
+}
+
 function getDashboardStats(projectPath: string) {
   const vaultPath = getVaultPath(projectPath)
   if (!existsSync(vaultPath)) {
@@ -239,7 +283,9 @@ function parseFrontmatter(content: string): Record<string, any> {
     const kv = line.match(/^(\w+):\s*(.+)$/)
     if (kv) {
       let value: any = kv[2].trim()
-      if (value.startsWith('"') && value.endsWith('"')) value = value.slice(1, -1)
+      if (value.startsWith('"') && value.endsWith('"')) {
+        value = value.slice(1, -1).replace(/\\"/g, '"').replace(/\\\\/g, '\\')
+      }
       if (value === 'true') value = true
       if (value === 'false') value = false
       const num = Number(value)
@@ -264,55 +310,12 @@ function getSessionById(projectPath: string, id: string) {
       const content = readFileSync(join(dir, file), 'utf-8')
       const frontmatter = parseFrontmatter(content)
       if (frontmatter.id === id || file.includes(id)) {
-        const events = parseEvents(content)
+        const events = parseSessionEvents(content)
         return { frontmatter, events, content, file }
       }
     }
   }
   return null
-}
-
-function parseEvents(content: string): any[] {
-  const events: any[] = []
-  const headingRegex = /^##\s+(.+)$/
-  const lines = content.split('\n')
-  let currentType = ''
-  let currentContent: string[] = []
-  let currentMeta: any = {}
-
-  for (let i = 0; i < lines.length; i++) {
-    const headingMatch = lines[i].match(headingRegex)
-    if (headingMatch) {
-      if (currentType && currentContent.length > 0) {
-        events.push({
-          type: currentType,
-          content: currentContent.join('\n').trim(),
-          ...currentMeta,
-        })
-      }
-      currentType = headingMatch[1].trim().toLowerCase()
-      currentContent = []
-      currentMeta = {}
-
-      const metaMatch = lines[i + 1]?.match(/<!--\s*context-event:\s*(\{.*?\})\s*-->/)
-      if (metaMatch) {
-        try {
-          currentMeta = JSON.parse(metaMatch[1])
-          i++
-        } catch { /* ignore */ }
-      }
-    } else if (currentType) {
-      currentContent.push(lines[i])
-    }
-  }
-  if (currentType && currentContent.length > 0) {
-    events.push({
-      type: currentType,
-      content: currentContent.join('\n').trim(),
-      ...currentMeta,
-    })
-  }
-  return events
 }
 
 async function searchSessions(projectPath: string, query: string, filters: any) {
@@ -357,8 +360,11 @@ function normalizeFilters(filters: any = {}) {
 
 function getSettings() {
   const stored = readSettings()
+  const projectPath = ensureProjectPath(global.__projectPath || stored.projectPath)
+  const recentProjects = Array.from(new Set([projectPath, ...stored.recentProjects].filter(Boolean)))
   return {
-    projectPath: ensureProjectPath(global.__projectPath || stored.projectPath),
+    projectPath,
+    recentProjects: recentProjects.map(projectInfo),
     indexingMode: stored.indexingMode,
     version: app.getVersion(),
   }
@@ -366,9 +372,11 @@ function getSettings() {
 
 function updateSettings(settings: any) {
   const current = readSettings()
+  const previousProjectPath = ensureProjectPath(global.__projectPath)
   const projectPath = ensureProjectPath(settings.projectPath || global.__projectPath || current.projectPath)
   global.__projectPath = projectPath
-  saveSettings({ projectPath, indexingMode: 'manual' })
+  const recentProjects = Array.from(new Set([projectPath, previousProjectPath, ...current.recentProjects].filter(Boolean))).slice(0, 12)
+  saveSettings({ projectPath, recentProjects, indexingMode: 'manual' })
   return getSettings()
 }
 
@@ -385,16 +393,32 @@ ipcMain.handle('contextvault:open-project', async () => {
   })
   if (result.canceled || result.filePaths.length === 0) return null
 
-  const projectPath = result.filePaths[0]
-  const eng = await getEngine()
-  const paths = eng.ensureEngineStorage(projectPath)
-  if (!existsSync(paths.memoryPath)) {
-    writeFileSync(paths.memoryPath, '# ContextVault Project Memory\n\nAdd durable project context here.\n', 'utf-8')
+  return activateProject(result.filePaths[0])
+})
+
+ipcMain.handle('contextvault:list-projects', async () => getSettings().recentProjects)
+
+ipcMain.handle('contextvault:switch-project', async (_e, projectPath: string) => {
+  const resolved = ensureProjectPath(projectPath)
+  if (!resolved || !readSettings().recentProjects.includes(resolved)) {
+    return { success: false, error: 'Project is unavailable. Add the folder again.' }
   }
-  eng.buildContextIndex(projectPath)
-  global.__projectPath = projectPath
-  saveSettings({ projectPath, indexingMode: 'manual' })
-  return projectPath
+  await activateProject(resolved)
+  return { success: true, project: projectInfo(resolved) }
+})
+
+ipcMain.handle('contextvault:remove-project', async (_e, projectPath: string) => {
+  const current = readSettings()
+  const recentProjects = current.recentProjects.filter((item) => item !== projectPath)
+  let activePath = ensureProjectPath(global.__projectPath || current.projectPath)
+  if (activePath === projectPath) activePath = recentProjects[0] || ''
+  global.__projectPath = activePath
+  saveSettings({ projectPath: activePath, recentProjects, indexingMode: 'manual' })
+  if (activePath) {
+    const eng = await getEngine()
+    eng.buildContextIndex(activePath)
+  }
+  return { success: true, activeProjectPath: activePath, projects: getSettings().recentProjects }
 })
 
 ipcMain.handle('contextvault:get-dashboard-stats', async () => {
@@ -455,6 +479,19 @@ ipcMain.handle('contextvault:import', async () => {
     return importResult
   } catch (err: any) {
     return { error: err.message }
+  }
+})
+
+ipcMain.handle('contextvault:save-session', async (_e, input: any) => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return { success: false, error: 'Select a project before recording.' }
+  try {
+    const session = saveDesktopSession(pp, input)
+    const eng = await getEngine()
+    eng.buildContextIndex(pp)
+    return { success: true, session }
+  } catch (err: any) {
+    return { success: false, error: err.message }
   }
 })
 
@@ -535,7 +572,8 @@ ipcMain.handle('contextvault:get-project-path', async () => global.__projectPath
 
 app.whenReady().then(async () => {
   const developmentProject = isDev ? join(app.getAppPath(), '..') : ''
-  global.__projectPath = ensureProjectPath(process.env.CONTEXTVAULT_PROJECT_PATH || readSettings().projectPath || developmentProject)
+  const storedSettings = readSettings()
+  global.__projectPath = ensureProjectPath(process.env.CONTEXTVAULT_PROJECT_PATH || storedSettings.projectPath || developmentProject)
   if (global.__projectPath) {
     try {
       const eng = await getEngine()

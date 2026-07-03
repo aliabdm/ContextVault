@@ -935,6 +935,34 @@ Verification results for this release: root tests `56/56`, extension build passe
 
 Release result: GitHub Action run `28638914646` completed successfully. GitHub Release `v1.5.5` is public with `ContextVault-Setup-1.5.5.exe` and `ContextVault-1.5.5.AppImage`. Vercel preview deployment `dpl_3W5CavGTNw6unr7tFh7BF8wU6Ps4` is READY for the release branch.
 
+### Desktop download analytics plan (2026-07-03)
+
+Goal: expose trustworthy Desktop download analytics without adding hidden application telemetry or weakening ContextVault's local-first privacy promise.
+
+1. `[done]` Aggregate public GitHub Release asset `download_count` values for Windows `.exe` and Linux `.AppImage` installers.
+2. `[done]` Add a cached JSON endpoint and a public `/stats` dashboard with total, platform, release, and asset breakdowns.
+3. `[done]` Link the dashboard from the landing footer and document exactly what the metric does and does not mean.
+4. `[done]` Run the landing production build and browser QA locally.
+5. `[in progress]` Commit/push to `main`, wait for Vercel production, and verify the live dashboard and API.
+
+Measurement decision: GitHub counts download events, not unique people or active installs. Re-downloads can increase the number. No device identifier, fingerprint, background ping, or hidden Desktop telemetry will be introduced.
+
+### Desktop onboarding and multi-project follow-up (2026-07-03)
+
+New user feedback: a first-time user cannot tell how recording starts, and the Desktop UI appears limited to one project.
+
+1. `[done]` Audit the current Desktop project picker, persisted settings, empty states, capture commands, README, FAQ, and landing instructions.
+2. `[done]` Add a prominent first-run/empty-state recording guide and a native in-app recorder with explicit capture boundaries.
+3. `[done]` Replace the single remembered project with a safe recent-project collection and project switcher; allow add/switch/remove-from-list without deleting vault files.
+4. `[done]` Add focused usage documentation from installation through the first recorded session and project switching.
+5. `[done]` Update every relevant public surface (project README, landing, FAQ, portfolio/profile copy where applicable) with verified behavior only.
+6. `[done]` Run root tests, extension build, Desktop build/tests, landing build, Docker checks, and browser/Desktop QA.
+7. `[in progress]` Release the Desktop-only feature set as `v1.6.0`, then verify GitHub assets and Vercel production. The npm package remains unchanged because CLI/engine code and contract did not change.
+
+Compatibility guardrail: Desktop remains a UI over the existing `.contextvault` format and CLI. No change may break the browser extension, `contextvault` commands, npm package behavior, or existing vaults.
+
+Verification checkpoint: 60/60 tests passed, including four new Desktop session-format regressions. Extension, Desktop, and landing production builds passed. A clean Docker install of Electron 43, electron-vite 5, Vite 7, and electron-builder 26 built successfully with zero audit findings. Linux packaging produced a 125 MB `ContextVault-1.6.0.AppImage`; package metadata was then updated for reliable Linux launcher/window association. Manual Desktop QA created/saved/read a two-event session, verified metadata comments no longer leak into event text, and removed the QA session afterward. Multi-project QA added a temporary second vault, switched both directions, removed it from recents without deleting user data, and cleaned the temporary folder. Landing QA passed at desktop and 375px mobile widths with no overflow or console errors; `/stats` and `/api/download-stats` both report 1 total Desktop download (Windows 1, Linux 0) at this checkpoint. Portfolio `main` was updated in `07747bf`; profile README `main` was updated in `466b5f7`.
+
 ### Production landing video hotfix
 
 1. `[done]` Promote the Desktop walkthrough to a prominent Hero position.

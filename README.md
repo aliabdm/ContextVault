@@ -22,6 +22,8 @@
   &middot;
   <a href="https://context-vault-two.vercel.app/faq"><strong>Technical FAQ</strong></a>
   &middot;
+  <a href="https://context-vault-two.vercel.app/stats"><strong>Desktop Download Stats</strong></a>
+  &middot;
   <a href="#roadmap"><strong>Roadmap</strong></a>
 </p>
 
@@ -35,7 +37,7 @@
   <a href="https://github.com/aliabdm/ContextVault/releases/latest"><img src="https://img.shields.io/github/v/release/aliabdm/ContextVault?style=for-the-badge&label=desktop" alt="latest Desktop release" /></a>
   <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/v/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm package" /></a>
   <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/dm/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm downloads" /></a>
-  <a href="https://context-vault-two.vercel.app/download"><img src="https://img.shields.io/github/downloads/aliabdm/ContextVault/total?style=for-the-badge&logo=github&color=6366f1" alt="GitHub downloads" /></a>
+  <a href="https://context-vault-two.vercel.app/stats"><img src="https://img.shields.io/badge/Desktop_download_stats-Live-6366f1?style=for-the-badge&logo=github" alt="Desktop download statistics" /></a>
 </p>
 
 <p align="center">
@@ -59,6 +61,20 @@ Download the latest installer for your platform:
 | Linux | [Download for Linux](https://context-vault-two.vercel.app/download/linux) (.AppImage) |
 
 Windows and Linux downloads resolve to the latest published release assets. The app works offline; update checks are available in packaged builds. macOS currently requires a local source build.
+
+#### Desktop quick start
+
+1. Open ContextVault Desktop and click **Add your first project**. Choose the local project folder you want to remember.
+2. Click the red **Start recording** button on the Dashboard or **Record Session** in the sidebar.
+3. Give the session a title, choose its source (Codex, Claude Code, Cursor, Terminal, Human, or Other), then click **Start recording**.
+4. Add the context worth preserving as **User**, **Agent**, **Decision**, **Task**, **Problem**, or **Note** events.
+5. Click **Finish & save**. The session is saved locally under `<project>/.contextvault/sessions/`, indexed, and available immediately in Sessions, Search, and Prepare Context.
+
+Use **+ Add** in the sidebar to add more projects. The project dropdown switches the entire Desktop view between their independent local vaults. Settings can remove a project from the recent list without deleting the project or its `.contextvault` files.
+
+The recorder is explicit: ContextVault does not listen to your screen, shell, microphone, or clipboard. If you prefer a terminal workflow, run `contextvault record` inside the same project; Desktop and CLI use the same Markdown session format.
+
+[View privacy-friendly Desktop download statistics](https://context-vault-two.vercel.app/stats). The dashboard counts GitHub installer download events, not unique people or active installations.
 
 > **macOS note:** The Desktop app builds successfully on macOS locally. To build the macOS `.dmg` yourself, run `cd desktop && npm run package:mac`. GitHub Actions does not include macOS installers because code signing requires an Apple Developer account. A future update may add notarized builds.
 
@@ -114,7 +130,7 @@ Browser Capture is installed from the extension build as described in [Installat
   <a href="landing/public/demo/contextvault-desktop-demo.mp4"><strong>Watch the complete Desktop workflow (MP4)</strong></a>
 </p>
 
-The Desktop app uses the same local `.contextvault` directory as the CLI. It includes Dashboard statistics, session browsing, event timelines, filtered search, prepared context packages, project-memory refresh, timeline generation, unified index rebuilds, and full Markdown export.
+The Desktop app uses the same local `.contextvault` directory as the CLI. It includes an in-app session recorder, multi-project switching, Dashboard statistics, session browsing, event timelines, filtered search, prepared context packages, project-memory refresh, timeline generation, unified index rebuilds, and full Markdown export.
 
 <table>
   <tr>

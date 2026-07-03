@@ -5,7 +5,7 @@ ContextVault has two independently versioned deliverables.
 ## Desktop releases
 
 - Version source: `desktop/package.json`
-- Tag format: `v<desktop-version>` (example: `v1.5.5`)
+- Tag format: `v<desktop-version>` (example: `v1.6.0`)
 - Workflow: `.github/workflows/release.yml`
 - Output: Windows installer and Linux AppImage attached to the GitHub Release
 

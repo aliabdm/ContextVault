@@ -20,8 +20,8 @@ export default function DesktopSection() {
             Manage context without the terminal
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-neutral-400">
-            Browse sessions, search project memory, and prepare AI context packages from a clean desktop
-            interface. Works offline with the same local `.contextvault` your CLI uses.
+            Record sessions, switch between projects, search local memory, and prepare AI context packages from a clean desktop
+            interface. Works offline with the same `.contextvault` format your CLI uses.
           </p>
         </div>
 
@@ -96,6 +96,31 @@ export default function DesktopSection() {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-2xl border border-vault-500/25 bg-gradient-to-r from-vault-500/10 to-purple-500/5 p-6 sm:p-8">
+          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-vault-300">Start in under a minute</span>
+              <h3 className="mt-2 text-2xl font-bold text-white">Recording is a visible, explicit action</h3>
+              <p className="mt-3 text-sm leading-6 text-neutral-400">
+                ContextVault never watches your screen or terminal in the background. You decide what becomes durable project memory.
+              </p>
+            </div>
+            <ol className="grid gap-3 sm:grid-cols-3">
+              {[
+                ['1', 'Add a project', 'Choose a local folder. Add more later and switch from the sidebar.'],
+                ['2', 'Start recording', 'Name the session and choose Codex, Claude Code, Cursor, or another source.'],
+                ['3', 'Capture & save', 'Add prompts, agent output, decisions, tasks, problems, or notes.'],
+              ].map(([step, title, description]) => (
+                <li key={step} className="rounded-xl border border-dark-500 bg-dark-800/70 p-4">
+                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-vault-500 text-xs font-bold text-white">{step}</span>
+                  <h4 className="mt-3 text-sm font-semibold text-white">{title}</h4>
+                  <p className="mt-1 text-xs leading-5 text-neutral-500">{description}</p>
+                </li>
+              ))}
+            </ol>
           </div>
         </div>
 

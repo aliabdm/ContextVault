@@ -38,6 +38,7 @@ mac:
   identity: null
 
 linux:
+  syncDesktopName: true
   target:
     - target: AppImage
       arch:

@@ -1,7 +1,9 @@
 import { NavLink } from 'react-router-dom'
+import ProjectSwitcher from './ProjectSwitcher'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: '◉' },
+  { to: '/record', label: 'Record Session', icon: '●' },
   { to: '/sessions', label: 'Sessions', icon: '☰' },
   { to: '/search', label: 'Search', icon: '⌕' },
   { to: '/prepare', label: 'Prepare', icon: '⊞' },
@@ -11,13 +13,13 @@ const links = [
 
 export default function Sidebar() {
   return (
-    <aside className="flex w-56 flex-col border-r border-dark-600 bg-dark-900 p-4">
-      <div className="mb-8 flex items-center gap-2 px-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-vault-500 text-sm font-bold text-white">
-          CV
-        </div>
+    <aside className="flex w-60 shrink-0 flex-col border-r border-dark-600 bg-dark-900 p-4">
+      <div className="mb-5 flex items-center gap-2 px-2">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-vault-500 text-sm font-bold text-white">CV</div>
         <span className="text-base font-semibold text-white">ContextVault</span>
       </div>
+
+      <ProjectSwitcher />
 
       <nav className="flex flex-col gap-1">
         {links.map((link) => (
@@ -33,7 +35,7 @@ export default function Sidebar() {
               }`
             }
           >
-            <span className="text-lg">{link.icon}</span>
+            <span className={link.to === '/record' ? 'text-base text-red-400' : 'text-lg'}>{link.icon}</span>
             {link.label}
           </NavLink>
         ))}
@@ -45,8 +47,8 @@ export default function Sidebar() {
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-neutral-500 transition-colors hover:text-neutral-300"
-          onClick={(e) => {
-            e.preventDefault()
+          onClick={(event) => {
+            event.preventDefault()
             window.contextVault?.openExternal('https://github.com/aliabdm/ContextVault')
           }}
         >
@@ -60,8 +62,8 @@ export default function Sidebar() {
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-2 rounded-lg px-3 py-2 text-xs text-neutral-500 transition-colors hover:text-neutral-300"
-          onClick={(e) => {
-            e.preventDefault()
+          onClick={(event) => {
+            event.preventDefault()
             window.contextVault?.openExternal('https://senior-mohammad-ali.vercel.app/')
           }}
         >

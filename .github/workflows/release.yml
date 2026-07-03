@@ -96,3 +96,11 @@ jobs:
             - [Linux](https://context-vault-two.vercel.app/download/linux)
 
             macOS is currently available as a local source build with `npm run package:mac`.
+
+            ### Start recording
+            1. Add or select a project in the Desktop sidebar.
+            2. Click **Start recording**.
+            3. Add prompts, agent output, decisions, tasks, problems, or notes.
+            4. Click **Finish & save**.
+
+            Desktop and `contextvault record` use the same local Markdown session format. [View public Desktop download stats](https://context-vault-two.vercel.app/stats).

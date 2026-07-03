@@ -4,6 +4,15 @@ const api = {
   openProject: (): Promise<string | null> =>
     ipcRenderer.invoke('contextvault:open-project'),
 
+  listProjects: (): Promise<any[]> =>
+    ipcRenderer.invoke('contextvault:list-projects'),
+
+  switchProject: (projectPath: string): Promise<any> =>
+    ipcRenderer.invoke('contextvault:switch-project', projectPath),
+
+  removeProject: (projectPath: string): Promise<any> =>
+    ipcRenderer.invoke('contextvault:remove-project', projectPath),
+
   getDashboardStats: (): Promise<{
     sessions: number
     events: number
@@ -30,6 +39,9 @@ const api = {
 
   importConversation: (): Promise<any> =>
     ipcRenderer.invoke('contextvault:import'),
+
+  saveSession: (input: any): Promise<any> =>
+    ipcRenderer.invoke('contextvault:save-session', input),
 
   getSettings: (): Promise<any> =>
     ipcRenderer.invoke('contextvault:get-settings'),

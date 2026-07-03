@@ -61,7 +61,7 @@ export default function Hero() {
             <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <span className="inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">
-                  New · Desktop v1.5.5
+                  New · Desktop Recorder
                 </span>
                 <h2 className="mt-2 text-xl font-bold text-white sm:text-2xl">Watch the complete workflow</h2>
               </div>
@@ -76,7 +76,7 @@ export default function Hero() {
                 loop
                 playsInline
                 preload="metadata"
-                aria-label="ContextVault Desktop v1.5.5 complete product walkthrough"
+                aria-label="ContextVault Desktop product walkthrough"
               >
                 <source src="/demo/contextvault-desktop-demo.mp4" type="video/mp4" />
                 Your browser does not support the ContextVault Desktop demo video.

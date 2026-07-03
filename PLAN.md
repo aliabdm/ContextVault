@@ -2,7 +2,7 @@
 
 ## Current Vision
 
-ContextVault is a local-first context platform with **Browser Capture** and **Terminal Capture**.
+ContextVault is a local-first context platform with **Browser Capture**, **Terminal Capture**, and a **Desktop App** over the same portable context format.
 
 It preserves AI conversations, coding-agent sessions, project decisions, tasks, problems, discoveries, and workflow context as portable local memory.
 
@@ -22,6 +22,12 @@ Terminal Capture
   - Vault Terminal CLI
   - Raw Context Events
   - Markdown Session Files
+        |
+        v
+Desktop App
+  - Explicit in-app session recorder
+  - Multi-project vault switcher
+  - Search, prepare, memory, timeline, and export tools
         |
         v
 Shared Context Layer
@@ -71,6 +77,10 @@ Storage / Export / Search
 - Project memory maintenance
 - Session linking
 - Context timeline
+- Desktop app for Windows and Linux, with macOS source builds
+- Explicit Desktop session recorder compatible with Vault Terminal Markdown
+- Multi-project Desktop switching with independent local vaults
+- Public GitHub installer download dashboard without in-app telemetry
 
 ### In Progress
 
