@@ -31,6 +31,12 @@ const api = {
   search: (query: string, filters?: any): Promise<any> =>
     ipcRenderer.invoke('contextvault:search', query, filters),
 
+  listEvents: (type: string, filters?: any): Promise<any> =>
+    ipcRenderer.invoke('contextvault:list-events', type, filters),
+
+  getWatcherStatus: (): Promise<any> =>
+    ipcRenderer.invoke('contextvault:get-watcher-status'),
+
   prepareContext: (query: string, filters?: any): Promise<any> =>
     ipcRenderer.invoke('contextvault:prepare-context', query, filters),
 

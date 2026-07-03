@@ -16,6 +16,8 @@ interface ContextVaultAPI {
   listSessions: () => Promise<any[]>
   getSession: (id: string) => Promise<any>
   search: (query: string, filters?: any) => Promise<any>
+  listEvents: (type: string, filters?: any) => Promise<{ success: boolean; events: any[]; error?: string }>
+  getWatcherStatus: () => Promise<{ watching: boolean; projectPath: string; lastUpdatedAt: string; events: number; sources: string[] }>
   prepareContext: (query: string, filters?: any) => Promise<any>
   exportMarkdown: (id: string) => Promise<{ content: string; filename: string } | null>
   importConversation: () => Promise<any>

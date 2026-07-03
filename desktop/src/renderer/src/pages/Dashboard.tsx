@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import StatsCard from '../components/StatsCard'
 import { announceProjectChange } from '../components/ProjectSwitcher'
+import WatcherStatus from '../components/WatcherStatus'
 
 interface Stats {
   sessions: number
@@ -43,12 +44,24 @@ export default function Dashboard() {
 
   if (!projectPath) {
     return (
-      <div className="mx-auto flex h-full max-w-2xl flex-col items-center justify-center text-center">
+      <div className="mx-auto flex h-full max-w-3xl flex-col items-center justify-center text-center">
         <div className="flex h-16 w-16 items-center justify-center rounded-2xl border border-dark-600 bg-dark-700 text-2xl text-vault-300">CV</div>
         <h1 className="mt-5 text-2xl font-bold text-white">Welcome to ContextVault</h1>
-        <p className="mt-3 max-w-lg text-sm leading-6 text-neutral-400">
-          Start by choosing a project folder. ContextVault creates a local `.contextvault` vault there; you can add more projects and switch between them at any time.
-        </p>
+        <p className="mt-3 max-w-xl text-sm leading-6 text-neutral-400">Choose a project once. Desktop initializes its local vault, watches it live, and gives you the full ContextVault workflow without command syntax.</p>
+        <ol className="mt-6 grid w-full gap-3 text-left sm:grid-cols-4">
+          {[
+            ['1', 'Select project', 'Choose the folder you work in.'],
+            ['2', 'Initialize', 'Desktop creates .contextvault safely.'],
+            ['3', 'Start recording', 'Capture manual events through the package engine.'],
+            ['4', 'View sessions', 'CLI and agent-written sessions appear live.'],
+          ].map(([step, title, description]) => (
+            <li key={step} className="rounded-xl border border-dark-600 bg-dark-700/45 p-4">
+              <span className="text-xs font-bold text-vault-300">{step}</span>
+              <strong className="mt-2 block text-sm text-neutral-200">{title}</strong>
+              <span className="mt-1 block text-xs leading-5 text-neutral-500">{description}</span>
+            </li>
+          ))}
+        </ol>
         <button onClick={handleOpenProject} className="mt-6 inline-flex h-11 items-center gap-2 rounded-xl bg-vault-500 px-6 text-sm font-semibold text-white shadow-lg shadow-vault-500/20 transition-all hover:bg-vault-600 active:scale-[0.97]">
           + Add your first project
         </button>
@@ -72,6 +85,8 @@ export default function Dashboard() {
           </button>
         </div>
       </div>
+
+      <WatcherStatus />
 
       {(stats?.sessions ?? 0) === 0 && (
         <section className="rounded-2xl border border-vault-500/25 bg-gradient-to-br from-vault-500/10 to-dark-700/40 p-6">
@@ -112,9 +127,9 @@ export default function Dashboard() {
           <ActionButton icon="⊞" label="Prepare Context" onClick={() => navigate('/prepare')} />
           <ActionButton icon="☰" label="Sessions" onClick={() => navigate('/sessions')} />
           <ActionButton icon="↓" label="Import Browser Export" onClick={async () => { await window.contextVault?.importConversation(); loadData() }} />
-          <ActionButton icon="□" label="Tasks" onClick={() => navigate('/search?type=task')} />
-          <ActionButton icon="✓" label="Decisions" onClick={() => navigate('/search?type=decision')} />
-          <ActionButton icon="!" label="Problems" onClick={() => navigate('/search?type=problem')} />
+          <ActionButton icon="□" label="Tasks" onClick={() => navigate('/tasks')} />
+          <ActionButton icon="✓" label="Decisions" onClick={() => navigate('/decisions')} />
+          <ActionButton icon="!" label="Problems" onClick={() => navigate('/problems')} />
           <ActionButton icon="◇" label="Vault Tools" onClick={() => navigate('/tools')} />
         </div>
       </div>

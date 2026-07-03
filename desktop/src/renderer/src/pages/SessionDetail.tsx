@@ -33,6 +33,12 @@ export default function SessionDetail() {
     }
   }
 
+  const handleCopy = async () => {
+    if (!id) return
+    const result = await window.contextVault?.exportMarkdown(decodeURIComponent(id))
+    if (result?.content) await navigator.clipboard.writeText(result.content)
+  }
+
   if (loading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -85,6 +91,12 @@ export default function SessionDetail() {
           </div>
         </div>
         <div className="flex gap-2">
+          <button
+            onClick={() => void handleCopy()}
+            className="inline-flex h-9 items-center gap-2 rounded-lg border border-dark-600 bg-dark-700 px-4 text-xs font-medium text-neutral-300 transition-colors hover:bg-dark-600"
+          >
+            Copy
+          </button>
           <button
             onClick={() => navigate(`/prepare?id=${encodeURIComponent(id || '')}`)}
             className="inline-flex h-9 items-center gap-2 rounded-lg border border-dark-600 bg-dark-700 px-4 text-xs font-medium text-neutral-300 transition-colors hover:bg-dark-600"

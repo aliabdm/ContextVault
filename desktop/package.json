@@ -1,6 +1,6 @@
 {
   "name": "contextvault-desktop",
-  "version": "1.7.0",
+  "version": "1.8.0",
   "desktopName": "com.contextvault.desktop.desktop",
   "description": "ContextVault Desktop — Visual context manager for AI chats, coding agents, and project memory",
   "main": "./out/main/index.js",

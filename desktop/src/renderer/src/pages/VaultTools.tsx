@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 type Status = { kind: 'idle' | 'working' | 'success' | 'error'; message: string }
@@ -42,6 +42,19 @@ export default function VaultTools() {
   const [preview, setPreview] = useState('')
   const [selectedCommand, setSelectedCommand] = useState('list')
   const [cliArgs, setCliArgs] = useState('')
+  const [sessions, setSessions] = useState<any[]>([])
+  const [linkFrom, setLinkFrom] = useState('')
+  const [linkTo, setLinkTo] = useState('')
+  const [relationship, setRelationship] = useState('related')
+
+  useEffect(() => {
+    window.contextVault?.listSessions().then((items) => {
+      const list = items || []
+      setSessions(list)
+      setLinkFrom(list[0]?.id || '')
+      setLinkTo(list[1]?.id || '')
+    })
+  }, [])
 
   const run = async (label: string, action: () => Promise<any>, onSuccess?: (result: any) => void) => {
     setStatus({ kind: 'working', message: `${label}...` })
@@ -57,6 +70,18 @@ export default function VaultTools() {
   }
 
   const tools = [
+    {
+      title: 'Initialize / repair vault',
+      description: 'Create any missing package folders and verify the active project is ready.',
+      action: () => run('Initializing vault', () => window.contextVault!.runCli('init'), (r) => setPreview(r.output || 'Vault is ready.')),
+      label: 'Initialize Vault',
+    },
+    {
+      title: 'Import conversation export',
+      description: 'Choose a supported Markdown or ZIP export and add it to this project.',
+      action: () => run('Importing conversation', () => window.contextVault!.importConversation(), (r) => setPreview(JSON.stringify(r, null, 2))),
+      label: 'Choose Import File',
+    },
     {
       title: 'Rebuild unified index',
       description: 'Normalize terminal sessions and browser imports into one searchable index.',
@@ -83,6 +108,11 @@ export default function VaultTools() {
     },
   ]
 
+  const copyPreview = async () => {
+    await navigator.clipboard.writeText(preview)
+    setStatus({ kind: 'success', message: 'Result copied to clipboard.' })
+  }
+
   const runPackageCommand = async () => {
     if (selectedCommand === 'record') {
       navigate('/record')
@@ -99,6 +129,22 @@ export default function VaultTools() {
     setStatus({ kind: 'success', message: `contextvault ${selectedCommand} completed.` })
     setPreview(result.output || '(command completed without text output)')
   }
+
+  const linkSessions = async () => {
+    if (!linkFrom || !linkTo || linkFrom === linkTo) {
+      setStatus({ kind: 'error', message: 'Choose two different sessions to link.' })
+      return
+    }
+    await run('Linking sessions', () => window.contextVault!.runCli('link', [linkFrom, linkTo, relationship]), (result) => setPreview(result.output || `Linked ${linkFrom} to ${linkTo}.`))
+  }
+
+  const workflows = [
+    ['/record', 'Record', 'Capture a package-backed session'], ['/sessions', 'Sessions', 'List, inspect, show, and export'],
+    ['/history', 'History', 'Chronological project activity'], ['/decisions', 'Decisions', 'Filter durable choices'],
+    ['/problems', 'Problems', 'Inspect blockers and failures'], ['/tasks', 'Tasks', 'Review follow-up work'],
+    ['/retrieve', 'Retrieve', 'Rank relevant evidence'], ['/search', 'Search', 'Search with structured filters'],
+    ['/prepare', 'Prepare', 'Build agent-ready context'],
+  ]
 
   return (
     <div className="mx-auto max-w-4xl space-y-6">
@@ -124,11 +170,33 @@ export default function VaultTools() {
         ))}
       </div>
 
-      <section className="rounded-2xl border border-vault-500/25 bg-vault-500/5 p-5">
+      <section className="rounded-2xl border border-dark-600 bg-dark-700/25 p-5">
+        <h2 className="text-sm font-semibold text-white">GUI workflows</h2>
+        <p className="mt-1 text-xs text-neutral-500">Common package features have dedicated screens, filters, results, and export actions.</p>
+        <div className="mt-4 grid gap-2 sm:grid-cols-3">
+          {workflows.map(([path, label, description]) => <button key={path} onClick={() => navigate(path)} className="rounded-xl border border-dark-600 bg-dark-800/60 p-3 text-left hover:border-vault-500/40"><span className="block text-xs font-semibold text-neutral-200">{label}</span><span className="mt-1 block text-[11px] text-neutral-600">{description}</span></button>)}
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-dark-600 bg-dark-700/25 p-5">
+        <h2 className="text-sm font-semibold text-white">Link sessions</h2>
+        <p className="mt-1 text-xs text-neutral-500">Create an explicit relationship without typing session IDs or command arguments.</p>
+        {sessions.length < 2 ? <p className="mt-4 rounded-xl border border-dashed border-dark-600 py-6 text-center text-xs text-neutral-500">Record at least two sessions before linking them.</p> : <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          <label><span className="mb-1.5 block text-xs text-neutral-400">From session</span><select value={linkFrom} onChange={(event) => setLinkFrom(event.target.value)} className="filter-control">{sessions.map((session) => <option key={session.id} value={session.id}>{session.title || session.id}</option>)}</select></label>
+          <label><span className="mb-1.5 block text-xs text-neutral-400">To session</span><select value={linkTo} onChange={(event) => setLinkTo(event.target.value)} className="filter-control">{sessions.map((session) => <option key={session.id} value={session.id}>{session.title || session.id}</option>)}</select></label>
+          <label><span className="mb-1.5 block text-xs text-neutral-400">Relationship</span><input value={relationship} onChange={(event) => setRelationship(event.target.value)} className="filter-control" /></label>
+          <button disabled={status.kind === 'working'} onClick={() => void linkSessions()} className="w-fit rounded-xl bg-vault-500 px-5 py-2.5 text-xs font-semibold text-white hover:bg-vault-600 disabled:opacity-50">Link sessions</button>
+        </div>}
+      </section>
+
+      <details className="rounded-2xl border border-dark-600 bg-dark-900/40 p-5">
+        <summary className="cursor-pointer text-sm font-semibold text-neutral-300">Advanced CLI Mode</summary>
+        <p className="mt-2 text-xs leading-5 text-neutral-600">Optional power-user fallback. The main product workflows above do not require command syntax.</p>
+        <section className="mt-4 border-t border-dark-600 pt-4">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <h2 className="text-sm font-semibold text-white">Every package command</h2>
-            <p className="mt-1 text-xs leading-5 text-neutral-500">These buttons execute the bundled <code>contextvault</code> CLI in the active project. Arguments use the same syntax as the terminal package.</p>
+            <h2 className="text-sm font-semibold text-white">Raw package command runner</h2>
+            <p className="mt-1 text-xs leading-5 text-neutral-500">Execute the bundled <code>contextvault</code> CLI directly when you need an uncommon flag.</p>
           </div>
           <code className="rounded-lg border border-dark-600 bg-dark-900 px-3 py-2 text-xs text-vault-300">contextvault {selectedCommand} {cliArgs}</code>
         </div>
@@ -165,13 +233,14 @@ export default function VaultTools() {
             </button>
           </div>
         )}
-      </section>
+        </section>
+      </details>
 
       <div className={`rounded-xl border px-4 py-3 text-xs ${status.kind === 'error' ? 'border-red-500/30 bg-red-500/5 text-red-300' : status.kind === 'success' ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-300' : 'border-dark-600 text-neutral-500'}`}>
         {status.message}
       </div>
 
-      {preview && <pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-xl border border-dark-600 bg-dark-900 p-4 text-xs leading-relaxed text-neutral-300">{preview}</pre>}
+      {preview && <section className="space-y-2"><div className="flex justify-end gap-2"><button onClick={() => void copyPreview()} className="rounded-lg border border-dark-600 px-3 py-2 text-xs text-neutral-300">Copy result</button><button onClick={() => downloadMarkdown(preview, 'contextvault-tool-result.md')} className="rounded-lg border border-dark-600 px-3 py-2 text-xs text-neutral-300">Export result</button></div><pre className="max-h-80 overflow-auto whitespace-pre-wrap rounded-xl border border-dark-600 bg-dark-900 p-4 text-xs leading-relaxed text-neutral-300">{preview}</pre></section>}
     </div>
   )
 }

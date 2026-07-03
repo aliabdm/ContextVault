@@ -10,6 +10,7 @@ import PrepareContext from './pages/PrepareContext'
 import Settings from './pages/Settings'
 import VaultTools from './pages/VaultTools'
 import Recorder from './pages/Recorder'
+import EventExplorer from './pages/EventExplorer'
 
 export default function App() {
   const [projectRevision, setProjectRevision] = useState(0)
@@ -35,6 +36,11 @@ export default function App() {
             <Route path="/record" element={<Recorder />} />
             <Route path="/sessions" element={<Sessions />} />
             <Route path="/sessions/:id" element={<SessionDetail />} />
+            <Route path="/history" element={<EventExplorer mode="history" />} />
+            <Route path="/decisions" element={<EventExplorer mode="decisions" />} />
+            <Route path="/problems" element={<EventExplorer mode="problems" />} />
+            <Route path="/tasks" element={<EventExplorer mode="tasks" />} />
+            <Route path="/retrieve" element={<EventExplorer mode="retrieve" />} />
             <Route path="/search" element={<Search />} />
             <Route path="/prepare" element={<PrepareContext />} />
             <Route path="/tools" element={<VaultTools />} />

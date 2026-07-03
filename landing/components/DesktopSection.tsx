@@ -20,8 +20,8 @@ export default function DesktopSection() {
             Manage context without the terminal
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-neutral-400">
-            Run the real ContextVault package commands, switch projects, browse existing sessions, search local memory, and prepare AI
-            context from a clean desktop interface. No parallel database or recorder format.
+            Record, inspect history, filter decisions and problems, retrieve evidence, prepare context, link sessions, and manage projects
+            through dedicated GUI workflows. The CLI remains the shared engine—not the user experience.
           </p>
         </div>
 
@@ -41,12 +41,12 @@ export default function DesktopSection() {
           <figure className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
             <img
               src="/demo/contextvault-desktop-commands.png"
-              alt="ContextVault Desktop Vault Tools showing every bundled package command"
+              alt="ContextVault Desktop History screen with source, type, time, and result filters"
               className="aspect-video w-full object-cover object-top"
             />
             <figcaption className="border-t border-dark-500 px-5 py-4">
-              <p className="text-sm font-semibold text-white">Every package command</p>
-              <p className="mt-1 text-xs leading-5 text-neutral-500">Visible controls for record, list, show, search, import, retrieve, prepare, memory, timeline, and the full CLI.</p>
+              <p className="text-sm font-semibold text-white">GUI first, commands optional</p>
+              <p className="mt-1 text-xs leading-5 text-neutral-500">Dedicated History, Decisions, Problems, Tasks, Retrieve, Search, and Prepare screens with copy/export. Raw arguments stay under Advanced CLI Mode.</p>
             </figcaption>
           </figure>
         </div>
@@ -64,7 +64,7 @@ export default function DesktopSection() {
               {[
                 ['1', 'Add a project', 'Choose a local folder. Add more later and switch from the sidebar.'],
                 ['2', 'Start recording', 'Name the session and choose Codex, Claude Code, Cursor, or another source.'],
-                ['3', 'Use every command', 'Record, list, show, search, prepare, retrieve, memory, timeline, and the full CLI surface.'],
+                ['3', 'Work visually', 'Use filters and result screens; sessions written by CLI or integrated agents appear live.'],
               ].map(([step, title, description]) => (
                 <li key={step} className="rounded-xl border border-dark-500 bg-dark-800/70 p-4">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-vault-500 text-xs font-bold text-white">{step}</span>

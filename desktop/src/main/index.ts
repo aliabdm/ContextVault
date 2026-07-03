@@ -13,6 +13,7 @@ let engine: any = null
 const cliRecorders = new Map<string, ChildProcessWithoutNullStreams>()
 let vaultWatcher: FSWatcher | null = null
 let vaultRefreshTimer: NodeJS.Timeout | null = null
+let lastVaultUpdatedAt = new Date().toISOString()
 
 const CLI_COMMANDS = new Set([
   'init', 'list', 'show', 'export', 'search', 'import', 'index', 'retrieve',
@@ -256,6 +257,7 @@ function watchActiveVault(projectPath: string): void {
   vaultWatcher = null
   if (vaultRefreshTimer) clearTimeout(vaultRefreshTimer)
   const sessionsPath = join(getVaultPath(projectPath), 'sessions')
+  lastVaultUpdatedAt = new Date().toISOString()
   mkdirSync(sessionsPath, { recursive: true })
   try {
     vaultWatcher = watch(sessionsPath, () => {
@@ -264,6 +266,7 @@ function watchActiveVault(projectPath: string): void {
         try {
           const eng = await getEngine()
           eng.buildContextIndex(projectPath)
+          lastVaultUpdatedAt = new Date().toISOString()
           mainWindow?.webContents.send('contextvault:vault-changed')
         } catch (error) {
           console.error('Failed to refresh changed vault:', error)
@@ -477,7 +480,7 @@ ipcMain.handle('contextvault:open-project', async () => {
     properties: ['openDirectory'],
     title: 'Select a project folder',
   })
-  if (result.canceled || result.filePaths.length === 0) return null
+  if (result.canceled || result.filePaths.length === 0) return { success: false, canceled: true, error: 'Import canceled.' }
 
   return activateProject(result.filePaths[0])
 })
@@ -562,9 +565,36 @@ ipcMain.handle('contextvault:import', async () => {
   try {
     const importResult = await eng.importBrowserExports(pp, result.filePaths[0])
     eng.buildContextIndex(pp)
-    return importResult
+    return { success: true, ...importResult }
   } catch (err: any) {
-    return { error: err.message }
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('contextvault:list-events', async (_e, type: string, filters: any) => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return { success: false, events: [], error: 'No project selected' }
+  try {
+    const eng = await getEngine()
+    const normalized = normalizeFilters(filters)
+    const events = eng.listContextEvents(pp, type || undefined, { ...normalized, query: String(filters?.query || '').trim() })
+    return { success: true, events }
+  } catch (error) {
+    return { success: false, events: [], error: error instanceof Error ? error.message : String(error) }
+  }
+})
+
+ipcMain.handle('contextvault:get-watcher-status', async () => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return { watching: false, projectPath: '', lastUpdatedAt: '', events: 0, sources: [] }
+  try {
+    const indexPath = join(getVaultPath(pp), 'index', 'context-index.json')
+    const index = existsSync(indexPath) ? JSON.parse(readFileSync(indexPath, 'utf-8')) : { events: [], eventCount: 0 }
+    const events = Array.isArray(index.events) ? index.events : []
+    const sources = Array.from(new Set(events.map((event: any) => event.platform || event.source).filter(Boolean))).sort()
+    return { watching: Boolean(vaultWatcher), projectPath: pp, lastUpdatedAt: lastVaultUpdatedAt, events: index.eventCount || events.length, sources }
+  } catch {
+    return { watching: Boolean(vaultWatcher), projectPath: pp, lastUpdatedAt: lastVaultUpdatedAt, events: 0, sources: [] }
   }
 })
 

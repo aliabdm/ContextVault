@@ -103,4 +103,7 @@ jobs:
             3. Write or paste context; Desktop sends it to the bundled `contextvault record` process.
             4. Click **Finish & save**.
 
-            Desktop is a GUI over the bundled package commands and reads existing `.contextvault` files directly. [View public Desktop download stats](https://context-vault-two.vercel.app/stats).
+            ### GUI-first workflows
+            History, Decisions, Problems, Tasks, Retrieve, Search, Prepare, Import, Link, Index, Memory, Timeline, and Export now have dedicated controls and result screens. The raw runner is available only under **Advanced CLI Mode**.
+
+            Desktop reads and watches the same `.contextvault` files as the package. Sessions written by the CLI or a compatible agent integration appear live. [View public Desktop download stats](https://context-vault-two.vercel.app/stats).

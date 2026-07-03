@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .filter-control {
+    @apply w-full rounded-xl border border-dark-600 bg-dark-800 px-3 py-2.5 text-sm text-neutral-200 outline-none focus:border-vault-500/60;
+  }
+}
+
 :root {
   --vault-50: #eef2ff;
   --vault-100: #e0e7ff;

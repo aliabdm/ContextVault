@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import SessionRow from '../components/SessionRow'
+import WatcherStatus from '../components/WatcherStatus'
 
 export default function Sessions() {
   const navigate = useNavigate()
@@ -51,7 +52,7 @@ export default function Sessions() {
   }
 
   return (
-    <div className="mx-auto max-w-5xl">
+    <div className="mx-auto max-w-5xl space-y-4">
       <div className="mb-6 flex items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-bold text-white">Sessions</h1>
@@ -64,7 +65,9 @@ export default function Sessions() {
         </button>
       </div>
 
-      <div className="mb-4">
+      <WatcherStatus />
+
+      <div>
         <input
           type="text"
           value={search}

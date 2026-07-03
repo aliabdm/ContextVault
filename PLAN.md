@@ -528,6 +528,14 @@ Goal: let a user turn a selected local ContextVault into a shareable repository 
 - Browser adapter hardening
 - Demo/storytelling assets
 
+### Desktop v1.8.0 completed
+
+- Full GUI workflows for Record, Sessions, History, Decisions, Problems, Tasks, Retrieve, Search, Prepare, Import, Link, Index, Memory, Timeline, and Export
+- Structured filters, result screens, copy/export actions, and helpful empty/error states
+- Live `.contextvault` watcher status and automatic refresh for CLI- or integration-written sessions
+- Multi-project onboarding and switching
+- Raw package runner moved under collapsed Advanced CLI Mode
+
 ### Future
 
 - Automatic browser-to-engine synchronization
@@ -541,7 +549,7 @@ Goal: let a user turn a selected local ContextVault into a shareable repository 
 - Agent integrations
 - Encrypted backups
 - Optional self-hosted sync
-- Collaborative Context Repositories: remote push/pull, team permissions, diffs, history, and conflict resolution
+- **Next phase — Collaborative Context Repositories:** push a selected context vault to a remote repository; invite team collaborators; pull, edit, diff, and review shared context; push updates with Git-like history; and handle conflicts without abandoning local Markdown as the source of truth
 
 ## Changelog
 

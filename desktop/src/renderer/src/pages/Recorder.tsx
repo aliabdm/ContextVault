@@ -162,6 +162,10 @@ export default function Recorder() {
         )}
       </div>
 
+      <section className="rounded-xl border border-blue-500/25 bg-blue-500/5 px-4 py-3 text-xs leading-5 text-neutral-400">
+        <strong className="text-blue-300">What Record captures:</strong> manual events you add here are sent to the bundled ContextVault package recorder. Desktop also watches this project's <code className="text-vault-300">.contextvault</code> files, so sessions written by the CLI or an integrated agent appear automatically. Codex, Claude, and Cursor are not silently intercepted; they must write through ContextVault CLI or compatible watched files.
+      </section>
+
       {!recording ? (
         <div className="rounded-2xl border border-dark-600 bg-dark-700/40 p-6">
           <div className="grid gap-5 sm:grid-cols-2">

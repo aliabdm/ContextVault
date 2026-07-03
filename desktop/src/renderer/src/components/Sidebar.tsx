@@ -5,6 +5,11 @@ const links = [
   { to: '/', label: 'Dashboard', icon: '◉' },
   { to: '/record', label: 'Record Session', icon: '●' },
   { to: '/sessions', label: 'Sessions', icon: '☰' },
+  { to: '/history', label: 'History', icon: 'H' },
+  { to: '/decisions', label: 'Decisions', icon: 'D' },
+  { to: '/problems', label: 'Problems', icon: '!' },
+  { to: '/tasks', label: 'Tasks', icon: 'T' },
+  { to: '/retrieve', label: 'Retrieve', icon: 'R' },
   { to: '/search', label: 'Search', icon: '⌕' },
   { to: '/prepare', label: 'Prepare', icon: '⊞' },
   { to: '/tools', label: 'Vault Tools', icon: '◇' },
@@ -21,7 +26,7 @@ export default function Sidebar() {
 
       <ProjectSwitcher />
 
-      <nav className="flex flex-col gap-1">
+      <nav className="flex flex-1 flex-col gap-1 overflow-y-auto">
         {links.map((link) => (
           <NavLink
             key={link.to}
@@ -41,7 +46,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      <div className="mt-auto border-t border-dark-600 pt-4">
+      <div className="border-t border-dark-600 pt-4">
         <a
           href="https://github.com/aliabdm/ContextVault"
           target="_blank"

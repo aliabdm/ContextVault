@@ -9,14 +9,14 @@ type Project = {
 
 export default function Settings() {
   const [projects, setProjects] = useState<Project[]>([])
-  const [version, setVersion] = useState('1.7.0')
+  const [version, setVersion] = useState('1.8.0')
   const [status, setStatus] = useState('')
 
   const load = async () => {
     const settings = await window.contextVault?.getSettings()
     if (settings) {
       setProjects(settings.recentProjects || [])
-      setVersion(settings.version || '1.7.0')
+      setVersion(settings.version || '1.8.0')
     }
   }
 
@@ -97,7 +97,7 @@ export default function Settings() {
         <section className="rounded-xl border border-dark-600 p-5">
           <h2 className="mb-2 text-sm font-semibold text-neutral-200">Recording and indexing</h2>
           <p className="text-xs leading-5 text-neutral-500">
-            Desktop launches the bundled <code className="text-vault-300">contextvault record</code> process and exposes every package command through Vault Tools. Existing `.contextvault` files are read directly; there is no parallel Desktop database or recorder format.
+            Desktop uses the bundled ContextVault engine behind dedicated GUI workflows. Record, History, Decisions, Problems, Tasks, Retrieve, Search, Prepare, Link, Import, and maintenance tools do not require command syntax. Existing `.contextvault` files are read directly; there is no parallel Desktop database or recorder format.
           </p>
         </section>
 

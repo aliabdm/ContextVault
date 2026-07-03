@@ -65,7 +65,7 @@ export default function Hero() {
                 </span>
                 <h2 className="mt-2 text-xl font-bold text-white sm:text-2xl">Watch the complete workflow</h2>
               </div>
-              <p className="text-xs text-neutral-500">Sessions · Search · Prepare · Memory · Export</p>
+              <p className="text-xs text-neutral-500">Record · Watch · History · Retrieve · Prepare · Export</p>
             </div>
             <div className="overflow-hidden rounded-2xl border border-vault-500/30 bg-dark-900 p-2 shadow-2xl shadow-vault-500/15">
               <video

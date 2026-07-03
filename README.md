@@ -68,11 +68,14 @@ Windows and Linux downloads resolve to the latest published release assets. The 
 2. Click the red **Start recording** button on the Dashboard or **Record Session** in the sidebar.
 3. Give the session a title, choose its source (Codex, Claude Code, Cursor, Terminal, Human, or Other), then click **Start recording**.
 4. Write or paste the context worth preserving. Desktop sends each entry to the bundled `contextvault record` process and classifies it locally as **User**, **Agent**, **Decision**, **Task**, **Problem**, or **Note**; use the compact override only when you want a different type.
-5. Click **Finish & save**. The session is saved locally under `<project>/.contextvault/sessions/`, indexed, and available immediately in Sessions, Search, and Prepare Context.
+5. Click **Finish & save**. The session is saved locally under `<project>/.contextvault/sessions/`, indexed, and available immediately throughout the app.
+6. Use the dedicated **History**, **Decisions**, **Problems**, **Tasks**, **Retrieve**, **Search**, and **Prepare** screens. Each has normal fields, dropdowns, result views, and copy/export actions—no command syntax.
 
 Use **+ Add** in the sidebar to add more projects. The project dropdown switches the entire Desktop view between their independent local vaults. Settings can remove a project from the recent list without deleting the project or its `.contextvault` files.
 
-Desktop is a GUI over the bundled package commands. **Record** launches the real `contextvault record` CLI with the active project as its working directory, and **Vault Tools** exposes buttons for `init`, `list`, `show`, `export`, `search`, `import`, `index`, `retrieve`, `prepare`, `memory`, `link`, `timeline`, `history`, `tasks`, `decisions`, and `problems`. Existing `.contextvault` files appear without migration.
+ContextVault Desktop is a full GUI product over the same package engine. **Record** launches the real `contextvault record` CLI with the active project as its working directory. History, Decisions, Problems, Tasks, Retrieve, Search, Prepare, Sessions, Import, Link, Index, Memory, Timeline, and Export all have dedicated GUI controls. A raw command runner remains available only inside collapsed **Advanced CLI Mode** for power users. Existing `.contextvault` files appear without migration.
+
+Desktop watches the active project's `.contextvault` files. Sessions written by a terminal CLI or an integrated agent appear live while the app is open; the Dashboard and Sessions screens show watcher state, last update time, event count, and detected sources. ContextVault does not silently intercept unrelated Codex, Claude, or Cursor processes: external tools must write through the ContextVault CLI or compatible watched files.
 
 The recorder is explicit: the package command reads entries sent from its UI or terminal stdin; it does not silently intercept another Codex, Claude, Cursor, screen, shell, microphone, or clipboard process. Automatic classification is deterministic and runs entirely on-device with no API call or telemetry.
 
@@ -131,7 +134,7 @@ Browser Capture is installed from the extension build as described in [Installat
 <table>
   <tr>
     <td width="50%"><img src="landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop native session recorder" /></td>
-    <td width="50%"><img src="landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop package command controls" /></td>
+    <td width="50%"><img src="landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop GUI history filters and results" /></td>
   </tr>
 </table>
 
@@ -139,7 +142,7 @@ Browser Capture is installed from the extension build as described in [Installat
   <a href="landing/public/demo/contextvault-desktop-demo.mp4"><strong>Watch the complete Desktop workflow (MP4)</strong></a>
 </p>
 
-The Desktop app is a graphical control surface for the packaged `contextvault` CLI and the same local `.contextvault` directory. It includes the real interactive package recorder, every package command, multi-project switching, Dashboard statistics, session browsing, event timelines, filtered search, prepared context packages, project-memory refresh, timeline generation, unified index rebuilds, and full Markdown export.
+The Desktop app is a complete graphical product for the packaged `contextvault` engine and the same local `.contextvault` directory. It includes the real interactive recorder, GUI-first workflows for every major package capability, multi-project switching, live watched-file sync, Dashboard statistics, grouped result screens, copy/export actions, project-memory refresh, timeline generation, unified index rebuilds, session linking, and full Markdown export.
 
 <table>
   <tr>
@@ -667,6 +670,7 @@ No backend, account, vector database, embedding API, or cloud service is require
 - Published `@aliabdm/contextvault` npm CLI
 - Desktop App (Windows and Linux installers; macOS source build)
 - Package-powered Desktop GUI with every `contextvault` command and live external-session refresh
+- GUI-first Desktop workflows with structured filters and Advanced CLI Mode hidden by default
 - Browser Capture
 - Terminal Capture MVP
 - Local-first browser storage
@@ -744,6 +748,8 @@ The unified Context Engine now exists. The next work is hardening retrieval and 
 ### Articles
 
 - [I Built a Local-First Recorder for AI Coding Sessions](docs/medium-vault-terminal.md) — Medium article introducing Vault Terminal and the local-first philosophy
+- [ContextVault Desktop: From CLI Wrapper to Full GUI Product](docs/contextvault-desktop-gui.md) — launch article for the GUI-first Desktop release
+- [Desktop v1.8.0 social launch kit](docs/launch-v1.8.0-social-kit.md) — ready-to-post copy for LinkedIn, X, Dev.to, Medium, Reddit, Product Hunt, and Hacker News
 - More articles coming soon on [Medium](https://medium.com/@aliabdm) and [Dev.to](https://dev.to/maliano63717738)
 
 ### Community Discussions

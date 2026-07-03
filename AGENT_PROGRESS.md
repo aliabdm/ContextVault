@@ -992,6 +992,17 @@ User clarified the intended architecture: Desktop must be a GUI over the shipped
 
 Next phase is documented as Collaborative Context Repositories: scoped remote push/pull, team permissions, diffs, history, local edits, reviewed pushes, and conflict handling while keeping Markdown as the source of truth.
 
+### GUI-first Desktop product completion (2026-07-03)
+
+Goal: make ContextVault Desktop usable without command knowledge. The bundled CLI remains the execution layer, but raw command arguments move behind Advanced CLI Mode.
+
+1. `[done]` Audited all 17 package commands. Record, sessions/list/show/export, history, decisions, problems, tasks, retrieve, search, prepare, initialize/import/index/memory/timeline/export-all, and link now have visible GUI entry points; uncommon flags remain available separately.
+2. `[done]` Built dedicated History, Decisions, Problems, Tasks, and Retrieve workflows with source/type/time/limit controls, grouped results, empty/error states, and copy/export actions.
+3. `[done]` Completed Search and Prepare filters/export, live watcher status, event/source counts, four-step onboarding, and explicit external-agent integration guidance.
+4. `[done]` Moved the raw command and arguments runner under collapsed Advanced CLI Mode. It is no longer the default product experience.
+5. `[done]` Verified all Desktop routes with no console errors; structured Search returned ranked results; an external CLI recording appeared live in the already-open Sessions view (3→4 sessions, 14→16 events, new terminal source); 63/63 package/extension tests, extension build, Desktop renderer type-check/build, and Windows v1.8.0 installer packaging pass. Linux cross-packaging timed out on Windows and remains covered by the native Ubuntu release job.
+6. `[in progress]` Refreshed README/PLAN/FAQ/landing/release notes, v1.8.0 screenshots and 26.8-second 1280×720 H.264 demo, launch article/social kit, portfolio/profile, and Desktop version. Remaining: final commits/push/tag, GitHub release verification, and public landing verification.
+
 ### Production landing video hotfix
 
 1. `[done]` Promote the Desktop walkthrough to a prominent Hero position.

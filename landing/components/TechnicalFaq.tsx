@@ -42,7 +42,7 @@ const questions = [
   {
     question: 'Is Desktop a separate implementation from the npm package?',
     answer:
-      'No. Desktop launches the bundled vault-terminal.mjs for recording and exposes every package command through visible controls. Existing .contextvault sessions are read directly, so there is no migration or parallel database.',
+      'No. Desktop launches the bundled vault-terminal.mjs for recording and uses the same Context Engine and .contextvault files as the package. Major capabilities have dedicated GUI screens and forms; the raw command runner is an optional collapsed Advanced CLI Mode. There is no migration or parallel database.',
   },
   {
     question: 'Does automatic Desktop classification send my text to an AI service?',
@@ -57,7 +57,17 @@ const questions = [
   {
     question: 'Does it automatically record every terminal or coding agent?',
     answer:
-      'No. The bundled contextvault record command reads explicit stdin, whether used from a terminal or through the Desktop GUI. Silent interception of an external Codex, Claude Code, Cursor, VS Code, or MCP process requires a separate adapter and is not claimed by the current release.',
+      'No. The bundled contextvault record command reads explicit entries from the terminal or Desktop GUI. Desktop watches the active .contextvault directory, so sessions written through the CLI or compatible agent integrations appear immediately. Silent interception of an unrelated Codex, Claude Code, Cursor, VS Code, or MCP process still requires an adapter and is not claimed.',
+  },
+  {
+    question: 'Do I need to know CLI commands to use Desktop?',
+    answer:
+      'No. Recording, Sessions, History, Decisions, Problems, Tasks, Retrieve, Search, Prepare, Import, Link, Index, Memory, Timeline, and Export have GUI entry points. Common filters use fields and dropdowns, and results can be copied or exported. Raw arguments are available only in Advanced CLI Mode.',
+  },
+  {
+    question: 'How do I know Desktop is synchronized with my project?',
+    answer:
+      'Dashboard and Sessions show Watching project, the last update time, event count, and detected sources. When ContextVault Markdown changes, the app rebuilds the local index and refreshes open views.',
   },
   {
     question: 'What is the source of truth?',
