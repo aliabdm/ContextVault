@@ -36,6 +36,7 @@ mac:
         - arm64
   artifactName: ContextVault-${version}-${arch}.${ext}
   category: public.app-category.developer-tools
+  identity: null
 
 linux:
   target:
