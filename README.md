@@ -67,12 +67,12 @@ Windows and Linux downloads resolve to the latest published release assets. The 
 1. Open ContextVault Desktop and click **Add your first project**. Choose the local project folder you want to remember.
 2. Click the red **Start recording** button on the Dashboard or **Record Session** in the sidebar.
 3. Give the session a title, choose its source (Codex, Claude Code, Cursor, Terminal, Human, or Other), then click **Start recording**.
-4. Add the context worth preserving as **User**, **Agent**, **Decision**, **Task**, **Problem**, or **Note** events.
+4. Write or paste the context worth preserving. Desktop classifies it locally as **User**, **Agent**, **Decision**, **Task**, **Problem**, or **Note**; use the compact override only when you want a different type.
 5. Click **Finish & save**. The session is saved locally under `<project>/.contextvault/sessions/`, indexed, and available immediately in Sessions, Search, and Prepare Context.
 
 Use **+ Add** in the sidebar to add more projects. The project dropdown switches the entire Desktop view between their independent local vaults. Settings can remove a project from the recent list without deleting the project or its `.contextvault` files.
 
-The recorder is explicit: ContextVault does not listen to your screen, shell, microphone, or clipboard. If you prefer a terminal workflow, run `contextvault record` inside the same project; Desktop and CLI use the same Markdown session format.
+The recorder is explicit: ContextVault does not listen to your screen, shell, microphone, or clipboard. Automatic classification is deterministic and runs entirely on-device with no API call or telemetry. If you prefer a terminal workflow, run `contextvault record` inside the same project; Desktop and CLI use the same Markdown session format.
 
 [View privacy-friendly Desktop download statistics](https://context-vault-two.vercel.app/stats). The dashboard counts GitHub installer download events, not unique people or active installations.
 
@@ -137,7 +137,7 @@ Browser Capture is installed from the extension build as described in [Installat
   <a href="landing/public/demo/contextvault-desktop-demo.mp4"><strong>Watch the complete Desktop workflow (MP4)</strong></a>
 </p>
 
-The Desktop app uses the same local `.contextvault` directory as the CLI. It includes an in-app session recorder, multi-project switching, Dashboard statistics, session browsing, event timelines, filtered search, prepared context packages, project-memory refresh, timeline generation, unified index rebuilds, and full Markdown export.
+The Desktop app uses the same local `.contextvault` directory as the CLI. It includes an in-app recorder with local automatic event classification, multi-project switching, Dashboard statistics, session browsing, event timelines, filtered search, prepared context packages, project-memory refresh, timeline generation, unified index rebuilds, and full Markdown export.
 
 <table>
   <tr>

@@ -37,7 +37,12 @@ const questions = [
   {
     question: 'How do I start recording in the Desktop app?',
     answer:
-      'Add or select a project, then click the red Start recording button on the Dashboard or Record Session in the sidebar. Name the session, choose its source, and add User, Agent, Decision, Task, Problem, or Note events. Finish & save writes compatible Markdown under that project\'s .contextvault/sessions directory and rebuilds the local index.',
+      'Add or select a project, then click the red Start recording button on the Dashboard or Record Session in the sidebar. Name the session, choose its source, and write or paste context normally. Desktop classifies every entry locally as User, Agent, Decision, Task, Problem, or Note; a compact override remains available. Finish & save writes compatible Markdown under that project\'s .contextvault/sessions directory and rebuilds the local index.',
+  },
+  {
+    question: 'Does automatic Desktop classification send my text to an AI service?',
+    answer:
+      'No. Classification uses deterministic on-device rules and makes no model, network, telemetry, or analytics request. The detected type is shown before you add the entry, and you can override it when needed.',
   },
   {
     question: 'Can Desktop manage more than one project?',

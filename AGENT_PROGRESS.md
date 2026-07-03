@@ -967,6 +967,18 @@ Static analytics decision: the first Vercel deployment prerendered the JSON rout
 
 Release/media result: GitHub Actions run `28642062889` completed successfully across Windows, Linux, and final release jobs. The public `v1.6.0` release contains `ContextVault-Setup-1.6.0.exe` (104,943,028 bytes) and `ContextVault-1.6.0.AppImage` (130,844,245 bytes). A new 35.8-second 1280x720 H.264 Desktop demo was recorded from an isolated temporary vault, visually reviewed, copied to the landing Hero, and accompanied by current Recorder and multi-project screenshots. A complete campaign kit for LinkedIn, X, GitHub, Dev.to, and Medium is stored at `C:\Users\Lenovo\Desktop\socialmedia\contextvault-v1.6.0-campaign` with a matching ZIP. Final clean-package verification packed `@aliabdm/contextvault@1.3.0`, installed it in `node:22-alpine`, and passed `init`, interactive `record`, `list`, `index`, `history`, `decisions`, and `--help`; root tests remain 60/60 and the extension production build still passes.
 
+### Automatic Desktop event classification follow-up (2026-07-03)
+
+User feedback: the native Desktop recorder should behave like the package and should not require users to manually choose Decision, Task, Problem, and related event types for every entry.
+
+1. `[done]` Audited the package/CLI and extension paths. Browser capture already assigns User/Assistant roles automatically; CLI slash commands remain explicit. Desktop now adds deterministic local semantic classification without changing either contract.
+2. `[done]` Made `Auto (recommended)` the default quick-entry flow and moved manual event types into a compact optional override.
+3. `[done]` Added English/Arabic classifier regression coverage. Root tests pass `63/63`; extension, Desktop, Desktop renderer type-check, and landing production builds pass; CLI smoke and Windows installer packaging pass.
+4. `[done]` Updated README, FAQ, landing, portfolio/profile copy, screenshots, a 20.5-second 1280x720 H.264 demo, and a new v1.6.1 campaign kit.
+5. `[in progress]` Review the final diff, commit, tag Desktop v1.6.1, push, and verify the GitHub release workflow and public landing auto-deploy.
+
+Classifier boundary: no text is sent to an AI model or API. Strong labels and intent phrases classify User, Agent, Decision, Task, and Problem events; uncertain text safely falls back to Note. The resolved type is shown before adding, and the saved Markdown remains fully compatible with existing CLI, extension imports, and vaults.
+
 ### Production landing video hotfix
 
 1. `[done]` Promote the Desktop walkthrough to a prominent Hero position.

@@ -1,8 +1,7 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { announceProjectChange } from '../components/ProjectSwitcher'
-
-type EventType = 'user' | 'agent' | 'note' | 'decision' | 'task' | 'problem'
+import { classifyDesktopEvent, type EventType } from '../lib/event-classifier'
 
 type RecordedEvent = {
   type: EventType
@@ -19,6 +18,8 @@ const eventTypes: Array<{ value: EventType; label: string; hint: string }> = [
   { value: 'note', label: 'Note', hint: 'Any other useful context' },
 ]
 
+type ClassificationMode = 'auto' | EventType
+
 export default function Recorder() {
   const navigate = useNavigate()
   const [projectPath, setProjectPath] = useState<string | null>(null)
@@ -26,13 +27,15 @@ export default function Recorder() {
   const [source, setSource] = useState('codex')
   const [startedAt, setStartedAt] = useState('')
   const [recording, setRecording] = useState(false)
-  const [eventType, setEventType] = useState<EventType>('note')
+  const [classificationMode, setClassificationMode] = useState<ClassificationMode>('auto')
   const [content, setContent] = useState('')
   const [events, setEvents] = useState<RecordedEvent[]>([])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
   const projectName = projectPath?.split(/[\\/]/).filter(Boolean).pop() || ''
-  const selectedType = useMemo(() => eventTypes.find((item) => item.value === eventType)!, [eventType])
+  const automaticClassification = classifyDesktopEvent(content)
+  const resolvedEventType = classificationMode === 'auto' ? automaticClassification.type : classificationMode
+  const selectedType = eventTypes.find((item) => item.value === resolvedEventType)!
 
   useEffect(() => {
     window.contextVault?.getProjectPath().then(setProjectPath)
@@ -61,7 +64,7 @@ export default function Recorder() {
       setError('Write or paste some context before adding the event.')
       return
     }
-    setEvents((current) => [...current, { type: eventType, content: content.trim(), createdAt: new Date().toISOString() }])
+    setEvents((current) => [...current, { type: resolvedEventType, content: content.trim(), createdAt: new Date().toISOString() }])
     setContent('')
     setError('')
   }
@@ -72,7 +75,7 @@ export default function Recorder() {
 
   const finishRecording = async () => {
     const finalEvents: RecordedEvent[] = content.trim()
-      ? [...events, { type: eventType, content: content.trim(), createdAt: new Date().toISOString() }]
+      ? [...events, { type: resolvedEventType, content: content.trim(), createdAt: new Date().toISOString() }]
       : events
     if (finalEvents.length === 0) {
       setError('Add at least one event before saving the session.')
@@ -162,44 +165,51 @@ export default function Recorder() {
       ) : (
         <>
           <div className="rounded-2xl border border-dark-600 bg-dark-700/40 p-5">
-            <div className="grid gap-4 sm:grid-cols-[180px_1fr]">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-xl border border-vault-500/20 bg-vault-500/5 px-4 py-3">
               <div>
-                <span className="mb-2 block text-xs font-semibold uppercase tracking-wider text-neutral-400">Event type</span>
-                <div className="space-y-1.5">
-                  {eventTypes.map((item) => (
-                    <button
-                      key={item.value}
-                      onClick={() => setEventType(item.value)}
-                      className={`w-full rounded-lg px-3 py-2 text-left text-xs font-medium transition-colors ${eventType === item.value ? 'bg-vault-500/15 text-vault-300' : 'text-neutral-400 hover:bg-dark-700 hover:text-neutral-200'}`}
-                    >
-                      {item.label}
-                    </button>
-                  ))}
-                </div>
+                <p className="text-xs font-semibold text-vault-300">Automatic classification is on</p>
+                <p className="mt-1 text-[11px] text-neutral-500">ContextVault classifies each entry locally. Nothing is sent off-device.</p>
               </div>
-              <div>
-                <div className="mb-2 flex items-center justify-between gap-4">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">{selectedType.label}</span>
-                  <span className="text-[11px] text-neutral-600">{selectedType.hint}</span>
+              <label className="flex items-center gap-2 text-[11px] text-neutral-500">
+                Classification
+                <select
+                  aria-label="Classification mode"
+                  value={classificationMode}
+                  onChange={(event) => setClassificationMode(event.target.value as ClassificationMode)}
+                  className="rounded-lg border border-dark-600 bg-dark-800 px-3 py-2 text-xs text-neutral-200 outline-none focus:border-vault-500/70"
+                >
+                  <option value="auto">Auto (recommended)</option>
+                  {eventTypes.map((item) => <option key={item.value} value={item.value}>{item.label}</option>)}
+                </select>
+              </label>
+            </div>
+            <div>
+              <div className="mb-2 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-neutral-400">Quick entry</span>
+                  <span aria-live="polite" className="rounded-md bg-vault-500/10 px-2 py-1 text-[10px] font-semibold uppercase text-vault-300">
+                    {classificationMode === 'auto' ? `Auto: ${selectedType.label}` : `Override: ${selectedType.label}`}
+                  </span>
                 </div>
-                <textarea
-                  value={content}
-                  onChange={(event) => setContent(event.target.value)}
-                  onKeyDown={(event) => {
-                    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
-                      event.preventDefault()
-                      addEvent()
-                    }
-                  }}
-                  placeholder="Write or paste the context worth preserving..."
-                  className="min-h-44 w-full resize-y rounded-xl border border-dark-600 bg-dark-800 px-4 py-3 text-sm leading-6 text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-vault-500/70"
-                />
-                <div className="mt-3 flex items-center justify-between gap-4">
-                  <span className="text-[11px] text-neutral-600">Ctrl/Cmd + Enter to add</span>
-                  <button onClick={addEvent} className="rounded-lg border border-vault-500/30 bg-vault-500/10 px-4 py-2 text-xs font-semibold text-vault-300 hover:bg-vault-500/20">
-                    Add {selectedType.label}
-                  </button>
-                </div>
+                <span className="text-[11px] text-neutral-600">{classificationMode === 'auto' ? automaticClassification.reason : selectedType.hint}</span>
+              </div>
+              <textarea
+                value={content}
+                onChange={(event) => setContent(event.target.value)}
+                onKeyDown={(event) => {
+                  if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                    event.preventDefault()
+                    addEvent()
+                  }
+                }}
+                placeholder="Write or paste context — its type is detected automatically..."
+                className="min-h-44 w-full resize-y rounded-xl border border-dark-600 bg-dark-800 px-4 py-3 text-sm leading-6 text-neutral-200 outline-none placeholder:text-neutral-600 focus:border-vault-500/70"
+              />
+              <div className="mt-3 flex items-center justify-between gap-4">
+                <span className="text-[11px] text-neutral-600">Ctrl/Cmd + Enter to classify and add</span>
+                <button onClick={addEvent} className="rounded-lg border border-vault-500/30 bg-vault-500/10 px-4 py-2 text-xs font-semibold text-vault-300 hover:bg-vault-500/20">
+                  Classify & add
+                </button>
               </div>
             </div>
             {error && <p className="mt-4 text-sm text-red-300">{error}</p>}

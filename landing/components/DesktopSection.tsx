@@ -29,12 +29,12 @@ export default function DesktopSection() {
           <figure className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
             <img
               src="/demo/contextvault-desktop-recorder.png"
-              alt="ContextVault Desktop recorder showing structured User, Agent, Decision, Task, and Problem events"
+              alt="ContextVault Desktop recorder automatically classifying User, Agent, Decision, Task, and Problem events"
               className="aspect-video w-full object-cover object-top"
             />
             <figcaption className="border-t border-dark-500 px-5 py-4">
-              <p className="text-sm font-semibold text-white">Native session recorder</p>
-              <p className="mt-1 text-xs leading-5 text-neutral-500">Capture prompts, agent output, decisions, tasks, problems, and notes without leaving the UI.</p>
+              <p className="text-sm font-semibold text-white">Automatic local classification</p>
+              <p className="mt-1 text-xs leading-5 text-neutral-500">Write or paste context once. Desktop detects prompts, results, decisions, tasks, problems, and notes on-device.</p>
             </figcaption>
           </figure>
 
@@ -64,7 +64,7 @@ export default function DesktopSection() {
               {[
                 ['1', 'Add a project', 'Choose a local folder. Add more later and switch from the sidebar.'],
                 ['2', 'Start recording', 'Name the session and choose Codex, Claude Code, Cursor, or another source.'],
-                ['3', 'Capture & save', 'Add prompts, agent output, decisions, tasks, problems, or notes.'],
+                ['3', 'Capture & save', 'Write naturally. ContextVault classifies each entry locally, with an optional override.'],
               ].map(([step, title, description]) => (
                 <li key={step} className="rounded-xl border border-dark-500 bg-dark-800/70 p-4">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-vault-500 text-xs font-bold text-white">{step}</span>

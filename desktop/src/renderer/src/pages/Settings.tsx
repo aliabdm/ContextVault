@@ -9,14 +9,14 @@ type Project = {
 
 export default function Settings() {
   const [projects, setProjects] = useState<Project[]>([])
-  const [version, setVersion] = useState('1.6.0')
+  const [version, setVersion] = useState('1.6.1')
   const [status, setStatus] = useState('')
 
   const load = async () => {
     const settings = await window.contextVault?.getSettings()
     if (settings) {
       setProjects(settings.recentProjects || [])
-      setVersion(settings.version || '1.6.0')
+      setVersion(settings.version || '1.6.1')
     }
   }
 
@@ -97,7 +97,7 @@ export default function Settings() {
         <section className="rounded-xl border border-dark-600 p-5">
           <h2 className="mb-2 text-sm font-semibold text-neutral-200">Recording and indexing</h2>
           <p className="text-xs leading-5 text-neutral-500">
-            The Desktop Recorder and <code className="text-vault-300">contextvault record</code> both save compatible Markdown under the active project's `.contextvault/sessions/`. The index rebuilds after a Desktop save; Vault Tools can rebuild it explicitly after external file changes.
+            Desktop classifies recorder entries locally with no API call, then saves the same compatible Markdown as <code className="text-vault-300">contextvault record</code> under the active project's `.contextvault/sessions/`. The index rebuilds after a Desktop save; Vault Tools can rebuild it explicitly after external file changes.
           </p>
         </section>
 

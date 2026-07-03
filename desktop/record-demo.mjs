@@ -7,10 +7,11 @@ import { spawnSync } from 'node:child_process'
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, '..')
 const outputDir = join(root, 'demo-output')
-const screenshotsDir = join(outputDir, 'screenshots-v1.6.0')
+const screenshotsDir = join(outputDir, 'screenshots-v1.6.1')
 const demoProject = join(outputDir, 'ContextVault Demo Workspace')
-const videoPath = join(outputDir, 'contextvault-desktop-v1.6.0.webm')
-const mp4Path = join(outputDir, 'contextvault-desktop-v1.6.0.mp4')
+const framesDir = join(outputDir, '.recording-frames-v1.6.1')
+const videoPath = join(outputDir, 'contextvault-desktop-v1.6.1.webm')
+const mp4Path = join(outputDir, 'contextvault-desktop-v1.6.1.mp4')
 const landingVideoPath = join(root, 'landing', 'public', 'demo', 'contextvault-desktop-demo.mp4')
 const ffmpegPath = process.env.FFMPEG_PATH || 'ffmpeg'
 const debugPort = process.env.CONTEXTVAULT_DEBUG_PORT || '9333'
@@ -48,11 +49,11 @@ async function clickButton(page, text) {
   await sleep(650)
 }
 
-async function addEvent(page, type, content) {
-  await clickButton(page, type)
+async function addEvent(page, expectedType, content) {
   await page.$eval('textarea', (element) => { element.value = '' })
   await page.type('textarea', content, { delay: 18 })
-  await clickButton(page, `Add ${type}`)
+  await page.waitForFunction((type) => document.querySelector('[aria-live="polite"]')?.textContent?.toLowerCase().includes(type.toLowerCase()), {}, expectedType)
+  await clickButton(page, 'Classify & add')
 }
 
 const ffmpegAvailable = existsSync(ffmpegPath) || spawnSync(ffmpegPath, ['-version'], { stdio: 'ignore' }).status === 0
@@ -60,6 +61,8 @@ if (!ffmpegAvailable) throw new Error('ffmpeg was not found. Add it to PATH or s
 
 rmSync(screenshotsDir, { recursive: true, force: true })
 mkdirSync(screenshotsDir, { recursive: true })
+rmSync(framesDir, { recursive: true, force: true })
+mkdirSync(framesDir, { recursive: true })
 prepareDemoProject()
 
 const browser = await puppeteer.connect({
@@ -83,56 +86,84 @@ try {
   await page.reload({ waitUntil: 'domcontentloaded' })
   await route(page, '#/')
 
-  const recorder = await page.screencast({ path: videoPath, ffmpegPath })
+  let captureFrames = true
+  let captureError
+  let frame = 0
+  const captureLoop = (async () => {
+    while (captureFrames) {
+      try {
+        await page.screenshot({ path: join(framesDir, `frame-${String(frame).padStart(6, '0')}.jpg`), type: 'jpeg', quality: 86 })
+        frame += 1
+      } catch (error) {
+        captureError = error
+        captureFrames = false
+      }
+      await sleep(125)
+    }
+  })()
 
-  await snapshot(page, '01-dashboard-first-run')
-  await sleep(1600)
+  try {
+    await snapshot(page, '01-dashboard-first-run')
+    await sleep(1600)
 
-  await clickButton(page, 'Start recording')
-  await snapshot(page, '02-recorder-setup')
-  await page.type('input[placeholder="Example: Fix authentication redirect"]', 'Ship the multi-project recorder', { delay: 35 })
-  await page.select('main select', 'codex')
-  await sleep(700)
-  await clickButton(page, 'Start recording')
-  await snapshot(page, '03-recorder-active')
+    await clickButton(page, 'Start recording')
+    await snapshot(page, '02-recorder-setup')
+    await page.type('input[placeholder="Example: Fix authentication redirect"]', 'Ship the automatic recorder', { delay: 35 })
+    await page.select('main select', 'codex')
+    await sleep(700)
+    await clickButton(page, 'Start recording')
+    await snapshot(page, '03-recorder-active')
 
-  await addEvent(page, 'User', 'Make recording obvious and let people switch between project vaults.')
-  await addEvent(page, 'Agent', 'Added a native recorder, onboarding, and a persistent project switcher.')
-  await addEvent(page, 'Decision', 'Keep Desktop and CLI on the same local Markdown session format.')
-  await addEvent(page, 'Task', 'Publish the v1.6.0 Windows and Linux installers.')
-  await addEvent(page, 'Problem', 'Old session metadata comments appeared in the visible timeline; parser fixed.')
-  await snapshot(page, '04-recorder-events')
-  await sleep(1400)
+    await addEvent(page, 'User', 'Can you make recording obvious and let people switch between project vaults?')
+    await addEvent(page, 'Agent', 'Implemented a native recorder, onboarding, and a persistent project switcher.')
+    await addEvent(page, 'Decision', 'We decided to keep Desktop and CLI on the same local Markdown session format.')
+    await addEvent(page, 'Task', 'Publish the v1.6.1 Windows and Linux installers.')
+    await addEvent(page, 'Problem', 'The old session metadata parser has a regression that exposes internal comments.')
+    await snapshot(page, '04-recorder-events')
+    await sleep(1400)
 
-  await clickButton(page, 'Finish & save')
-  await page.waitForFunction(() => window.location.hash.startsWith('#/sessions/'), { timeout: 15000 })
-  await snapshot(page, '05-session-detail')
-  await sleep(1500)
+    await clickButton(page, 'Finish & save')
+    await page.waitForFunction(() => window.location.hash.startsWith('#/sessions/'), { timeout: 15000 })
+    await snapshot(page, '05-session-detail')
+    await sleep(1500)
 
-  await route(page, '#/sessions')
-  await snapshot(page, '06-sessions')
-  await sleep(1200)
+    await route(page, '#/sessions')
+    await snapshot(page, '06-sessions')
+    await sleep(1200)
 
-  await route(page, '#/settings')
-  await snapshot(page, '07-multi-project-settings')
-  await sleep(1600)
+    await route(page, '#/settings')
+    await snapshot(page, '07-multi-project-settings')
+    await sleep(1600)
 
-  await route(page, '#/')
-  await snapshot(page, '08-dashboard-complete')
-  await sleep(1200)
+    await route(page, '#/')
+    await snapshot(page, '08-dashboard-complete')
+    await sleep(1200)
+  } finally {
+    captureFrames = false
+    await captureLoop
+  }
 
-  await recorder.stop()
+  if (captureError) throw captureError
+  if (frame < 10) throw new Error(`Only captured ${frame} video frames.`)
 
   const conversion = spawnSync(ffmpegPath, [
-    '-y', '-i', videoPath,
+    '-y', '-framerate', '8', '-i', join(framesDir, 'frame-%06d.jpg'),
     '-vf', 'scale=1280:720',
     '-c:v', 'libx264', '-preset', 'fast', '-crf', '19',
-    '-pix_fmt', 'yuv420p', '-movflags', '+faststart',
+    '-pix_fmt', 'yuv420p', '-movflags', '+faststart', '-r', '30',
     '-an', mp4Path,
   ], { stdio: 'pipe' })
   if (conversion.status !== 0) throw new Error(conversion.stderr.toString())
 
+  const webmConversion = spawnSync(ffmpegPath, [
+    '-y', '-i', mp4Path,
+    '-c:v', 'libvpx-vp9', '-crf', '32', '-b:v', '0',
+    '-an', videoPath,
+  ], { stdio: 'pipe' })
+  if (webmConversion.status !== 0) throw new Error(webmConversion.stderr.toString())
+
   copyFileSync(mp4Path, landingVideoPath)
+  rmSync(framesDir, { recursive: true, force: true })
   console.log(`Recorded ${videoPath}`)
   console.log(`Campaign MP4 ${mp4Path}`)
   console.log(`Landing MP4 ${landingVideoPath}`)

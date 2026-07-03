@@ -1,5 +1,28 @@
 import { describe, expect, it } from 'vitest'
 import { createDesktopSessionDocument, parseSessionEvents } from '../desktop/src/main/session-format'
+import { classifyDesktopEvent } from '../desktop/src/renderer/src/lib/event-classifier'
+
+describe('Desktop automatic event classification', () => {
+  it('classifies requests, results, decisions, tasks, and problems locally', () => {
+    expect(classifyDesktopEvent('Can you add project switching?').type).toBe('user')
+    expect(classifyDesktopEvent('Implemented the persistent project switcher.').type).toBe('agent')
+    expect(classifyDesktopEvent('We decided to keep the shared Markdown format.').type).toBe('decision')
+    expect(classifyDesktopEvent('Publish the Windows and Linux installers.').type).toBe('task')
+    expect(classifyDesktopEvent('The metadata parser has a regression.').type).toBe('problem')
+  })
+
+  it('honors explicit transcript labels and falls back to a note', () => {
+    expect(classifyDesktopEvent('Assistant: The build is green.')).toMatchObject({ type: 'agent', confidence: 'explicit' })
+    expect(classifyDesktopEvent('Decision - Ship version 1.6.1.')).toMatchObject({ type: 'decision', confidence: 'explicit' })
+    expect(classifyDesktopEvent('Useful context for the next session.').type).toBe('note')
+  })
+
+  it('recognizes common Arabic intent without sending text to a service', () => {
+    expect(classifyDesktopEvent('بدي تضيف تسجيل أوتوماتيكي').type).toBe('user')
+    expect(classifyDesktopEvent('قررنا نخلي التصنيف محلي').type).toBe('decision')
+    expect(classifyDesktopEvent('في مشكلة بالبارسر').type).toBe('problem')
+  })
+})
 
 describe('Desktop session format', () => {
   it('writes CLI-compatible Markdown and reads metadata without leaking the comment', () => {
