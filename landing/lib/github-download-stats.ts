@@ -1,13 +1,13 @@
-const RELEASES_URL = 'https://api.github.com/repos/aliabdm/ContextVault/releases?per_page=100'
+export const GITHUB_RELEASES_URL = 'https://api.github.com/repos/aliabdm/ContextVault/releases?per_page=100'
 
-type GitHubAsset = {
+export type GitHubAsset = {
   name: string
   browser_download_url: string
   download_count: number
   size: number
 }
 
-type GitHubRelease = {
+export type GitHubRelease = {
   tag_name: string
   html_url: string
   published_at: string | null
@@ -52,21 +52,7 @@ function getDesktopPlatform(name: string): DesktopPlatform | null {
   return null
 }
 
-export async function getDesktopDownloadStats(): Promise<DesktopDownloadStats> {
-  const response = await fetch(RELEASES_URL, {
-    headers: {
-      Accept: 'application/vnd.github+json',
-      'User-Agent': 'ContextVault-Landing',
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-    next: { revalidate: 3600 },
-  })
-
-  if (!response.ok) {
-    throw new Error(`GitHub releases request failed with ${response.status}`)
-  }
-
-  const githubReleases = (await response.json()) as GitHubRelease[]
+export function summarizeDesktopDownloads(githubReleases: GitHubRelease[]): DesktopDownloadStats {
   const releases = githubReleases
     .filter((release) => !release.draft && !release.prerelease)
     .map((release): DesktopReleaseStats => {

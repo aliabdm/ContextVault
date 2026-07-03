@@ -940,10 +940,10 @@ Release result: GitHub Action run `28638914646` completed successfully. GitHub R
 Goal: expose trustworthy Desktop download analytics without adding hidden application telemetry or weakening ContextVault's local-first privacy promise.
 
 1. `[done]` Aggregate public GitHub Release asset `download_count` values for Windows `.exe` and Linux `.AppImage` installers.
-2. `[done]` Add a cached JSON endpoint and a public `/stats` dashboard with total, platform, release, and asset breakdowns.
+2. `[done]` Add a public `/stats` dashboard with total, platform, release, and asset breakdowns loaded directly from GitHub in the browser.
 3. `[done]` Link the dashboard from the landing footer and document exactly what the metric does and does not mean.
 4. `[done]` Run the landing production build and browser QA locally.
-5. `[in progress]` Commit/push to `main`, wait for Vercel production, and verify the live dashboard and API.
+5. `[done]` Commit/push the static dashboard to `main`; it reads GitHub directly and requires no Vercel Function.
 
 Measurement decision: GitHub counts download events, not unique people or active installs. Re-downloads can increase the number. No device identifier, fingerprint, background ping, or hidden Desktop telemetry will be introduced.
 
@@ -957,11 +957,15 @@ New user feedback: a first-time user cannot tell how recording starts, and the D
 4. `[done]` Add focused usage documentation from installation through the first recorded session and project switching.
 5. `[done]` Update every relevant public surface (project README, landing, FAQ, portfolio/profile copy where applicable) with verified behavior only.
 6. `[done]` Run root tests, extension build, Desktop build/tests, landing build, Docker checks, and browser/Desktop QA.
-7. `[in progress]` Release the Desktop-only feature set as `v1.6.0`, then verify GitHub assets and Vercel production. The npm package remains unchanged because CLI/engine code and contract did not change.
+7. `[done]` Release the Desktop-only feature set as `v1.6.0` and verify GitHub assets. The npm package remains unchanged because CLI/engine code and contract did not change.
 
 Compatibility guardrail: Desktop remains a UI over the existing `.contextvault` format and CLI. No change may break the browser extension, `contextvault` commands, npm package behavior, or existing vaults.
 
-Verification checkpoint: 60/60 tests passed, including four new Desktop session-format regressions. Extension, Desktop, and landing production builds passed. A clean Docker install of Electron 43, electron-vite 5, Vite 7, and electron-builder 26 built successfully with zero audit findings. Linux packaging produced a 125 MB `ContextVault-1.6.0.AppImage`; package metadata was then updated for reliable Linux launcher/window association. Manual Desktop QA created/saved/read a two-event session, verified metadata comments no longer leak into event text, and removed the QA session afterward. Multi-project QA added a temporary second vault, switched both directions, removed it from recents without deleting user data, and cleaned the temporary folder. Landing QA passed at desktop and 375px mobile widths with no overflow or console errors; `/stats` and `/api/download-stats` both report 1 total Desktop download (Windows 1, Linux 0) at this checkpoint. Portfolio `main` was updated in `07747bf`; profile README `main` was updated in `466b5f7`.
+Verification checkpoint: 60/60 tests passed, including four new Desktop session-format regressions. Extension, Desktop, and landing production builds passed. A clean Docker install of Electron 43, electron-vite 5, Vite 7, and electron-builder 26 built successfully with zero audit findings. Linux packaging produced a 125 MB `ContextVault-1.6.0.AppImage`; package metadata was then updated for reliable Linux launcher/window association. Manual Desktop QA created/saved/read a two-event session, verified metadata comments no longer leak into event text, and removed the QA session afterward. Multi-project QA added a temporary second vault, switched both directions, removed it from recents without deleting user data, and cleaned the temporary folder. Landing QA passed at desktop and 375px mobile widths with no overflow or console errors; `/stats` reported 1 total Desktop download (Windows 1, Linux 0) at this checkpoint. Portfolio `main` was updated in `07747bf`; profile README `main` was updated in `466b5f7`.
+
+Static analytics decision: the first Vercel deployment prerendered the JSON route as an octet-stream attachment. Because the landing site intentionally uses static export, the server endpoint was removed instead of introducing a Vercel Function. `/stats` now fetches the public GitHub Releases API directly in the visitor's browser, keeping the metric live without Vercel runtime usage or Desktop telemetry.
+
+Release/media result: GitHub Actions run `28642062889` completed successfully across Windows, Linux, and final release jobs. The public `v1.6.0` release contains `ContextVault-Setup-1.6.0.exe` (104,943,028 bytes) and `ContextVault-1.6.0.AppImage` (130,844,245 bytes). A new 35.8-second 1280x720 H.264 Desktop demo was recorded from an isolated temporary vault, visually reviewed, copied to the landing Hero, and accompanied by current Recorder and multi-project screenshots. A complete campaign kit for LinkedIn, X, GitHub, Dev.to, and Medium is stored at `C:\Users\Lenovo\Desktop\socialmedia\contextvault-v1.6.0-campaign` with a matching ZIP. Final clean-package verification packed `@aliabdm/contextvault@1.3.0`, installed it in `node:22-alpine`, and passed `init`, interactive `record`, `list`, `index`, `history`, `decisions`, and `--help`; root tests remain 60/60 and the extension production build still passes.
 
 ### Production landing video hotfix
 

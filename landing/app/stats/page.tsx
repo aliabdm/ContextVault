@@ -1,14 +1,14 @@
-import type { Metadata } from 'next'
+'use client'
+
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Footer from '@/components/Footer'
-import { getDesktopDownloadStats, type DesktopDownloadStats } from '@/lib/github-download-stats'
-
-export const metadata: Metadata = {
-  title: 'Desktop Download Stats - ContextVault',
-  description: 'Public, privacy-friendly download statistics for ContextVault Desktop releases.',
-}
-
-export const revalidate = 3600
+import {
+  GITHUB_RELEASES_URL,
+  summarizeDesktopDownloads,
+  type DesktopDownloadStats,
+  type GitHubRelease,
+} from '@/lib/github-download-stats'
 
 const number = new Intl.NumberFormat('en-US')
 
@@ -26,17 +26,26 @@ function formatSize(bytes: number) {
   return `${(bytes / 1024 / 1024).toFixed(1)} MB`
 }
 
-async function loadStats(): Promise<DesktopDownloadStats | null> {
-  try {
-    return await getDesktopDownloadStats()
-  } catch (error) {
-    console.error('Unable to render GitHub download statistics', error)
-    return null
-  }
-}
+export default function StatsPage() {
+  const [stats, setStats] = useState<DesktopDownloadStats | null>(null)
+  const [loading, setLoading] = useState(true)
 
-export default async function StatsPage() {
-  const stats = await loadStats()
+  useEffect(() => {
+    let active = true
+    fetch(GITHUB_RELEASES_URL)
+      .then((response) => {
+        if (!response.ok) throw new Error(`GitHub returned ${response.status}`)
+        return response.json() as Promise<GitHubRelease[]>
+      })
+      .then((releases) => {
+        if (active) setStats(summarizeDesktopDownloads(releases))
+      })
+      .catch((error) => console.error('Unable to load GitHub download statistics', error))
+      .finally(() => {
+        if (active) setLoading(false)
+      })
+    return () => { active = false }
+  }, [])
 
   return (
     <>
@@ -59,7 +68,7 @@ export default async function StatsPage() {
             </div>
             <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">Desktop downloads</h1>
             <p className="mt-5 text-lg leading-relaxed text-neutral-400">
-              Installer download events reported by GitHub Releases. Updated at most once per hour, with no telemetry inside the app.
+              Installer download events loaded directly from GitHub Releases when this page opens, with no telemetry inside the app.
             </p>
           </div>
 
@@ -129,15 +138,15 @@ export default async function StatsPage() {
                 <p className="mt-2 max-w-3xl text-sm leading-relaxed text-neutral-400">
                   These totals come from public GitHub release assets. ContextVault does not send device IDs, fingerprints, usage events, project data, or background analytics from the Desktop app.
                 </p>
-                <a href="/api/download-stats" className="mt-4 inline-block text-sm font-medium text-vault-400 hover:text-vault-300">
-                  View the public JSON endpoint →
+                <a href={GITHUB_RELEASES_URL} target="_blank" rel="noopener noreferrer" className="mt-4 inline-block text-sm font-medium text-vault-400 hover:text-vault-300">
+                  View the public GitHub data source ↗
                 </a>
               </section>
             </>
           ) : (
             <div className="mt-10 rounded-2xl border border-dark-600 bg-dark-700 p-8">
-              <h2 className="text-lg font-semibold text-white">Statistics are temporarily unavailable</h2>
-              <p className="mt-2 text-sm text-neutral-400">GitHub did not return the release data. Please try again shortly.</p>
+              <h2 className="text-lg font-semibold text-white">{loading ? 'Loading live statistics...' : 'Statistics are temporarily unavailable'}</h2>
+              <p className="mt-2 text-sm text-neutral-400">{loading ? 'Reading public installer counts from GitHub Releases.' : 'GitHub did not return the release data. Please try again shortly.'}</p>
             </div>
           )}
         </div>

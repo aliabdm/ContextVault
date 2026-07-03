@@ -126,6 +126,13 @@ Browser Capture is installed from the extension build as described in [Installat
 
 ### Desktop App
 
+<table>
+  <tr>
+    <td width="50%"><img src="landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop native session recorder" /></td>
+    <td width="50%"><img src="landing/public/demo/contextvault-desktop-projects.png" alt="ContextVault Desktop multi-project vault settings" /></td>
+  </tr>
+</table>
+
 <p align="center">
   <a href="landing/public/demo/contextvault-desktop-demo.mp4"><strong>Watch the complete Desktop workflow (MP4)</strong></a>
 </p>
