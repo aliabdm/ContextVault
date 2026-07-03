@@ -1001,7 +1001,7 @@ Goal: make ContextVault Desktop usable without command knowledge. The bundled CL
 3. `[done]` Completed Search and Prepare filters/export, live watcher status, event/source counts, four-step onboarding, and explicit external-agent integration guidance.
 4. `[done]` Moved the raw command and arguments runner under collapsed Advanced CLI Mode. It is no longer the default product experience.
 5. `[done]` Verified all Desktop routes with no console errors; structured Search returned ranked results; an external CLI recording appeared live in the already-open Sessions view (3→4 sessions, 14→16 events, new terminal source); 63/63 package/extension tests, extension build, Desktop renderer type-check/build, and Windows v1.8.0 installer packaging pass. Linux cross-packaging timed out on Windows and remains covered by the native Ubuntu release job.
-6. `[in progress]` Refreshed README/PLAN/FAQ/landing/release notes, v1.8.0 screenshots and 26.8-second 1280×720 H.264 demo, launch article/social kit, portfolio/profile, and Desktop version. Remaining: final commits/push/tag, GitHub release verification, and public landing verification.
+6. `[done]` Refreshed README/PLAN/FAQ/landing/release notes, v1.8.0 screenshots and 26.8-second 1280×720 H.264 demo, launch article/social kit, portfolio/profile, and Desktop version. Pushed root commit `6974488`, portfolio `032045f`, and profile `4506118`; tagged `v1.8.0`. GitHub Action run `28682974361` completed successfully and published Windows (104,949,910 bytes) and Linux (130,852,433 bytes). Production landing, FAQ, video, and both platform download redirects were verified on v1.8.0.
 
 ### Production landing video hotfix
 
