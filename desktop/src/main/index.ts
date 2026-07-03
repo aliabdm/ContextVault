@@ -1,11 +1,15 @@
-import { app, BrowserWindow, ipcMain, dialog, shell } from 'electron'
+import { app, BrowserWindow, ipcMain, dialog, shell, Notification } from 'electron'
 import { join } from 'path'
 import { existsSync, readFileSync, readdirSync, mkdirSync } from 'fs'
+import { autoUpdater } from 'electron-updater'
 
 let mainWindow: BrowserWindow | null = null
 let engine: any = null
 
 const isDev = !app.isPackaged
+
+autoUpdater.autoDownload = false
+autoUpdater.autoInstallOnAppQuit = true
 
 function getEnginePath(): string {
   const base = app.isPackaged
@@ -24,6 +28,56 @@ async function getEngine() {
   }
   return engine
 }
+
+function setupAutoUpdater(): void {
+  if (isDev) return
+
+  autoUpdater.on('update-available', (info) => {
+    mainWindow?.webContents.send('update:available', info.version)
+  })
+
+  autoUpdater.on('update-not-available', () => {
+    mainWindow?.webContents.send('update:not-available')
+  })
+
+  autoUpdater.on('download-progress', (progress) => {
+    mainWindow?.webContents.send('update:download-progress', progress.percent)
+  })
+
+  autoUpdater.on('update-downloaded', () => {
+    mainWindow?.webContents.send('update:downloaded')
+    if (mainWindow) {
+      new Notification({
+        title: 'ContextVault',
+        body: 'A new version has been downloaded. Restart to apply the update.',
+      }).show()
+    }
+  })
+
+  autoUpdater.on('error', (err) => {
+    mainWindow?.webContents.send('update:error', err.message)
+  })
+}
+
+ipcMain.handle('update:check', async () => {
+  if (isDev) return { available: false }
+  try {
+    const result = await autoUpdater.checkForUpdates()
+    return { available: result?.updateInfo?.version ? true : false, version: result?.updateInfo?.version }
+  } catch {
+    return { available: false }
+  }
+})
+
+ipcMain.handle('update:download', async () => {
+  if (isDev) return
+  autoUpdater.downloadUpdate()
+})
+
+ipcMain.handle('update:install', async () => {
+  if (isDev) return
+  setImmediate(() => autoUpdater.quitAndInstall())
+})
 
 function createWindow(): void {
   mainWindow = new BrowserWindow({
@@ -44,6 +98,8 @@ function createWindow(): void {
 
   mainWindow.on('ready-to-show', () => {
     mainWindow?.show()
+    setupAutoUpdater()
+    if (!isDev) autoUpdater.checkForUpdates()
   })
 
   mainWindow.on('closed', () => {

@@ -20,6 +20,14 @@ interface ContextVaultAPI {
   updateSettings: (settings: any) => Promise<any>
   openExternal: (url: string) => Promise<void>
   getProjectPath: () => Promise<string | null>
+
+  checkForUpdate: () => Promise<{ available: boolean; version?: string }>
+  downloadUpdate: () => Promise<void>
+  installUpdate: () => Promise<void>
+  onUpdateAvailable: (callback: (version: string) => void) => void
+  onUpdateProgress: (callback: (percent: number) => void) => void
+  onUpdateDownloaded: (callback: () => void) => void
+  onUpdateError: (callback: (msg: string) => void) => void
 }
 
 declare global {

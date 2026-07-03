@@ -115,17 +115,29 @@ export default function DesktopSection() {
             </span>
           </div>
 
-          <a
-            href="https://github.com/aliabdm/ContextVault/releases"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex h-11 items-center gap-2 rounded-xl bg-vault-500 px-6 text-sm font-semibold text-white shadow-lg shadow-vault-500/30 transition-all hover:bg-vault-600 active:scale-[0.97]"
-          >
-            <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-            </svg>
-            Download from GitHub
-          </a>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <a
+              href="/download/windows"
+              className="inline-flex h-11 items-center gap-2 rounded-xl bg-vault-500 px-6 text-sm font-semibold text-white shadow-lg shadow-vault-500/30 transition-all hover:bg-vault-600 active:scale-[0.97]"
+            >
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.5 13.5l-5-3v-5" /></svg>
+              Download for Windows
+            </a>
+            <a
+              href="/download/macos"
+              className="inline-flex h-11 items-center gap-2 rounded-xl border border-dark-500 bg-dark-700/50 px-6 text-sm font-semibold text-neutral-200 transition-all hover:bg-dark-600 active:scale-[0.97]"
+            >
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22.527 17.043c-.472 1.068-1.032 2.056-1.683 2.961-.89 1.236-1.618 2.092-2.188 2.57-.873.803-1.809 1.214-2.805 1.232-.718 0-1.585-.205-2.599-.614-1.015-.41-1.949-.613-2.8-.613-.887 0-1.844.203-2.872.613-1.028.409-1.86.625-2.498.646-1.276.043-2.245-.382-2.907-1.275C1.694 21.136.5 19.22.5 16.514c0-1.902.564-3.498 1.693-4.784.886-1.002 2.032-1.516 3.438-1.542 1.04 0 2.044.386 2.996 1.154.266.216.533.324.8.324.23 0 .519-.12.867-.363.345-.243.643-.442.893-.597.981-.62 2.229-.877 3.742-.772 1.868.142 3.296.868 4.276 2.177-1.706 1.014-2.55 2.434-2.533 4.257.016 1.418.557 2.598 1.622 3.537.47.443.999.785 1.587 1.028-.139.394-.28.758-.424 1.092z" /></svg>
+              macOS
+            </a>
+            <a
+              href="/download/linux"
+              className="inline-flex h-11 items-center gap-2 rounded-xl border border-dark-500 bg-dark-700/50 px-6 text-sm font-semibold text-neutral-200 transition-all hover:bg-dark-600 active:scale-[0.97]"
+            >
+              <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l7.59-7.59L20 8l-9 9z" /></svg>
+              Linux
+            </a>
+          </div>
         </div>
 
         <p className="mt-4 text-center text-xs text-neutral-600">

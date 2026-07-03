@@ -23,9 +23,7 @@ export default function CtaSection() {
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
-            href="https://github.com/aliabdm/ContextVault/releases"
-            target="_blank"
-            rel="noopener noreferrer"
+            href="/download"
             className="inline-flex h-12 items-center rounded-xl bg-vault-500 px-7 text-sm font-semibold text-white shadow-lg shadow-vault-500/30 transition-all hover:bg-vault-600 active:scale-[0.97]"
           >
             Download Desktop App

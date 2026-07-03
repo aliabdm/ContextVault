@@ -34,7 +34,7 @@
   <img src="https://img.shields.io/badge/desktop-win%20%7C%20mac%20%7C%20linux-22c55e?style=for-the-badge" alt="desktop app" />
   <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/v/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm package" /></a>
   <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/dm/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm downloads" /></a>
-  <a href="https://github.com/aliabdm/ContextVault/releases"><img src="https://img.shields.io/github/downloads/aliabdm/ContextVault/total?style=for-the-badge&logo=github&color=6366f1" alt="GitHub downloads" /></a>
+  <a href="https://context-vault-two.vercel.app/download"><img src="https://img.shields.io/github/downloads/aliabdm/ContextVault/total?style=for-the-badge&logo=github&color=6366f1" alt="GitHub downloads" /></a>
 </p>
 
 <p align="center">
@@ -49,15 +49,15 @@
 
 ### Desktop App (recommended)
 
-Download the installer for your platform from the [GitHub Releases](https://github.com/aliabdm/ContextVault/releases) page:
+Download the latest installer for your platform:
 
-| Platform | Format |
-|----------|--------|
-| Windows | `ContextVault-Setup-1.0.0.exe` (NSIS installer) |
-| macOS | `ContextVault-1.0.0.dmg` (Intel + Apple Silicon) |
-| Linux | `ContextVault-1.0.0.AppImage` |
+| Platform | Download |
+|----------|----------|
+| Windows | [Download for Windows](https://context-vault-two.vercel.app/download/windows) (.exe) |
+| macOS | [Download for macOS](https://context-vault-two.vercel.app/download/macos) (.dmg) |
+| Linux | [Download for Linux](https://context-vault-two.vercel.app/download/linux) (.AppImage) |
 
-No admin required. Works offline.
+The download links always point to the latest release. No admin required. Works offline. Auto-updates are built in.
 
 ### CLI (npm)
 
@@ -689,18 +689,28 @@ The unified Context Engine now exists. The next work is hardening retrieval and 
 
 ---
 
-## Author
+## Documentation & Community
 
 **Mohammad Ali Abdul Wahed**
 
 | | |
 | --- | --- |
 | GitHub | [aliabdm](https://github.com/aliabdm) |
-| Portfolio | [senior-mohammad-ali.vercel.app](https://senior-mohammad-ali.vercel.app/) |
-| Dev.to | [@maliano63717738](https://dev.to/maliano63717738) |
-| Medium | [@aliabdm](https://medium.com/@aliabdm) |
-| X (Twitter) | [@Maliano63717738](https://x.com/Maliano63717738) |
 | LinkedIn | [Mohammad Ali Abdul Wahed](https://www.linkedin.com/in/mohammad-ali-abdul-wahed-1533b9171/) |
+| X (Twitter) | [@Maliano63717738](https://x.com/Maliano63717738) |
+| Portfolio | [senior-mohammad-ali.vercel.app](https://senior-mohammad-ali.vercel.app/) |
+| Medium | [@aliabdm](https://medium.com/@aliabdm) |
+| Dev.to | [@maliano63717738](https://dev.to/maliano63717738) |
+
+### Articles
+
+- [I Built a Local-First Recorder for AI Coding Sessions](docs/medium-vault-terminal.md) — Medium article introducing Vault Terminal and the local-first philosophy
+- More articles coming soon on [Medium](https://medium.com/@aliabdm) and [Dev.to](https://dev.to/maliano63717738)
+
+### Community Discussions
+
+- [GitHub Discussions](https://github.com/aliabdm/ContextVault/discussions) — Ask questions, share workflows, report issues
+- [GitHub Issues](https://github.com/aliabdm/ContextVault/issues) — Bug reports and feature requests
 
 ---
 

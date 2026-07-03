@@ -42,6 +42,31 @@ const api = {
 
   getProjectPath: (): Promise<string | null> =>
     ipcRenderer.invoke('contextvault:get-project-path'),
+
+  checkForUpdate: (): Promise<{ available: boolean; version?: string }> =>
+    ipcRenderer.invoke('update:check'),
+
+  downloadUpdate: (): Promise<void> =>
+    ipcRenderer.invoke('update:download'),
+
+  installUpdate: (): Promise<void> =>
+    ipcRenderer.invoke('update:install'),
+
+  onUpdateAvailable: (callback: (version: string) => void) => {
+    ipcRenderer.on('update:available', (_e, version) => callback(version))
+  },
+
+  onUpdateProgress: (callback: (percent: number) => void) => {
+    ipcRenderer.on('update:download-progress', (_e, percent) => callback(percent))
+  },
+
+  onUpdateDownloaded: (callback: () => void) => {
+    ipcRenderer.on('update:downloaded', () => callback())
+  },
+
+  onUpdateError: (callback: (msg: string) => void) => {
+    ipcRenderer.on('update:error', (_e, msg) => callback(msg))
+  },
 }
 
 contextBridge.exposeInMainWorld('contextVault', api)
