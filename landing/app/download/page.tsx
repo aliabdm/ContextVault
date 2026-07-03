@@ -22,11 +22,11 @@ export default function DownloadPage() {
         </div>
         <h1 className="text-xl font-bold text-white">Detecting your platform...</h1>
         <p className="mt-2 text-sm text-neutral-400">
-          Redirecting to the correct installer.
+          Redirecting to the correct installer or macOS build instructions.
         </p>
         <div className="mt-6 flex justify-center gap-4 text-sm text-neutral-500">
           <a href="/download/windows" className="text-vault-400 hover:underline">Windows</a>
-          <a href="/download/macos" className="text-vault-400 hover:underline">macOS</a>
+          <a href="/download/macos" className="text-vault-400 hover:underline">macOS source</a>
           <a href="/download/linux" className="text-vault-400 hover:underline">Linux</a>
         </div>
       </div>

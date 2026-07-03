@@ -4,13 +4,11 @@ import { useEffect, useState } from 'react'
 
 const assetFilters: Record<string, (name: string) => boolean> = {
   windows: (name: string) => name.includes('.exe') && !name.includes('.exe.'),
-  macos: (name: string) => name.includes('.dmg'),
   linux: (name: string) => name.includes('.AppImage'),
 }
 
 const platformNames: Record<string, string> = {
   windows: 'Windows',
-  macos: 'macOS',
   linux: 'Linux',
 }
 

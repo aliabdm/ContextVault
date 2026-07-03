@@ -31,7 +31,8 @@
   <img src="https://img.shields.io/badge/build-passing-22c55e?style=for-the-badge" alt="build" />
   <img src="https://img.shields.io/badge/privacy-local--first-7c3aed?style=for-the-badge" alt="privacy" />
   <img src="https://img.shields.io/badge/capture-browser%20%2B%20terminal-f97316?style=for-the-badge" alt="capture surfaces" />
-  <img src="https://img.shields.io/badge/desktop-win%20%7C%20mac%20%7C%20linux-22c55e?style=for-the-badge" alt="desktop app" />
+  <img src="https://img.shields.io/badge/desktop-Windows%20%7C%20Linux%20%7C%20macOS%20source-22c55e?style=for-the-badge" alt="desktop app" />
+  <a href="https://github.com/aliabdm/ContextVault/releases/latest"><img src="https://img.shields.io/github/v/release/aliabdm/ContextVault?style=for-the-badge&label=desktop" alt="latest Desktop release" /></a>
   <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/v/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm package" /></a>
   <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/dm/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm downloads" /></a>
   <a href="https://context-vault-two.vercel.app/download"><img src="https://img.shields.io/github/downloads/aliabdm/ContextVault/total?style=for-the-badge&logo=github&color=6366f1" alt="GitHub downloads" /></a>
@@ -54,10 +55,10 @@ Download the latest installer for your platform:
 | Platform | Download |
 |----------|----------|
 | Windows | [Download for Windows](https://context-vault-two.vercel.app/download/windows) (.exe) |
-| macOS | [Download for macOS](https://context-vault-two.vercel.app/download/macos) (.dmg) |
+| macOS | [Build from source](https://github.com/aliabdm/ContextVault#desktop-app-recommended) (`npm run package:mac`) |
 | Linux | [Download for Linux](https://context-vault-two.vercel.app/download/linux) (.AppImage) |
 
-The download links always point to the latest release. No admin required. Works offline. Auto-updates are built in.
+Windows and Linux downloads resolve to the latest published release assets. The app works offline; update checks are available in packaged builds. macOS currently requires a local source build.
 
 > **macOS note:** The Desktop app builds successfully on macOS locally. To build the macOS `.dmg` yourself, run `cd desktop && npm run package:mac`. GitHub Actions does not include macOS installers because code signing requires an Apple Developer account. A future update may add notarized builds.
 
@@ -106,6 +107,14 @@ Browser Capture is installed from the extension build as described in [Installat
 <p align="center">
   <a href="landing/public/demo/context-engine-demo.mp4"><strong>Watch the MP4 demo</strong></a>
 </p>
+
+### Desktop App
+
+<p align="center">
+  <a href="landing/public/demo/contextvault-desktop-demo.mp4"><strong>Watch the complete Desktop workflow (MP4)</strong></a>
+</p>
+
+The Desktop app uses the same local `.contextvault` directory as the CLI. It includes Dashboard statistics, session browsing, event timelines, filtered search, prepared context packages, project-memory refresh, timeline generation, unified index rebuilds, and full Markdown export.
 
 <table>
   <tr>
@@ -213,7 +222,7 @@ Context should survive:
 
 | Feature | Description |
 | --- | --- |
-| Desktop App | Visual context manager for Windows, macOS, and Linux |
+| Desktop App | Visual context manager for Windows and Linux; macOS source build supported |
 | Browser Capture | Captures LLM conversations from supported browser platforms |
 | Terminal Capture | Captures coding-agent, human, and project-context sessions from the terminal |
 | Hybrid browser engine | DOM + network capture for browser reliability |
@@ -631,7 +640,7 @@ No backend, account, vector database, embedding API, or cloud service is require
 ### Implemented
 
 - Published `@aliabdm/contextvault` npm CLI
-- Desktop App (Windows, macOS, Linux)
+- Desktop App (Windows and Linux installers; macOS source build)
 - Browser Capture
 - Terminal Capture MVP
 - Local-first browser storage

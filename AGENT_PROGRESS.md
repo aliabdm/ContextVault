@@ -849,3 +849,86 @@ Resolution:
   - Cursor/Windsurf adapters.
   - Claude Code integration.
   - Codex integration.
+
+---
+
+## 11. Desktop Audit And Campaign Demo Handoff (2026-07-03)
+
+### Working rule for future agents
+
+Before changing code, add the active plan here. After every meaningful step, update its status and record commands, results, blockers, and the exact next action. Never leave the handoff dependent on chat history.
+
+### Completed plan
+
+1. `[done]` Audit Desktop against the browser extension, CLI, and Context Engine.
+2. `[done]` Fix Desktop startup, preload/IPC, session parsing, search filters, Prepare Context, and project persistence.
+3. `[done]` Add functional Vault Tools for index rebuild, project memory, timeline, full export, and opening `.contextvault`.
+4. `[done]` Correct Portfolio/LinkedIn links, version display, macOS availability wording, and popup version.
+5. `[done]` Fix Docker build context and browser preview mode.
+6. `[done]` Build/test extension, Desktop, landing site, and Windows installer.
+7. `[done]` Record and visually inspect the final Desktop campaign demo.
+
+### Important fixes made
+
+- Desktop now imports `electron-updater` through its CommonJS-compatible default export.
+- Preload is built as `out/preload/index.cjs`; BrowserWindow points to that file while keeping sandboxing enabled.
+- Windows engine imports use `pathToFileURL`, so Context Engine functions work from Electron.
+- Session event parsing no longer uses a global regex that drops capture groups.
+- Search/Prepare filters are normalized to the engine's `types` and `sources` arrays.
+- Prepare Context reads and returns generated Markdown instead of sending an object to React.
+- Selected project settings persist under Electron user data.
+- Development mode opens the repository vault automatically when present.
+- Filename timestamps use UTC, fixing the timezone-dependent test.
+- Docker ignores nested `node_modules`, build output, release, demo, and vault directories.
+- Browser popup uses a safe Preview mode when Chrome extension APIs are unavailable.
+
+### Verification completed
+
+```text
+Root tests:             56/56 passed
+Extension production:  build passed
+Desktop production:    build passed
+Landing production:    build passed
+Desktop prod audit:    0 vulnerabilities
+Windows packaging:     passed
+Docker service:        running on http://127.0.0.1:5173
+Desktop dev app:       running with debug port 9333
+```
+
+### Deliverables
+
+```text
+demo-output/contextvault-desktop-demo.mp4
+  1280x720, 30 fps, H.264, 16:9, approximately 16.7 seconds
+
+demo-output/contextvault-desktop-demo.webm
+demo-output/screenshots/
+desktop/dist/ContextVault-Setup-1.5.4.exe
+```
+
+### Current working-tree caution
+
+- The work is not committed or pushed.
+- Preserve all pre-existing untracked documentation, profile, screenshot, Arabic-note, and demo-script files.
+- `demo-output/`, `.contextvault/`, Desktop build output, and release artifacts are intentionally ignored.
+- `desktop/electron-builder.yml` currently sets `win.signAndEditExecutable: false` so local packaging works without Windows symlink privileges. Revisit this when adding production code signing.
+
+### Exact next actions
+
+1. Review `git diff` and separate product changes from optional documentation/demo files.
+2. Decide whether the older duplicate recorder scripts under `scripts/` should be cleaned up or excluded from the commit.
+3. Run `npm test`, root build, Desktop build, landing build, and `npm run package:win` once more after any edits.
+4. Commit on a `codex/` branch or the user-selected branch.
+5. Push/deploy only with explicit user authorization.
+6. After deployment, verify public download links and update the GitHub About description to mention Desktop, terminal capture, and agents.
+
+### Active release plan (2026-07-03)
+
+1. `[done]` Clean the working tree and keep only product, release, documentation, and final demo assets.
+2. `[done]` Add the final Desktop MP4 to the landing page and update project/profile README copy.
+3. `[done]` Harden the tag-triggered GitHub release workflow and bump Desktop to `1.5.5`.
+4. `[done]` Run extension, Desktop, landing, Docker, installer, and browser verification.
+5. `[in progress]` Commit and push `codex/desktop-v1.5.5-release`.
+6. `[pending]` Create and push annotated tag `v1.5.5`, then verify the GitHub Action and release assets.
+
+Verification results for this release: root tests `56/56`, extension build passed, Desktop build passed, Windows `1.5.5` installer packaging passed, landing production build passed, workflow YAML parsed successfully, Docker extension preview healthy, landing Desktop MP4 loaded at 1280×720, and macOS build guidance rendered without browser errors.

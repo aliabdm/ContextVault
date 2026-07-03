@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
 export default function PrepareContext() {
@@ -14,6 +14,14 @@ export default function PrepareContext() {
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
 
+  useEffect(() => {
+    if (!sessionId) return
+    window.contextVault?.getSession(decodeURIComponent(sessionId)).then((session) => {
+      const title = session?.frontmatter?.title
+      if (title) setQuery(`Continue work from: ${title}`)
+    })
+  }, [sessionId])
+
   const handleGenerate = async () => {
     if (!query.trim() && !sessionId) return
     setLoading(true)
@@ -21,9 +29,10 @@ export default function PrepareContext() {
     setCopied(false)
 
     const filters: any = { limit: 20 }
-    if (includeDecisions) filters.type = filters.type ? filters.type + ',decision' : 'decision'
-    if (includeProblems) filters.type = filters.type ? filters.type + ',problem' : 'problem'
-    if (includeTasks) filters.type = filters.type ? filters.type + ',task' : 'task'
+    filters.types = []
+    if (includeDecisions) filters.types.push('decision')
+    if (includeProblems) filters.types.push('problem')
+    if (includeTasks) filters.types.push('task')
     if (since) filters.since = since
 
     const result = await window.contextVault?.prepareContext(query || 'context', filters)

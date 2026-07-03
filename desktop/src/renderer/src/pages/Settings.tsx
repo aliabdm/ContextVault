@@ -2,16 +2,15 @@ import { useState, useEffect } from 'react'
 
 export default function Settings() {
   const [projectPath, setProjectPath] = useState<string | null>(null)
-  const [indexingMode, setIndexingMode] = useState('manual')
   const [version, setVersion] = useState('1.0.0')
   const [saved, setSaved] = useState(false)
+  const projectName = projectPath?.split(/[\\/]/).filter(Boolean).pop() || ''
 
   useEffect(() => {
     const load = async () => {
       const settings = await window.contextVault?.getSettings()
       if (settings) {
         setProjectPath(settings.projectPath || null)
-        setIndexingMode(settings.indexingMode || 'manual')
         setVersion(settings.version || '1.0.0')
       }
     }
@@ -24,7 +23,7 @@ export default function Settings() {
   }
 
   const handleSave = async () => {
-    await window.contextVault?.updateSettings({ indexingMode })
+    await window.contextVault?.updateSettings({ projectPath })
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -41,8 +40,8 @@ export default function Settings() {
           <h2 className="mb-3 text-sm font-semibold text-neutral-200">Project Location</h2>
           {projectPath ? (
             <div className="space-y-2">
-              <div className="rounded-lg bg-dark-700 px-3 py-2 font-mono text-xs text-neutral-400">
-                {projectPath}
+              <div className="rounded-lg bg-dark-700 px-3 py-2 text-xs text-neutral-400" title={projectPath || ''}>
+                <span className="font-medium text-neutral-200">{projectName}</span> <span className="text-neutral-600">· Stored locally</span>
               </div>
               <button
                 onClick={handleOpenProject}
@@ -65,37 +64,8 @@ export default function Settings() {
         </div>
 
         <div className="rounded-xl border border-dark-600 p-5">
-          <h2 className="mb-3 text-sm font-semibold text-neutral-200">Indexing</h2>
-          <div className="space-y-2">
-            <label className="flex items-center gap-3">
-              <input
-                type="radio"
-                name="indexing"
-                value="manual"
-                checked={indexingMode === 'manual'}
-                onChange={() => setIndexingMode('manual')}
-                className="text-vault-500 focus:ring-vault-500/50"
-              />
-              <div>
-                <span className="text-sm text-neutral-200">Manual</span>
-                <p className="text-xs text-neutral-500">Rebuild index when you click "Index"</p>
-              </div>
-            </label>
-            <label className="flex items-center gap-3">
-              <input
-                type="radio"
-                name="indexing"
-                value="watcher"
-                checked={indexingMode === 'watcher'}
-                onChange={() => setIndexingMode('watcher')}
-                className="text-vault-500 focus:ring-vault-500/50"
-              />
-              <div>
-                <span className="text-sm text-neutral-200">File Watcher</span>
-                <p className="text-xs text-neutral-500">Auto-index when files change</p>
-              </div>
-            </label>
-          </div>
+          <h2 className="mb-2 text-sm font-semibold text-neutral-200">Indexing</h2>
+          <p className="text-xs leading-relaxed text-neutral-500">Indexing is explicit and local. Use Vault Tools to rebuild the unified browser and terminal index whenever your source files change.</p>
           <button
             onClick={handleSave}
             className="mt-4 inline-flex h-9 items-center gap-2 rounded-xl bg-vault-500 px-4 text-xs font-semibold text-white transition-all hover:bg-vault-600 active:scale-[0.97]"
@@ -131,11 +101,11 @@ export default function Settings() {
                 href="#"
                 onClick={(e) => {
                   e.preventDefault()
-                  window.contextVault?.openExternal('https://github.com/aliabdm')
+                window.contextVault?.openExternal('https://senior-mohammad-ali.vercel.app/')
                 }}
                 className="text-xs text-vault-400 transition-colors hover:text-vault-300"
               >
-                Author
+                Portfolio
               </a>
               <a
                 href="#"
@@ -147,6 +117,7 @@ export default function Settings() {
               >
                 FAQ
               </a>
+              <a href="#" onClick={(e) => { e.preventDefault(); window.contextVault?.openExternal('https://www.linkedin.com/in/mohammad-ali-abdul-wahed-1533b9171/') }} className="text-xs text-vault-400 transition-colors hover:text-vault-300">LinkedIn</a>
             </div>
           </div>
         </div>

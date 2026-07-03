@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
 export default function Search() {
+  const [searchParams] = useSearchParams()
   const [query, setQuery] = useState('')
-  const [typeFilter, setTypeFilter] = useState('')
+  const [typeFilter, setTypeFilter] = useState(searchParams.get('type') || '')
   const [sourceFilter, setSourceFilter] = useState('')
   const [sinceFilter, setSinceFilter] = useState('')
   const [results, setResults] = useState<any>(null)
@@ -14,8 +16,8 @@ export default function Search() {
     setLoading(true)
     setSearched(true)
     const filters: any = {}
-    if (typeFilter) filters.type = typeFilter
-    if (sourceFilter) filters.source = sourceFilter
+    if (typeFilter) filters.types = [typeFilter]
+    if (sourceFilter) filters.sources = [sourceFilter]
     if (sinceFilter) filters.since = sinceFilter
     const res = await window.contextVault?.search(query, filters)
     setResults(res)

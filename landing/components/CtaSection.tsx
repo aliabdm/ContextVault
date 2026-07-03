@@ -14,7 +14,7 @@ export default function CtaSection() {
       >
         <span className="text-xs font-semibold uppercase tracking-[0.2em] text-neutral-500">Get Started</span>
         <h2 className="mt-4 text-balance text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          Get ContextVault Desktop for Windows, macOS, or Linux
+          Get ContextVault Desktop for Windows or Linux. macOS source builds are supported.
         </h2>
         <p className="mt-4 text-lg leading-relaxed text-neutral-400">
           Download the Desktop app for a visual interface, install the browser extension for LLM chats,

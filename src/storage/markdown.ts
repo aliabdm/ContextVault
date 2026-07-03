@@ -81,16 +81,16 @@ export function buildMarkdown(conversation: Conversation): string {
 export function generateFilename(conversation: Conversation): string {
   const date = new Date(conversation.startedAt);
   const dateStr =
-    date.getFullYear().toString() +
+    date.getUTCFullYear().toString() +
     "-" +
-    (date.getMonth() + 1).toString().padStart(2, "0") +
+    (date.getUTCMonth() + 1).toString().padStart(2, "0") +
     "-" +
-    date.getDate().toString().padStart(2, "0");
+    date.getUTCDate().toString().padStart(2, "0");
 
   const timeStr =
-    date.getHours().toString().padStart(2, "0") +
+    date.getUTCHours().toString().padStart(2, "0") +
     "-" +
-    date.getMinutes().toString().padStart(2, "0");
+    date.getUTCMinutes().toString().padStart(2, "0");
 
   const safeTitle = conversation.title
     .toLowerCase()

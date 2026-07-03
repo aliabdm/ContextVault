@@ -1,10 +1,41 @@
 import { app, BrowserWindow, ipcMain, dialog, shell, Notification } from 'electron'
 import { join } from 'path'
-import { existsSync, readFileSync, readdirSync, mkdirSync } from 'fs'
-import { autoUpdater } from 'electron-updater'
+import { pathToFileURL } from 'url'
+import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from 'fs'
+import electronUpdater from 'electron-updater'
+
+const { autoUpdater } = electronUpdater
 
 let mainWindow: BrowserWindow | null = null
 let engine: any = null
+
+type DesktopSettings = {
+  projectPath: string
+  indexingMode: 'manual'
+}
+
+const defaultSettings: DesktopSettings = { projectPath: '', indexingMode: 'manual' }
+
+function settingsPath(): string {
+  return join(app.getPath('userData'), 'settings.json')
+}
+
+function readSettings(): DesktopSettings {
+  try {
+    const value = JSON.parse(readFileSync(settingsPath(), 'utf-8'))
+    return {
+      projectPath: ensureProjectPath(value.projectPath),
+      indexingMode: 'manual',
+    }
+  } catch {
+    return defaultSettings
+  }
+}
+
+function saveSettings(settings: DesktopSettings): void {
+  mkdirSync(app.getPath('userData'), { recursive: true })
+  writeFileSync(settingsPath(), JSON.stringify(settings, null, 2) + '\n', 'utf-8')
+}
 
 const isDev = !app.isPackaged
 
@@ -24,7 +55,7 @@ async function getEngine() {
     if (!existsSync(enginePath)) {
       throw new Error(`Engine not found at ${enginePath}. Initialize a project first.`)
     }
-    engine = await import(enginePath)
+    engine = await import(pathToFileURL(enginePath).href)
   }
   return engine
 }
@@ -89,7 +120,7 @@ function createWindow(): void {
     title: 'ContextVault',
     backgroundColor: '#0d0d1a',
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
+      preload: join(__dirname, '../preload/index.cjs'),
       nodeIntegration: false,
       contextIsolation: true,
       sandbox: true,
@@ -228,7 +259,7 @@ function getSessionById(projectPath: string, id: string) {
 
   for (const dir of searchDirs) {
     if (!existsSync(dir)) continue
-    const files = require('fs').readdirSync(dir).filter((f: string) => f.endsWith('.md'))
+    const files = readdirSync(dir).filter((f: string) => f.endsWith('.md'))
     for (const file of files) {
       const content = readFileSync(join(dir, file), 'utf-8')
       const frontmatter = parseFrontmatter(content)
@@ -243,7 +274,7 @@ function getSessionById(projectPath: string, id: string) {
 
 function parseEvents(content: string): any[] {
   const events: any[] = []
-  const headingRegex = /^##\s+(.+)$/gm
+  const headingRegex = /^##\s+(.+)$/
   const lines = content.split('\n')
   let currentType = ''
   let currentContent: string[] = []
@@ -287,7 +318,7 @@ function parseEvents(content: string): any[] {
 async function searchSessions(projectPath: string, query: string, filters: any) {
   const eng = await getEngine()
   try {
-    const result = await eng.retrieveContext(projectPath, query, filters || {})
+    const result = await eng.retrieveContext(projectPath, query, normalizeFilters(filters))
     return result
   } catch (err) {
     return { results: [], sessions: [], links: [], query, generatedAt: new Date().toISOString() }
@@ -297,25 +328,47 @@ async function searchSessions(projectPath: string, query: string, filters: any) 
 async function prepareContext(projectPath: string, query: string, filters: any) {
   const eng = await getEngine()
   try {
-    const result = await eng.prepareContext(projectPath, query, filters || {})
-    return { success: true, output: result }
+    const result = await eng.prepareContext(projectPath, query, normalizeFilters(filters))
+    return {
+      success: true,
+      output: readFileSync(result.outputPath, 'utf-8'),
+      outputPath: result.outputPath,
+      eventCount: result.retrieval.results.length,
+      sessionCount: result.retrieval.sessions.length,
+    }
   } catch (err: any) {
     return { success: false, error: err.message }
   }
 }
 
-function getSettings() {
+function normalizeFilters(filters: any = {}) {
+  const toArray = (plural: unknown, singular: unknown) => {
+    if (Array.isArray(plural)) return plural.filter(Boolean)
+    const value = plural || singular
+    return typeof value === 'string' ? value.split(',').map((item) => item.trim()).filter(Boolean) : []
+  }
   return {
-    projectPath: ensureProjectPath(global.__projectPath),
-    indexingMode: 'manual',
-    version: '1.0.0',
+    limit: Number(filters.limit) || 20,
+    types: toArray(filters.types, filters.type),
+    sources: toArray(filters.sources, filters.source),
+    since: filters.since || undefined,
+  }
+}
+
+function getSettings() {
+  const stored = readSettings()
+  return {
+    projectPath: ensureProjectPath(global.__projectPath || stored.projectPath),
+    indexingMode: stored.indexingMode,
+    version: app.getVersion(),
   }
 }
 
 function updateSettings(settings: any) {
-  if (settings.projectPath) {
-    global.__projectPath = settings.projectPath
-  }
+  const current = readSettings()
+  const projectPath = ensureProjectPath(settings.projectPath || global.__projectPath || current.projectPath)
+  global.__projectPath = projectPath
+  saveSettings({ projectPath, indexingMode: 'manual' })
   return getSettings()
 }
 
@@ -333,15 +386,14 @@ ipcMain.handle('contextvault:open-project', async () => {
   if (result.canceled || result.filePaths.length === 0) return null
 
   const projectPath = result.filePaths[0]
-  const vaultPath = getVaultPath(projectPath)
-  if (!existsSync(vaultPath)) {
-    mkdirSync(vaultPath, { recursive: true })
-    mkdirSync(join(vaultPath, 'sessions'), { recursive: true })
-    mkdirSync(join(vaultPath, 'exports'), { recursive: true })
-    mkdirSync(join(vaultPath, 'index'), { recursive: true })
-    mkdirSync(join(vaultPath, 'imports', 'browser'), { recursive: true })
+  const eng = await getEngine()
+  const paths = eng.ensureEngineStorage(projectPath)
+  if (!existsSync(paths.memoryPath)) {
+    writeFileSync(paths.memoryPath, '# ContextVault Project Memory\n\nAdd durable project context here.\n', 'utf-8')
   }
+  eng.buildContextIndex(projectPath)
   global.__projectPath = projectPath
+  saveSettings({ projectPath, indexingMode: 'manual' })
   return projectPath
 })
 
@@ -399,6 +451,7 @@ ipcMain.handle('contextvault:import', async () => {
   const eng = await getEngine()
   try {
     const importResult = await eng.importBrowserExports(pp, result.filePaths[0])
+    eng.buildContextIndex(pp)
     return importResult
   } catch (err: any) {
     return { error: err.message }
@@ -409,6 +462,69 @@ ipcMain.handle('contextvault:get-settings', async () => getSettings())
 
 ipcMain.handle('contextvault:update-settings', async (_e, settings: any) => updateSettings(settings))
 
+ipcMain.handle('contextvault:rebuild-index', async () => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return { success: false, error: 'No project selected' }
+  try {
+    const eng = await getEngine()
+    const index = eng.buildContextIndex(pp)
+    return { success: true, sessions: index.sessionCount, events: index.eventCount }
+  } catch (err: any) {
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('contextvault:update-memory', async () => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return { success: false, error: 'No project selected' }
+  try {
+    const eng = await getEngine()
+    const result = eng.updateProjectMemory(pp)
+    return { success: true, content: readFileSync(result.memoryPath, 'utf-8'), eventCount: result.eventCount }
+  } catch (err: any) {
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('contextvault:build-timeline', async () => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return { success: false, error: 'No project selected' }
+  try {
+    const eng = await getEngine()
+    const result = eng.buildTimeline(pp)
+    return { success: true, content: readFileSync(result.outputPath, 'utf-8'), eventCount: result.eventCount }
+  } catch (err: any) {
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('contextvault:export-all', async () => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return { success: false, error: 'No project selected' }
+  try {
+    const vaultPath = getVaultPath(pp)
+    const memoryPath = join(vaultPath, 'memory.md')
+    const sessions = listSessions(pp)
+    const sections = ['# ContextVault Full Export', '', `Generated at: ${new Date().toISOString()}`, '', '## Project Memory', '', existsSync(memoryPath) ? readFileSync(memoryPath, 'utf-8').trim() : 'No project memory.', '', '## Sessions', '']
+    for (const item of sessions) {
+      const session = getSessionById(pp, item.id)
+      if (session) sections.push(session.content.trim(), '')
+    }
+    const content = sections.join('\n')
+    const outputPath = join(vaultPath, 'exports', 'contextvault-full-export.md')
+    writeFileSync(outputPath, content, 'utf-8')
+    return { success: true, content, filename: 'contextvault-full-export.md', sessionCount: sessions.length }
+  } catch (err: any) {
+    return { success: false, error: err.message }
+  }
+})
+
+ipcMain.handle('contextvault:open-vault-folder', async () => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return false
+  return (await shell.openPath(getVaultPath(pp))) === ''
+})
+
 ipcMain.handle('contextvault:open-external', async (_e, url: string) => {
   if (typeof url === 'string' && (url.startsWith('https://') || url.startsWith('http://'))) {
     await shell.openExternal(url)
@@ -417,7 +533,18 @@ ipcMain.handle('contextvault:open-external', async (_e, url: string) => {
 
 ipcMain.handle('contextvault:get-project-path', async () => global.__projectPath || null)
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  const developmentProject = isDev ? join(app.getAppPath(), '..') : ''
+  global.__projectPath = ensureProjectPath(process.env.CONTEXTVAULT_PROJECT_PATH || readSettings().projectPath || developmentProject)
+  if (global.__projectPath) {
+    try {
+      const eng = await getEngine()
+      eng.ensureEngineStorage(global.__projectPath)
+      eng.buildContextIndex(global.__projectPath)
+    } catch (error) {
+      console.error('Failed to initialize ContextVault engine:', error)
+    }
+  }
   createWindow()
 
   app.on('activate', () => {

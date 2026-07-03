@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [stats, setStats] = useState<Stats | null>(null)
   const [projectPath, setProjectPath] = useState<string | null>(null)
   const [loading, setLoading] = useState(true)
+  const projectName = projectPath?.split(/[\\/]/).filter(Boolean).pop() || ''
 
   const loadData = async () => {
     setLoading(true)
@@ -68,7 +69,7 @@ export default function Dashboard() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-white">Dashboard</h1>
-          <p className="mt-1 text-sm text-neutral-500">{projectPath}</p>
+          <p className="mt-1 text-sm text-neutral-500" title={projectPath}>{projectName} <span className="text-neutral-600">· Local project</span></p>
         </div>
         <button
           onClick={handleOpenProject}
@@ -103,6 +104,7 @@ export default function Dashboard() {
           <ActionButton icon="✅" label="Decisions" onClick={() => navigate('/search?type=decision')} />
           <ActionButton icon="⚠️" label="Problems" onClick={() => navigate('/search?type=problem')} />
           <ActionButton icon="⚙" label="Settings" onClick={() => navigate('/settings')} />
+          <ActionButton icon="◇" label="Vault Tools" onClick={() => navigate('/tools')} />
         </div>
       </div>
     </div>

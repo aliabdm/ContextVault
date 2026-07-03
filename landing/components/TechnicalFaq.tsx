@@ -32,7 +32,7 @@ const questions = [
   {
     question: 'Is there a Desktop app?',
     answer:
-      'Yes. ContextVault Desktop is available for Windows, macOS, and Linux. It provides a visual interface for managing sessions, searching project memory, preparing AI context packages, and exporting context — all without the terminal. It uses the same local .contextvault directory as the CLI, so you can switch between both tools freely. Download the installer from the GitHub Releases page.',
+      'Yes. ContextVault Desktop provides a visual interface for managing sessions, searching project memory, preparing AI context packages, and exporting context — all without the terminal. Windows and Linux installers are published on GitHub Releases; macOS is currently available as a local source build. It uses the same local .contextvault directory as the CLI, so you can switch between both tools freely.',
   },
   {
     question: 'Does it automatically record every terminal or coding agent?',

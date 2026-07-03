@@ -1,4 +1,8 @@
-node_modules
-dist
+**/node_modules
+**/dist
+desktop/out
+release
+demo-output
+.contextvault
 .git
 *.md

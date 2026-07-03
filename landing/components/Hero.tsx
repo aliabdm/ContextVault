@@ -22,7 +22,7 @@ const demos = [
   {
     label: 'Desktop App',
     title: 'Visual context manager',
-    detail: 'Windows, macOS, Linux — manage sessions, search, and prepare context',
+    detail: 'Windows and Linux installers, macOS source build — search, prepare, and export',
     image: null,
     alt: 'ContextVault Desktop app provides a visual interface for project context',
     accent: 'from-green-500/20 to-vault-500/10',

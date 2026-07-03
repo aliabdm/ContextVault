@@ -18,9 +18,13 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: desktop/package-lock.json
+      - name: Verify tag matches Desktop version
+        run: node -e "const p=require('./desktop/package.json'); if ('v'+p.version !== process.env.GITHUB_REF_NAME) { console.error('Tag must be v'+p.version); process.exit(1) }"
       - name: Install dependencies
         working-directory: desktop
         run: npm ci
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: true
       - name: Build
         working-directory: desktop
         run: npm run build
@@ -36,7 +40,7 @@ jobs:
         with:
           files: desktop/dist/ContextVault-Setup-*.exe
           tag_name: ${{ github.ref_name }}
-          fail_on_unmatched_files: false
+          fail_on_unmatched_files: true
 
   build-linux:
     runs-on: ubuntu-latest
@@ -47,15 +51,13 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: desktop/package-lock.json
-      - name: Install system dependencies
-        run: |
-          sudo apt-get update -qq || true
-          sudo apt-get install -y libgtk-3-0 libnotify4 libnss3 libxkbcommon0 \
-            libxcomposite1 libxdamage1 libxrandr2 libxrender1 \
-            libxtst6 libasound2 2>&1 || echo "Some deps may be missing"
+      - name: Verify tag matches Desktop version
+        run: node -e "const p=require('./desktop/package.json'); if ('v'+p.version !== process.env.GITHUB_REF_NAME) { console.error('Tag must be v'+p.version); process.exit(1) }"
       - name: Install dependencies
         working-directory: desktop
         run: npm ci
+        env:
+          PUPPETEER_SKIP_DOWNLOAD: true
       - name: Build
         working-directory: desktop
         run: npm run build
@@ -71,11 +73,11 @@ jobs:
         with:
           files: desktop/dist/ContextVault-*.AppImage
           tag_name: ${{ github.ref_name }}
-          fail_on_unmatched_files: false
+          fail_on_unmatched_files: true
 
   release:
     needs: [build-windows, build-linux]
-    if: always()
+    if: success()
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -91,5 +93,6 @@ jobs:
 
             ### Install
             - [Windows](https://context-vault-two.vercel.app/download/windows)
-            - [macOS](https://context-vault-two.vercel.app/download/macos)
             - [Linux](https://context-vault-two.vercel.app/download/linux)
+
+            macOS is currently available as a local source build with `npm run package:mac`.
