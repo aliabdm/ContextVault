@@ -928,7 +928,7 @@ desktop/dist/ContextVault-Setup-1.5.4.exe
 2. `[done]` Add the final Desktop MP4 to the landing page and update project/profile README copy.
 3. `[done]` Harden the tag-triggered GitHub release workflow and bump Desktop to `1.5.5`.
 4. `[done]` Run extension, Desktop, landing, Docker, installer, and browser verification.
-5. `[in progress]` Commit and push `codex/desktop-v1.5.5-release`.
-6. `[pending]` Create and push annotated tag `v1.5.5`, then verify the GitHub Action and release assets.
+5. `[done]` Commit and push `codex/desktop-v1.5.5-release` (`a90f485`).
+6. `[in progress]` Create and push annotated tag `v1.5.5`, then verify the GitHub Action and release assets.
 
 Verification results for this release: root tests `56/56`, extension build passed, Desktop build passed, Windows `1.5.5` installer packaging passed, landing production build passed, workflow YAML parsed successfully, Docker extension preview healthy, landing Desktop MP4 loaded at 1280×720, and macOS build guidance rendered without browser errors.
