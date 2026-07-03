@@ -96,6 +96,17 @@ Then load `dist/` into Chrome via `chrome://extensions` → Developer Mode → L
 
 The Record button launches the bundled `contextvault record` process. Desktop never watches your screen or terminal in the background. Automatic classification runs on-device — no model, no API call, no telemetry.
 
+<table>
+  <tr>
+    <td width="50%"><img src="landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop recorder with automatic classification" /></td>
+    <td width="50%"><img src="landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop GUI screens with filters and results" /></td>
+  </tr>
+</table>
+
+<p align="center">
+  <img src="landing/public/demo/desktop-walkthrough/step-11.png" alt="ContextVault Desktop dashboard with full project context" width="720" />
+</p>
+
 ### Terminal
 
 ```bash
@@ -155,6 +166,9 @@ Supported filters: `--type`, `--source`, `--since` (`24h`, `14d`, `2w`, or ISO d
   <tr>
     <td width="50%"><img src="landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop recorder with automatic classification" /></td>
     <td width="50%"><img src="landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop GUI screens with filters and results" /></td>
+  </tr>
+  <tr>
+    <td colspan="2" align="center"><img src="landing/public/demo/desktop-walkthrough/step-11.png" alt="ContextVault Desktop dashboard with full project context" width="720" /></td>
   </tr>
 </table>
 
@@ -335,11 +349,6 @@ docker compose --profile testing up dev test-server  # + ChatGPT mock on :8080
 | Portfolio | [senior-mohammad-ali.vercel.app](https://senior-mohammad-ali.vercel.app/) |
 | Medium | [@aliabdm](https://medium.com/@aliabdm) |
 | Dev.to | [@maliano63717738](https://dev.to/maliano63717738) |
-
-### Articles
-
-- [I Built a Local-First Recorder for AI Coding Sessions](docs/medium-vault-terminal.md) — Vault Terminal philosophy
-- [ContextVault Desktop: From CLI Wrapper to Full GUI Product](docs/contextvault-desktop-gui.md) — Desktop launch article
 
 ### Community
 

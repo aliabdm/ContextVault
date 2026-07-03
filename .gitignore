@@ -11,3 +11,4 @@ release/
 .env
 .env.*
 important_for_me.txt
+PLAN.md
