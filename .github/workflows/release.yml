@@ -118,11 +118,19 @@ jobs:
           pattern: installer-*
           merge-multiple: true
         continue-on-error: true
+      - name: List downloaded files
+        run: find . -type f -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" 2>/dev/null || echo "No installer files found"
       - name: Generate update metadata
+        shell: bash
         run: |
-          set -e
-          VERSION=${GITHUB_REF_NAME#v}
-          EXE_FILE=$(ls -1 ContextVault-Setup-*.exe 2>/dev/null | head -1)
+          VERSION="${GITHUB_REF_NAME#v}"
+          EXE_FILE=""
+          for f in ContextVault-Setup-*.exe; do
+            if [ -f "$f" ]; then
+              EXE_FILE="$f"
+              break
+            fi
+          done
           if [ -n "$EXE_FILE" ]; then
             echo "Found: $EXE_FILE"
             SHA=$(sha256sum "$EXE_FILE" | cut -d' ' -f1)
