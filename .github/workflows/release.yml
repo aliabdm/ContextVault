@@ -40,6 +40,7 @@ jobs:
 
   build-macos:
     runs-on: macos-latest
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -106,7 +107,7 @@ jobs:
           path: desktop/dist/ContextVault-*.AppImage
 
   release:
-    needs: [build-windows, build-linux]
+    needs: [build-windows, build-linux, build-macos]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -119,18 +120,26 @@ jobs:
         continue-on-error: true
       - name: Generate update metadata
         run: |
+          set -e
           VERSION=${GITHUB_REF_NAME#v}
-          if ls ContextVault-Setup-*.exe 2>/dev/null; then
+          EXE_FILE=$(ls -1 ContextVault-Setup-*.exe 2>/dev/null | head -1)
+          if [ -n "$EXE_FILE" ]; then
+            echo "Found: $EXE_FILE"
+            SHA=$(sha256sum "$EXE_FILE" | cut -d' ' -f1)
+            SIZE=$(stat -c%s "$EXE_FILE")
             cat > latest.yml << EOF
             version: $VERSION
-            path: ContextVault-Setup-$VERSION.exe
-            sha512: $(sha256sum ContextVault-Setup-*.exe | cut -d' ' -f1)
+            path: $EXE_FILE
+            sha512: $SHA
             releaseDate: $(date -u +%Y-%m-%dT%H:%M:%S.000Z)
             files:
-              - url: ContextVault-Setup-$VERSION.exe
-                sha512: $(sha256sum ContextVault-Setup-*.exe | cut -d' ' -f1)
-                size: $(stat -c%s ContextVault-Setup-*.exe)
+              - url: $EXE_FILE
+                sha512: $SHA
+                size: $SIZE
             EOF
+            cat latest.yml
+          else
+            echo "No .exe found, skipping latest.yml"
           fi
       - name: Create Release
         uses: softprops/action-gh-release@v2
