@@ -1,0 +1,47 @@
+import { contextBridge, ipcRenderer } from 'electron'
+
+const api = {
+  openProject: (): Promise<string | null> =>
+    ipcRenderer.invoke('contextvault:open-project'),
+
+  getDashboardStats: (): Promise<{
+    sessions: number
+    events: number
+    decisions: number
+    problems: number
+    tasks: number
+    memoryExists: boolean
+  } | null> => ipcRenderer.invoke('contextvault:get-dashboard-stats'),
+
+  listSessions: (): Promise<any[]> =>
+    ipcRenderer.invoke('contextvault:list-sessions'),
+
+  getSession: (id: string): Promise<any> =>
+    ipcRenderer.invoke('contextvault:get-session', id),
+
+  search: (query: string, filters?: any): Promise<any> =>
+    ipcRenderer.invoke('contextvault:search', query, filters),
+
+  prepareContext: (query: string, filters?: any): Promise<any> =>
+    ipcRenderer.invoke('contextvault:prepare-context', query, filters),
+
+  exportMarkdown: (id: string): Promise<{ content: string; filename: string } | null> =>
+    ipcRenderer.invoke('contextvault:export-markdown', id),
+
+  importConversation: (): Promise<any> =>
+    ipcRenderer.invoke('contextvault:import'),
+
+  getSettings: (): Promise<any> =>
+    ipcRenderer.invoke('contextvault:get-settings'),
+
+  updateSettings: (settings: any): Promise<any> =>
+    ipcRenderer.invoke('contextvault:update-settings', settings),
+
+  openExternal: (url: string): Promise<void> =>
+    ipcRenderer.invoke('contextvault:open-external', url),
+
+  getProjectPath: (): Promise<string | null> =>
+    ipcRenderer.invoke('contextvault:get-project-path'),
+}
+
+contextBridge.exposeInMainWorld('contextVault', api)

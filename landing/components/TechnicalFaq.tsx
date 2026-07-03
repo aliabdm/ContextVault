@@ -30,6 +30,11 @@ const questions = [
       'The current engine uses exact phrase matches, token matches, event-type importance, and recency. Filters can narrow by event type, source or browser platform, and time. Retrieval is lexical and deterministic; embeddings and semantic search are not silently running in the background.',
   },
   {
+    question: 'Is there a Desktop app?',
+    answer:
+      'Yes. ContextVault Desktop is available for Windows, macOS, and Linux. It provides a visual interface for managing sessions, searching project memory, preparing AI context packages, and exporting context — all without the terminal. It uses the same local .contextvault directory as the CLI, so you can switch between both tools freely. Download the installer from the GitHub Releases page.',
+  },
+  {
     question: 'Does it automatically record every terminal or coding agent?',
     answer:
       'No. Vault Terminal records the context you explicitly enter. Automatic Codex, Claude Code, Cursor, VS Code, and MCP adapters are future integrations. This boundary avoids hidden interception and keeps the current behavior predictable.',

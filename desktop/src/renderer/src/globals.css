@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --vault-50: #eef2ff;
+  --vault-100: #e0e7ff;
+  --vault-200: #c7d2fe;
+  --vault-300: #a5b4fc;
+  --vault-400: #818cf8;
+  --vault-500: #6366f1;
+  --vault-600: #4f46e5;
+  --vault-700: #4338ca;
+  --vault-800: #3730a3;
+  --vault-900: #312e81;
+
+  --dark-50: #fafafa;
+  --dark-100: #f5f5f5;
+  --dark-200: #e5e5e5;
+  --dark-300: #d4d4d4;
+  --dark-400: #a3a3a3;
+  --dark-500: #737373;
+  --dark-600: #262626;
+  --dark-700: #1a1a2e;
+  --dark-800: #0d0d1a;
+  --dark-900: #070711;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body, #root {
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, sans-serif;
+  background: var(--dark-800);
+  color: #e5e5e5;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--dark-600);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--dark-500);
+}

@@ -17,8 +17,8 @@ export default function CtaSection() {
           Start saving browser and terminal context today
         </h2>
         <p className="mt-4 text-lg leading-relaxed text-neutral-400">
-          Install the extension for LLM web apps. Use Vault Terminal for coding agents and project memory.
-          Both are free, open source, and local-first.
+          Install the extension for LLM web apps. Use Vault Terminal for coding agents, or the Desktop app for a visual interface.
+          All are free, open source, and local-first.
         </p>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -38,10 +38,18 @@ export default function CtaSection() {
           >
             Browser extension
           </a>
+          <a
+            href="https://github.com/aliabdm/ContextVault/releases"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex h-12 items-center rounded-xl border border-vault-500/30 bg-vault-500/10 px-6 text-sm font-semibold text-vault-200 transition-all hover:bg-vault-500/20 active:scale-[0.97]"
+          >
+            Desktop app
+          </a>
         </div>
 
         <p className="mt-4 text-xs text-neutral-600">
-          Browser Capture + Terminal Capture - Open source - MIT license
+          Browser Capture + Terminal Capture + Desktop App - Open source - MIT license
         </p>
 
         <a href="/faq" className="mt-5 inline-block text-sm font-medium text-vault-300 transition-colors hover:text-white">

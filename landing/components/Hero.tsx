@@ -19,6 +19,14 @@ const demos = [
     alt: 'Vault Terminal records a coding-agent session and exports local Markdown context',
     accent: 'from-orange-500/20 to-vault-500/10',
   },
+  {
+    label: 'Desktop App',
+    title: 'Visual context manager',
+    detail: 'Windows, macOS, Linux — manage sessions, search, and prepare context',
+    image: '/demo/contextvault-demo.gif',
+    alt: 'ContextVault Desktop app provides a visual interface for project context',
+    accent: 'from-green-500/20 to-vault-500/10',
+  },
 ]
 
 export default function Hero() {
@@ -97,7 +105,7 @@ export default function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="mx-auto mt-12 grid max-w-6xl gap-4 lg:grid-cols-2"
+          className="mx-auto mt-12 grid max-w-6xl gap-4 md:grid-cols-2 lg:grid-cols-3"
         >
           {demos.map((demo) => (
             <div

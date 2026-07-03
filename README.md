@@ -31,7 +31,10 @@
   <img src="https://img.shields.io/badge/build-passing-22c55e?style=for-the-badge" alt="build" />
   <img src="https://img.shields.io/badge/privacy-local--first-7c3aed?style=for-the-badge" alt="privacy" />
   <img src="https://img.shields.io/badge/capture-browser%20%2B%20terminal-f97316?style=for-the-badge" alt="capture surfaces" />
+  <img src="https://img.shields.io/badge/desktop-win%20%7C%20mac%20%7C%20linux-22c55e?style=for-the-badge" alt="desktop app" />
   <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/v/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm package" /></a>
+  <a href="https://www.npmjs.com/package/@aliabdm/contextvault"><img src="https://img.shields.io/npm/dm/@aliabdm/contextvault?style=for-the-badge&logo=npm&color=cb3837" alt="npm downloads" /></a>
+  <a href="https://github.com/aliabdm/ContextVault/releases"><img src="https://img.shields.io/github/downloads/aliabdm/ContextVault/total?style=for-the-badge&logo=github&color=6366f1" alt="GitHub downloads" /></a>
 </p>
 
 <p align="center">
@@ -44,7 +47,21 @@
 
 ## Installation
 
-Run Vault Terminal immediately with npm:
+### Desktop App (recommended)
+
+Download the installer for your platform from the [GitHub Releases](https://github.com/aliabdm/ContextVault/releases) page:
+
+| Platform | Format |
+|----------|--------|
+| Windows | `ContextVault-Setup-1.0.0.exe` (NSIS installer) |
+| macOS | `ContextVault-1.0.0.dmg` (Intel + Apple Silicon) |
+| Linux | `ContextVault-1.0.0.AppImage` |
+
+No admin required. Works offline.
+
+### CLI (npm)
+
+Run Vault Terminal immediately without installing:
 
 ```bash
 npx @aliabdm/contextvault init
@@ -194,6 +211,7 @@ Context should survive:
 
 | Feature | Description |
 | --- | --- |
+| Desktop App | Visual context manager for Windows, macOS, and Linux |
 | Browser Capture | Captures LLM conversations from supported browser platforms |
 | Terminal Capture | Captures coding-agent, human, and project-context sessions from the terminal |
 | Hybrid browser engine | DOM + network capture for browser reliability |
@@ -220,21 +238,21 @@ Context should survive:
 </p>
 
 ```text
-Browser Capture                         Terminal Capture
-DOM Observer + Network Monitor          Vault Terminal CLI
-        |                                      |
-Stream Assembler                       Raw Context Events
-        |                                      |
-Capture Engine                         Markdown Sessions
-        |                                      |
-Background Service Worker              .contextvault/
-        |                                      |
-IndexedDB Storage                      Local Filesystem Storage
-        |                                      |
- Markdown / ZIP Export                 Sessions
-        \                                      /
-         \                                    /
-          -------- Shared Context Layer ------
+Browser Capture                         Terminal Capture              Desktop App
+DOM Observer + Network Monitor          Vault Terminal CLI            Electron UI
+        |                                      |                           |
+Stream Assembler                       Raw Context Events           Preload API
+        |                                      |                           |
+Capture Engine                         Markdown Sessions            Main Process
+        |                                      |                           |
+Background Service Worker              .contextvault/               Context Engine
+        |                                      |                           |
+IndexedDB Storage                      Local Filesystem Storage     Local Filesystem
+        |                                      |                           |
+ Markdown / ZIP Export                 Sessions                     Visual Output
+        \                                      /                           /
+         \                                    /                           /
+          --------------- Shared Context Layer ---------------------------
                           |
                     Context Engine
             Normalize / Index / Retrieve
@@ -611,6 +629,7 @@ No backend, account, vector database, embedding API, or cloud service is require
 ### Implemented
 
 - Published `@aliabdm/contextvault` npm CLI
+- Desktop App (Windows, macOS, Linux)
 - Browser Capture
 - Terminal Capture MVP
 - Local-first browser storage

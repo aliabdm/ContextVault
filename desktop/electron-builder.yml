@@ -1,0 +1,55 @@
+appId: com.contextvault.desktop
+productName: ContextVault
+copyright: Copyright © 2026 Mohammad Ali Abdul Wahed
+
+directories:
+  output: dist
+  buildResources: resources
+
+files:
+  - out/**/*
+  - "!node_modules/**/*"
+
+extraResources:
+  - from: ../scripts/
+    to: scripts/
+    filter:
+      - "*.mjs"
+
+win:
+  target:
+    - target: nsis
+      arch:
+        - x64
+  artifactName: ContextVault-Setup-${version}.${ext}
+
+nsis:
+  oneClick: false
+  allowToChangeInstallationDirectory: true
+  deleteAppDataOnUninstall: false
+  installerIcon: resources/icon.ico
+  uninstallerIcon: resources/icon.ico
+  shortcutName: ContextVault
+
+mac:
+  target:
+    - target: dmg
+      arch:
+        - x64
+        - arm64
+  artifactName: ContextVault-${version}-${arch}.${ext}
+  category: public.app-category.developer-tools
+
+linux:
+  target:
+    - target: AppImage
+      arch:
+        - x64
+  artifactName: ContextVault-${version}.${ext}
+  category: Development
+
+publish:
+  provider: github
+  owner: aliabdm
+  repo: ContextVault
+  releaseType: release
