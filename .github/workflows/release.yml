@@ -9,41 +9,135 @@ permissions:
   contents: write
 
 jobs:
-  release:
-    strategy:
-      matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
-    runs-on: ${{ matrix.os }}
-
+  build-windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
           cache-dependency-path: desktop/package-lock.json
-
       - name: Install dependencies
         working-directory: desktop
-        run: npm ci --ignore-scripts
-
-      - name: Build Electron
+        run: npm ci
+      - name: Build
         working-directory: desktop
         run: npm run build
         env:
           NODE_ENV: production
-
-      - name: Package installer
+      - name: Package
         working-directory: desktop
-        run: npx electron-builder --config electron-builder.yml --publish always
+        run: npx electron-builder --config electron-builder.yml --publish never
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_LINK: ${{ secrets.CSC_LINK || '' }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD || '' }}
-
-      - name: Upload artifacts
+      - name: Upload installer
         uses: actions/upload-artifact@v4
         with:
-          name: installer-${{ matrix.os }}
-          path: desktop/dist/*
+          name: installer-windows
+          path: desktop/dist/ContextVault-Setup-*.exe
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - name: Install dependencies
+        working-directory: desktop
+        run: npm ci
+      - name: Build
+        working-directory: desktop
+        run: npm run build
+        env:
+          NODE_ENV: production
+      - name: Package
+        working-directory: desktop
+        run: npx electron-builder --config electron-builder.yml --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          CSC_IDENTITY_AUTO_DISCOVERY: false
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-macos
+          path: desktop/dist/ContextVault-*.dmg
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libgtk-3-0 libnotify4 libnss3 libxcb1 libxkbcommon0 \
+            libxcomposite1 libxdamage1 libxrandr2 libxrender1 libxtst6 \
+            libasound2 libdbus-glib-1-2
+      - name: Install dependencies
+        working-directory: desktop
+        run: npm ci
+      - name: Build
+        working-directory: desktop
+        run: npm run build
+        env:
+          NODE_ENV: production
+      - name: Package
+        working-directory: desktop
+        run: npx electron-builder --config electron-builder.yml --publish never
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: installer-linux
+          path: desktop/dist/ContextVault-*.AppImage
+
+  release:
+    needs: [build-windows, build-macos, build-linux]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: installer-*
+          merge-multiple: true
+      - name: Generate latest.yml
+        run: |
+          VERSION=${GITHUB_REF_NAME#v}
+          cat > latest.yml << EOF
+          version: $VERSION
+          path: ContextVault-Setup-$VERSION.exe
+          sha512: $(sha256sum ContextVault-Setup-*.exe | cut -d' ' -f1)
+          releaseDate: $(date -u +%Y-%m-%dT%H:%M:%S.000Z)
+          files:
+            - url: ContextVault-Setup-$VERSION.exe
+              sha512: $(sha256sum ContextVault-Setup-*.exe | cut -d' ' -f1)
+              size: $(stat -c%s ContextVault-Setup-*.exe)
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ContextVault ${{ github.ref_name }}
+          body: |
+            ## ContextVault ${{ github.ref_name }}
+
+            ### Install
+            - [Windows](https://context-vault-two.vercel.app/download/windows)
+            - [macOS](https://context-vault-two.vercel.app/download/macos)
+            - [Linux](https://context-vault-two.vercel.app/download/linux)
+
+            ### Changelog
+            See the commit history for details.
+          files: |
+            *.exe
+            *.dmg
+            *.AppImage
+            latest.yml
+          generate_release_notes: true
