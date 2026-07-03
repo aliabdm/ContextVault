@@ -20,8 +20,8 @@ export default function DesktopSection() {
             Manage context without the terminal
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-neutral-400">
-            Record sessions, switch between projects, search local memory, and prepare AI context packages from a clean desktop
-            interface. Works offline with the same `.contextvault` format your CLI uses.
+            Run the real ContextVault package commands, switch projects, browse existing sessions, search local memory, and prepare AI
+            context from a clean desktop interface. No parallel database or recorder format.
           </p>
         </div>
 
@@ -33,20 +33,20 @@ export default function DesktopSection() {
               className="aspect-video w-full object-cover object-top"
             />
             <figcaption className="border-t border-dark-500 px-5 py-4">
-              <p className="text-sm font-semibold text-white">Automatic local classification</p>
-              <p className="mt-1 text-xs leading-5 text-neutral-500">Write or paste context once. Desktop detects prompts, results, decisions, tasks, problems, and notes on-device.</p>
+              <p className="text-sm font-semibold text-white">The real package recorder</p>
+              <p className="mt-1 text-xs leading-5 text-neutral-500">Start launches the bundled `contextvault record`; entries and output flow through the same CLI code.</p>
             </figcaption>
           </figure>
 
           <figure className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
             <img
-              src="/demo/contextvault-desktop-projects.png"
-              alt="ContextVault Desktop settings showing two independent local project vaults"
+              src="/demo/contextvault-desktop-commands.png"
+              alt="ContextVault Desktop Vault Tools showing every bundled package command"
               className="aspect-video w-full object-cover object-top"
             />
             <figcaption className="border-t border-dark-500 px-5 py-4">
-              <p className="text-sm font-semibold text-white">Multiple local project vaults</p>
-              <p className="mt-1 text-xs leading-5 text-neutral-500">Add and switch projects from the sidebar. Removing a shortcut never deletes its `.contextvault` files.</p>
+              <p className="text-sm font-semibold text-white">Every package command</p>
+              <p className="mt-1 text-xs leading-5 text-neutral-500">Visible controls for record, list, show, search, import, retrieve, prepare, memory, timeline, and the full CLI.</p>
             </figcaption>
           </figure>
         </div>
@@ -64,7 +64,7 @@ export default function DesktopSection() {
               {[
                 ['1', 'Add a project', 'Choose a local folder. Add more later and switch from the sidebar.'],
                 ['2', 'Start recording', 'Name the session and choose Codex, Claude Code, Cursor, or another source.'],
-                ['3', 'Capture & save', 'Write naturally. ContextVault classifies each entry locally, with an optional override.'],
+                ['3', 'Use every command', 'Record, list, show, search, prepare, retrieve, memory, timeline, and the full CLI surface.'],
               ].map(([step, title, description]) => (
                 <li key={step} className="rounded-xl border border-dark-500 bg-dark-800/70 p-4">
                   <span className="flex h-7 w-7 items-center justify-center rounded-full bg-vault-500 text-xs font-bold text-white">{step}</span>

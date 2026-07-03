@@ -19,12 +19,14 @@ interface ContextVaultAPI {
   prepareContext: (query: string, filters?: any) => Promise<any>
   exportMarkdown: (id: string) => Promise<{ content: string; filename: string } | null>
   importConversation: () => Promise<any>
-  saveSession: (input: {
-    title: string
-    source: string
-    startedAt: string
-    events: Array<{ type: string; content: string; createdAt: string }>
-  }) => Promise<any>
+  runCli: (command: string, args?: string[]) => Promise<{ success: boolean; output: string; error: string; exitCode: number }>
+  startRecorder: (input: { title: string; source: string }) => Promise<{ success: boolean; recorderId?: string; error?: string }>
+  sendRecorderCommand: (recorderId: string, command: string) => Promise<{ success: boolean; error?: string }>
+  finishRecorder: (recorderId: string) => Promise<{ success: boolean; error?: string }>
+  cancelRecorder: (recorderId: string) => Promise<{ success: boolean }>
+  onRecorderOutput: (callback: (payload: { recorderId: string; stream: 'stdout' | 'stderr'; data: string }) => void) => () => void
+  onRecorderExit: (callback: (payload: { recorderId: string; exitCode: number }) => void) => () => void
+  onVaultChanged: (callback: () => void) => () => void
   getSettings: () => Promise<any>
   updateSettings: (settings: any) => Promise<any>
   rebuildIndex: () => Promise<any>

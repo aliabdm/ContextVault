@@ -25,8 +25,9 @@ export default function Recorder() {
   const [projectPath, setProjectPath] = useState<string | null>(null)
   const [title, setTitle] = useState('')
   const [source, setSource] = useState('codex')
-  const [startedAt, setStartedAt] = useState('')
   const [recording, setRecording] = useState(false)
+  const [recorderId, setRecorderId] = useState('')
+  const [cliOutput, setCliOutput] = useState('')
   const [classificationMode, setClassificationMode] = useState<ClassificationMode>('auto')
   const [content, setContent] = useState('')
   const [events, setEvents] = useState<RecordedEvent[]>([])
@@ -41,6 +42,25 @@ export default function Recorder() {
     window.contextVault?.getProjectPath().then(setProjectPath)
   }, [])
 
+  useEffect(() => {
+    const removeOutputListener = window.contextVault?.onRecorderOutput((payload) => {
+      if (payload.recorderId === recorderId) setCliOutput((current) => (current + payload.data).slice(-12_000))
+    })
+    const removeExitListener = window.contextVault?.onRecorderExit((payload) => {
+      if (payload.recorderId !== recorderId) return
+      setRecording(false)
+      setSaving(false)
+      setRecorderId('')
+      if (payload.exitCode === 0) navigate('/sessions')
+      else setError(`The ContextVault recorder exited with code ${payload.exitCode}.`)
+    })
+    return () => {
+      removeOutputListener?.()
+      removeExitListener?.()
+      if (recorderId) void window.contextVault?.cancelRecorder(recorderId)
+    }
+  }, [navigate, recorderId])
+
   const openProject = async () => {
     const nextPath = await window.contextVault?.openProject()
     if (nextPath) {
@@ -49,48 +69,61 @@ export default function Recorder() {
     }
   }
 
-  const startRecording = () => {
+  const startRecording = async () => {
     if (!title.trim()) {
       setError('Give the session a short title first.')
       return
     }
     setError('')
-    setStartedAt(new Date().toISOString())
+    setCliOutput('Starting contextvault record...\n')
+    const result = await window.contextVault?.startRecorder({ title: title.trim(), source })
+    if (!result?.success || !result.recorderId) {
+      setError(result?.error || 'Unable to start contextvault record.')
+      return
+    }
+    setRecorderId(result.recorderId)
     setRecording(true)
   }
 
-  const addEvent = () => {
+  const addEvent = async (): Promise<boolean> => {
     if (!content.trim()) {
       setError('Write or paste some context before adding the event.')
-      return
+      return false
     }
-    setEvents((current) => [...current, { type: resolvedEventType, content: content.trim(), createdAt: new Date().toISOString() }])
+    if (!recorderId) {
+      setError('The ContextVault CLI recorder is not active.')
+      return false
+    }
+    const value = content.trim()
+    const result = await window.contextVault?.sendRecorderCommand(recorderId, `/${resolvedEventType} ${value}`)
+    if (!result?.success) {
+      setError(result?.error || 'The CLI recorder rejected this event.')
+      return false
+    }
+    setEvents((current) => [...current, { type: resolvedEventType, content: value, createdAt: new Date().toISOString() }])
     setContent('')
     setError('')
-  }
-
-  const removeEvent = (index: number) => {
-    setEvents((current) => current.filter((_, eventIndex) => eventIndex !== index))
+    return true
   }
 
   const finishRecording = async () => {
-    const finalEvents: RecordedEvent[] = content.trim()
-      ? [...events, { type: resolvedEventType, content: content.trim(), createdAt: new Date().toISOString() }]
-      : events
-    if (finalEvents.length === 0) {
+    const hasPendingEvent = Boolean(content.trim())
+    if (events.length === 0 && !hasPendingEvent) {
       setError('Add at least one event before saving the session.')
       return
     }
+    if (hasPendingEvent && !(await addEvent())) return
+    if (!recorderId) return
 
     setSaving(true)
     setError('')
-    const result = await window.contextVault?.saveSession({ title, source, startedAt, events: finalEvents })
-    setSaving(false)
+    const result = await window.contextVault?.finishRecorder(recorderId)
     if (!result?.success) {
-      setError(result?.error || 'Unable to save the session.')
+      setSaving(false)
+      setError(result?.error || 'Unable to finish contextvault record.')
       return
     }
-    navigate(`/sessions/${encodeURIComponent(result.session.id)}`)
+    navigate('/sessions')
   }
 
   if (!projectPath) {
@@ -116,7 +149,7 @@ export default function Recorder() {
             <span className={`h-2.5 w-2.5 rounded-full ${recording ? 'animate-pulse bg-red-400' : 'bg-neutral-600'}`} />
             <h1 className="text-2xl font-bold text-white">Session Recorder</h1>
           </div>
-          <p className="mt-1 text-sm text-neutral-500">{projectName} · saved locally as compatible ContextVault Markdown</p>
+          <p className="mt-1 text-sm text-neutral-500">{projectName} · powered by the bundled <code>contextvault record</code> command</p>
         </div>
         {recording && (
           <button
@@ -154,7 +187,7 @@ export default function Recorder() {
               </select>
             </label>
             <div className="rounded-xl border border-dark-600 bg-dark-800/60 p-4 text-xs leading-5 text-neutral-500">
-              ContextVault records only what you explicitly add. It does not listen to your screen, terminal, microphone, or clipboard.
+              This button starts the same interactive recorder shipped in the npm package, with this project as its working directory.
             </div>
           </div>
           {error && <p className="mt-4 text-sm text-red-300">{error}</p>}
@@ -199,7 +232,7 @@ export default function Recorder() {
                 onKeyDown={(event) => {
                   if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
                     event.preventDefault()
-                    addEvent()
+                    void addEvent()
                   }
                 }}
                 placeholder="Write or paste context — its type is detected automatically..."
@@ -228,7 +261,7 @@ export default function Recorder() {
                   <div key={`${event.createdAt}-${index}`} className="flex items-start gap-3 rounded-xl border border-dark-600 bg-dark-700/40 p-4">
                     <span className="rounded-md bg-vault-500/10 px-2 py-1 text-[10px] font-semibold uppercase text-vault-300">{event.type}</span>
                     <p className="min-w-0 flex-1 whitespace-pre-wrap text-sm leading-6 text-neutral-300">{event.content}</p>
-                    <button onClick={() => removeEvent(index)} className="text-xs text-neutral-600 hover:text-red-300" aria-label={`Remove ${event.type} event`}>Remove</button>
+                    <span className="text-[10px] uppercase text-emerald-500/70">sent to CLI</span>
                   </div>
                 ))}
               </div>
@@ -237,8 +270,15 @@ export default function Recorder() {
         </>
       )}
 
+      {recording && cliOutput && (
+        <details className="rounded-xl border border-dark-600 bg-dark-900/70 px-4 py-3">
+          <summary className="cursor-pointer text-xs font-semibold text-neutral-400">Live package output</summary>
+          <pre className="mt-3 max-h-40 overflow-auto whitespace-pre-wrap text-[11px] leading-5 text-neutral-500">{cliOutput}</pre>
+        </details>
+      )}
+
       <div className="rounded-xl border border-dark-600/70 bg-dark-900/40 px-4 py-3 text-xs leading-5 text-neutral-500">
-        Prefer the terminal? Run <code className="text-vault-300">contextvault record</code> inside this project. Desktop and CLI write the same `.contextvault/sessions/` format.
+        Desktop launches the bundled <code className="text-vault-300">contextvault record</code> process; it does not maintain a separate recording format or database.
       </div>
     </div>
   )

@@ -81,8 +81,8 @@ export default function Dashboard() {
               <h2 className="mt-2 text-xl font-bold text-white">Record useful context in three steps</h2>
               <ol className="mt-4 grid gap-3 text-sm text-neutral-400 sm:grid-cols-3">
                 <li><strong className="block text-neutral-200">1. Start</strong>Name the session and choose Codex, Claude Code, Cursor, or another source.</li>
-                <li><strong className="block text-neutral-200">2. Capture</strong>Add prompts, agent output, decisions, tasks, problems, and notes.</li>
-                <li><strong className="block text-neutral-200">3. Save</strong>Finish the session; it appears here and remains local Markdown.</li>
+                <li><strong className="block text-neutral-200">2. Capture</strong>Desktop sends entries to the real package recorder.</li>
+                <li><strong className="block text-neutral-200">3. Save</strong>The CLI writes Markdown; it appears here immediately.</li>
               </ol>
             </div>
             <button onClick={() => navigate('/record')} className="shrink-0 rounded-xl bg-vault-500 px-5 py-3 text-sm font-semibold text-white hover:bg-vault-600">
@@ -90,7 +90,7 @@ export default function Dashboard() {
             </button>
           </div>
           <p className="mt-5 border-t border-dark-600/70 pt-4 text-xs text-neutral-500">
-            Terminal workflow also stays available: <code className="text-vault-300">contextvault record</code>
+            This GUI launches the same <code className="text-vault-300">contextvault record</code> command shipped by npm.
           </p>
         </section>
       )}

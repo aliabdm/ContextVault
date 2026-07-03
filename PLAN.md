@@ -484,6 +484,20 @@ After Context Engine is mature:
 - Self-hosted sync
 - Encrypted backups
 
+#### Next Phase - Collaborative Context Repositories
+
+Goal: let a user turn a selected local ContextVault into a shareable repository with Git-like collaboration while preserving portable Markdown as the source of truth.
+
+- Create or connect a remote repository for a specific context vault.
+- Push local sessions, memory, links, and context metadata with an explicit commit message.
+- Invite team collaborators with scoped read/write permissions.
+- Pull remote context changes into a local vault.
+- Show file and event-level diffs before pull, merge, or push.
+- Edit shared context locally and push reviewed updates.
+- Track authorship, history, branches or proposals, and conflict resolution without hiding changes.
+- Keep secrets, ignored files, private sessions, and project code out of a context push by default.
+- Design the remote protocol so self-hosting remains possible and local-only use still requires no account.
+
 ## Roadmap By State
 
 ### Implemented
@@ -527,6 +541,7 @@ After Context Engine is mature:
 - Agent integrations
 - Encrypted backups
 - Optional self-hosted sync
+- Collaborative Context Repositories: remote push/pull, team permissions, diffs, history, and conflict resolution
 
 ## Changelog
 

@@ -17,7 +17,11 @@ export default function App() {
   useEffect(() => {
     const handleProjectChange = () => setProjectRevision((value) => value + 1)
     window.addEventListener('contextvault:project-changed', handleProjectChange)
-    return () => window.removeEventListener('contextvault:project-changed', handleProjectChange)
+    const removeVaultListener = window.contextVault?.onVaultChanged(handleProjectChange)
+    return () => {
+      window.removeEventListener('contextvault:project-changed', handleProjectChange)
+      removeVaultListener?.()
+    }
   }, [])
 
   return (

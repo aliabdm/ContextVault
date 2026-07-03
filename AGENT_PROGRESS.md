@@ -979,6 +979,19 @@ User feedback: the native Desktop recorder should behave like the package and sh
 
 Classifier boundary: no text is sent to an AI model or API. Strong labels and intent phrases classify User, Agent, Decision, Task, and Problem events; uncertain text safely falls back to Note. The resolved type is shown before adding, and the saved Markdown remains fully compatible with existing CLI, extension imports, and vaults.
 
+### CLI-backed Desktop parity correction (2026-07-03)
+
+User clarified the intended architecture: Desktop must be a GUI over the shipped `contextvault` package commands, not a parallel recorder implementation.
+
+1. `[done]` Added a safe Electron bridge that launches the bundled `vault-terminal.mjs` with the active project as cwd.
+2. `[done]` Removed the parallel Desktop save path. The Record button now runs the real interactive `contextvault record` process and streams package output into the UI.
+3. `[done]` Exposed all 17 package commands through visible Vault Tools controls while retaining the specialized Sessions, Search, Prepare, and Tools screens.
+4. `[done]` Proved two-way compatibility: a Desktop recording produced a `vt-*` package session found by `contextvault list`; a session recorded from an external CLI appeared live in an already-open Sessions screen.
+5. `[done]` Corrected README, FAQ, landing, portfolio/profile copy, articles, posts, and campaign language. The recorder reads explicit stdin and does not claim silent interception of external Codex/Claude processes.
+6. `[in progress]` Final diff review, browser QA, commit/tag/push, and v1.7.0 Windows/Linux release verification.
+
+Next phase is documented as Collaborative Context Repositories: scoped remote push/pull, team permissions, diffs, history, local edits, reviewed pushes, and conflict handling while keeping Markdown as the source of truth.
+
 ### Production landing video hotfix
 
 1. `[done]` Promote the Desktop walkthrough to a prominent Hero position.

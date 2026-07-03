@@ -100,7 +100,7 @@ jobs:
             ### Start recording
             1. Add or select a project in the Desktop sidebar.
             2. Click **Start recording**.
-            3. Write or paste context; Desktop classifies it locally as a prompt, result, decision, task, problem, or note.
+            3. Write or paste context; Desktop sends it to the bundled `contextvault record` process.
             4. Click **Finish & save**.
 
-            Desktop and `contextvault record` use the same local Markdown session format. [View public Desktop download stats](https://context-vault-two.vercel.app/stats).
+            Desktop is a GUI over the bundled package commands and reads existing `.contextvault` files directly. [View public Desktop download stats](https://context-vault-two.vercel.app/stats).

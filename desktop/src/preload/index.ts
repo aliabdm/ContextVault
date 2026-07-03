@@ -40,8 +40,38 @@ const api = {
   importConversation: (): Promise<any> =>
     ipcRenderer.invoke('contextvault:import'),
 
-  saveSession: (input: any): Promise<any> =>
-    ipcRenderer.invoke('contextvault:save-session', input),
+  runCli: (command: string, args: string[] = []): Promise<any> =>
+    ipcRenderer.invoke('contextvault:run-cli', command, args),
+
+  startRecorder: (input: { title: string; source: string }): Promise<any> =>
+    ipcRenderer.invoke('contextvault:recorder-start', input),
+
+  sendRecorderCommand: (recorderId: string, command: string): Promise<any> =>
+    ipcRenderer.invoke('contextvault:recorder-send', recorderId, command),
+
+  finishRecorder: (recorderId: string): Promise<any> =>
+    ipcRenderer.invoke('contextvault:recorder-finish', recorderId),
+
+  cancelRecorder: (recorderId: string): Promise<any> =>
+    ipcRenderer.invoke('contextvault:recorder-cancel', recorderId),
+
+  onRecorderOutput: (callback: (payload: any) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, payload: any) => callback(payload)
+    ipcRenderer.on('contextvault:recorder-output', listener)
+    return () => ipcRenderer.removeListener('contextvault:recorder-output', listener)
+  },
+
+  onRecorderExit: (callback: (payload: any) => void) => {
+    const listener = (_event: Electron.IpcRendererEvent, payload: any) => callback(payload)
+    ipcRenderer.on('contextvault:recorder-exit', listener)
+    return () => ipcRenderer.removeListener('contextvault:recorder-exit', listener)
+  },
+
+  onVaultChanged: (callback: () => void) => {
+    const listener = () => callback()
+    ipcRenderer.on('contextvault:vault-changed', listener)
+    return () => ipcRenderer.removeListener('contextvault:vault-changed', listener)
+  },
 
   getSettings: (): Promise<any> =>
     ipcRenderer.invoke('contextvault:get-settings'),

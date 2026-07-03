@@ -7,11 +7,11 @@ import { spawnSync } from 'node:child_process'
 const here = dirname(fileURLToPath(import.meta.url))
 const root = join(here, '..')
 const outputDir = join(root, 'demo-output')
-const screenshotsDir = join(outputDir, 'screenshots-v1.6.1')
+const screenshotsDir = join(outputDir, 'screenshots-v1.7.0')
 const demoProject = join(outputDir, 'ContextVault Demo Workspace')
-const framesDir = join(outputDir, '.recording-frames-v1.6.1')
-const videoPath = join(outputDir, 'contextvault-desktop-v1.6.1.webm')
-const mp4Path = join(outputDir, 'contextvault-desktop-v1.6.1.mp4')
+const framesDir = join(outputDir, '.recording-frames-v1.7.0')
+const videoPath = join(outputDir, 'contextvault-desktop-v1.7.0.webm')
+const mp4Path = join(outputDir, 'contextvault-desktop-v1.7.0.mp4')
 const landingVideoPath = join(root, 'landing', 'public', 'demo', 'contextvault-desktop-demo.mp4')
 const ffmpegPath = process.env.FFMPEG_PATH || 'ffmpeg'
 const debugPort = process.env.CONTEXTVAULT_DEBUG_PORT || '9333'
@@ -117,13 +117,13 @@ try {
     await addEvent(page, 'User', 'Can you make recording obvious and let people switch between project vaults?')
     await addEvent(page, 'Agent', 'Implemented a native recorder, onboarding, and a persistent project switcher.')
     await addEvent(page, 'Decision', 'We decided to keep Desktop and CLI on the same local Markdown session format.')
-    await addEvent(page, 'Task', 'Publish the v1.6.1 Windows and Linux installers.')
+    await addEvent(page, 'Task', 'Publish the v1.7.0 Windows and Linux installers.')
     await addEvent(page, 'Problem', 'The old session metadata parser has a regression that exposes internal comments.')
     await snapshot(page, '04-recorder-events')
     await sleep(1400)
 
     await clickButton(page, 'Finish & save')
-    await page.waitForFunction(() => window.location.hash.startsWith('#/sessions/'), { timeout: 15000 })
+    await page.waitForFunction(() => window.location.hash === '#/sessions' || window.location.hash.startsWith('#/sessions/'), { timeout: 15000 })
     await snapshot(page, '05-session-detail')
     await sleep(1500)
 
@@ -131,12 +131,23 @@ try {
     await snapshot(page, '06-sessions')
     await sleep(1200)
 
+    await route(page, '#/tools')
+    await snapshot(page, '07-package-commands')
+    await page.evaluate(() => {
+      const button = [...document.querySelectorAll('button')].find((element) => element.textContent?.includes('List sessions'))
+      if (!button) throw new Error('List sessions package command is missing')
+      button.click()
+    })
+    await sleep(500)
+    await clickButton(page, 'Run command')
+    await sleep(1200)
+
     await route(page, '#/settings')
-    await snapshot(page, '07-multi-project-settings')
+    await snapshot(page, '09-multi-project-settings')
     await sleep(1600)
 
     await route(page, '#/')
-    await snapshot(page, '08-dashboard-complete')
+    await snapshot(page, '10-dashboard-complete')
     await sleep(1200)
   } finally {
     captureFrames = false

@@ -1,6 +1,31 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 type Status = { kind: 'idle' | 'working' | 'success' | 'error'; message: string }
+
+const cliCommands = [
+  ['record', 'Interactive recorder', 'Runs the real package recorder inside Desktop.'],
+  ['init', 'Initialize vault', 'Create the package storage structure.'],
+  ['list', 'List sessions', 'Print every saved package session.'],
+  ['show', 'Show session', 'Show latest or a session ID.'],
+  ['export', 'Export context', 'Run the package Markdown export.'],
+  ['search', 'Search', 'Search package sessions.'],
+  ['import', 'Import', 'Import a Markdown or ZIP path.'],
+  ['index', 'Build index', 'Run the package index command.'],
+  ['retrieve', 'Retrieve', 'Retrieve ranked project evidence.'],
+  ['prepare', 'Prepare', 'Generate agent-ready context.'],
+  ['memory', 'Memory', 'Refresh durable project memory.'],
+  ['link', 'Link sessions', 'Link two session IDs.'],
+  ['timeline', 'Timeline', 'Generate the project timeline.'],
+  ['history', 'History', 'Render chronological history.'],
+  ['tasks', 'Tasks', 'List captured tasks.'],
+  ['decisions', 'Decisions', 'List captured decisions.'],
+  ['problems', 'Problems', 'List captured problems.'],
+] as const
+
+function parseCliArgs(value: string): string[] {
+  return (value.match(/"[^"]*"|'[^']*'|\S+/g) || []).map((part) => part.replace(/^("|')|("|')$/g, ''))
+}
 
 function downloadMarkdown(content: string, filename: string) {
   const url = URL.createObjectURL(new Blob([content], { type: 'text/markdown' }))
@@ -12,8 +37,11 @@ function downloadMarkdown(content: string, filename: string) {
 }
 
 export default function VaultTools() {
+  const navigate = useNavigate()
   const [status, setStatus] = useState<Status>({ kind: 'idle', message: 'All operations stay on this device.' })
   const [preview, setPreview] = useState('')
+  const [selectedCommand, setSelectedCommand] = useState('list')
+  const [cliArgs, setCliArgs] = useState('')
 
   const run = async (label: string, action: () => Promise<any>, onSuccess?: (result: any) => void) => {
     setStatus({ kind: 'working', message: `${label}...` })
@@ -55,6 +83,23 @@ export default function VaultTools() {
     },
   ]
 
+  const runPackageCommand = async () => {
+    if (selectedCommand === 'record') {
+      navigate('/record')
+      return
+    }
+    setStatus({ kind: 'working', message: `Running contextvault ${selectedCommand}...` })
+    setPreview('')
+    const result = await window.contextVault?.runCli(selectedCommand, parseCliArgs(cliArgs))
+    if (!result?.success) {
+      setStatus({ kind: 'error', message: result?.error || `${selectedCommand} failed.` })
+      setPreview(result?.output || '')
+      return
+    }
+    setStatus({ kind: 'success', message: `contextvault ${selectedCommand} completed.` })
+    setPreview(result.output || '(command completed without text output)')
+  }
+
   return (
     <div className="mx-auto max-w-4xl space-y-6">
       <div className="flex items-start justify-between">
@@ -78,6 +123,49 @@ export default function VaultTools() {
           </section>
         ))}
       </div>
+
+      <section className="rounded-2xl border border-vault-500/25 bg-vault-500/5 p-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <h2 className="text-sm font-semibold text-white">Every package command</h2>
+            <p className="mt-1 text-xs leading-5 text-neutral-500">These buttons execute the bundled <code>contextvault</code> CLI in the active project. Arguments use the same syntax as the terminal package.</p>
+          </div>
+          <code className="rounded-lg border border-dark-600 bg-dark-900 px-3 py-2 text-xs text-vault-300">contextvault {selectedCommand} {cliArgs}</code>
+        </div>
+
+        <div className="mt-4 grid gap-2 sm:grid-cols-3 lg:grid-cols-4">
+          {cliCommands.map(([command, label, description]) => (
+            <button
+              key={command}
+              onClick={() => {
+                setSelectedCommand(command)
+                setStatus({ kind: 'idle', message: description })
+                if (command === 'record') navigate('/record')
+              }}
+              className={`rounded-xl border px-3 py-3 text-left transition-colors ${selectedCommand === command ? 'border-vault-500/50 bg-vault-500/15' : 'border-dark-600 bg-dark-800/60 hover:border-dark-500'}`}
+            >
+              <span className="block text-xs font-semibold text-neutral-200">{label}</span>
+              <span className="mt-1 block font-mono text-[10px] text-neutral-600">{command}</span>
+            </button>
+          ))}
+        </div>
+
+        {selectedCommand !== 'record' && (
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row">
+            <input
+              value={cliArgs}
+              onChange={(event) => setCliArgs(event.target.value)}
+              onKeyDown={(event) => { if (event.key === 'Enter') void runPackageCommand() }}
+              placeholder='Arguments, e.g. "auth middleware" --since 14d'
+              aria-label="Package command arguments"
+              className="min-w-0 flex-1 rounded-xl border border-dark-600 bg-dark-900 px-4 py-2.5 font-mono text-xs text-neutral-200 outline-none placeholder:text-neutral-700 focus:border-vault-500/60"
+            />
+            <button disabled={status.kind === 'working'} onClick={() => void runPackageCommand()} className="rounded-xl bg-vault-500 px-5 py-2.5 text-xs font-semibold text-white hover:bg-vault-600 disabled:opacity-50">
+              Run command
+            </button>
+          </div>
+        )}
+      </section>
 
       <div className={`rounded-xl border px-4 py-3 text-xs ${status.kind === 'error' ? 'border-red-500/30 bg-red-500/5 text-red-300' : status.kind === 'success' ? 'border-emerald-500/30 bg-emerald-500/5 text-emerald-300' : 'border-dark-600 text-neutral-500'}`}>
         {status.message}

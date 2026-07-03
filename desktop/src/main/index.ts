@@ -1,14 +1,23 @@
 import { app, BrowserWindow, ipcMain, dialog, shell, Notification } from 'electron'
 import { basename, join } from 'path'
 import { pathToFileURL } from 'url'
-import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync } from 'fs'
+import { existsSync, readFileSync, readdirSync, mkdirSync, writeFileSync, watch, type FSWatcher } from 'fs'
+import { spawn, type ChildProcessWithoutNullStreams } from 'child_process'
 import electronUpdater from 'electron-updater'
-import { createDesktopSessionDocument, parseSessionEvents } from './session-format'
+import { parseSessionEvents } from './session-format'
 
 const { autoUpdater } = electronUpdater
 
 let mainWindow: BrowserWindow | null = null
 let engine: any = null
+const cliRecorders = new Map<string, ChildProcessWithoutNullStreams>()
+let vaultWatcher: FSWatcher | null = null
+let vaultRefreshTimer: NodeJS.Timeout | null = null
+
+const CLI_COMMANDS = new Set([
+  'init', 'list', 'show', 'export', 'search', 'import', 'index', 'retrieve',
+  'prepare', 'memory', 'link', 'timeline', 'history', 'tasks', 'decisions', 'problems',
+])
 
 type DesktopSettings = {
   projectPath: string
@@ -162,6 +171,65 @@ function ensureProjectPath(_path?: string): string {
   return ''
 }
 
+function getCliPath(): string {
+  const base = app.isPackaged
+    ? join(process.resourcesPath, 'scripts')
+    : join(app.getAppPath(), '..', 'scripts')
+  return join(base, 'vault-terminal.mjs')
+}
+
+function cleanCliValue(value: unknown, maxLength = 4000): string {
+  return String(value ?? '').replace(/[\r\n]+/g, ' ').trim().slice(0, maxLength)
+}
+
+function spawnCli(projectPath: string, args: string[]): ChildProcessWithoutNullStreams {
+  const cliPath = getCliPath()
+  if (!existsSync(cliPath)) throw new Error(`ContextVault CLI not found at ${cliPath}`)
+  return spawn(process.execPath, [cliPath, ...args], {
+    cwd: projectPath,
+    windowsHide: true,
+    env: { ...process.env, ELECTRON_RUN_AS_NODE: '1' },
+    stdio: ['pipe', 'pipe', 'pipe'],
+  })
+}
+
+function runCliCommand(projectPath: string, command: string, args: unknown[] = []) {
+  return new Promise((resolve) => {
+    if (!CLI_COMMANDS.has(command)) {
+      resolve({ success: false, output: '', error: `Unsupported command: ${command}`, exitCode: 1 })
+      return
+    }
+    const safeArgs = Array.isArray(args) ? args.map((value) => cleanCliValue(value)).filter(Boolean).slice(0, 40) : []
+    let child: ChildProcessWithoutNullStreams
+    try {
+      child = spawnCli(projectPath, [command, ...safeArgs])
+    } catch (error) {
+      resolve({ success: false, output: '', error: error instanceof Error ? error.message : String(error), exitCode: 1 })
+      return
+    }
+    let output = ''
+    let errorOutput = ''
+    child.stdout.on('data', (chunk) => { output += chunk.toString() })
+    child.stderr.on('data', (chunk) => { errorOutput += chunk.toString() })
+    child.on('error', (error) => resolve({ success: false, output, error: error.message, exitCode: 1 }))
+    child.on('close', async (code) => {
+      if (command !== 'show' && command !== 'list') {
+        try {
+          const eng = await getEngine()
+          eng.buildContextIndex(projectPath)
+        } catch { /* command output remains authoritative */ }
+      }
+      resolve({
+        success: code === 0,
+        output: output.trim(),
+        error: errorOutput.trim() || (code === 0 ? '' : `${command} exited with code ${code}`),
+        exitCode: code ?? 1,
+      })
+    })
+    child.stdin.end()
+  })
+}
+
 async function activateProject(projectPath: string): Promise<string> {
   const eng = await getEngine()
   const paths = eng.ensureEngineStorage(projectPath)
@@ -179,7 +247,32 @@ async function activateProject(projectPath: string): Promise<string> {
   ].filter(Boolean))).slice(0, 12)
   global.__projectPath = projectPath
   saveSettings({ projectPath, recentProjects, indexingMode: 'manual' })
+  watchActiveVault(projectPath)
   return projectPath
+}
+
+function watchActiveVault(projectPath: string): void {
+  vaultWatcher?.close()
+  vaultWatcher = null
+  if (vaultRefreshTimer) clearTimeout(vaultRefreshTimer)
+  const sessionsPath = join(getVaultPath(projectPath), 'sessions')
+  mkdirSync(sessionsPath, { recursive: true })
+  try {
+    vaultWatcher = watch(sessionsPath, () => {
+      if (vaultRefreshTimer) clearTimeout(vaultRefreshTimer)
+      vaultRefreshTimer = setTimeout(async () => {
+        try {
+          const eng = await getEngine()
+          eng.buildContextIndex(projectPath)
+          mainWindow?.webContents.send('contextvault:vault-changed')
+        } catch (error) {
+          console.error('Failed to refresh changed vault:', error)
+        }
+      }, 250)
+    })
+  } catch (error) {
+    console.error('Failed to watch active ContextVault sessions:', error)
+  }
 }
 
 function projectInfo(projectPath: string) {
@@ -188,14 +281,6 @@ function projectInfo(projectPath: string) {
     name: basename(projectPath),
     active: projectPath === global.__projectPath,
   }
-}
-
-function saveDesktopSession(projectPath: string, input: any) {
-  const document = createDesktopSessionDocument(projectPath, input)
-  const sessionsPath = join(getVaultPath(projectPath), 'sessions')
-  mkdirSync(sessionsPath, { recursive: true })
-  writeFileSync(join(sessionsPath, document.session.filename), document.markdown, 'utf-8')
-  return document.session
 }
 
 function getDashboardStats(projectPath: string) {
@@ -377,6 +462,7 @@ function updateSettings(settings: any) {
   global.__projectPath = projectPath
   const recentProjects = Array.from(new Set([projectPath, previousProjectPath, ...current.recentProjects].filter(Boolean))).slice(0, 12)
   saveSettings({ projectPath, recentProjects, indexingMode: 'manual' })
+  if (projectPath) watchActiveVault(projectPath)
   return getSettings()
 }
 
@@ -482,17 +568,73 @@ ipcMain.handle('contextvault:import', async () => {
   }
 })
 
-ipcMain.handle('contextvault:save-session', async (_e, input: any) => {
+ipcMain.handle('contextvault:run-cli', async (_e, command: string, args: unknown[] = []) => {
   const pp = ensureProjectPath(global.__projectPath)
-  if (!pp) return { success: false, error: 'Select a project before recording.' }
+  if (!pp) return { success: false, output: '', error: 'Select a project first.', exitCode: 1 }
+  return runCliCommand(pp, cleanCliValue(command, 40), args)
+})
+
+ipcMain.handle('contextvault:recorder-start', async (_e, input: { title?: string; source?: string }) => {
+  const pp = ensureProjectPath(global.__projectPath)
+  if (!pp) return { success: false, error: 'Select a project first.' }
+  if (cliRecorders.size > 0) return { success: false, error: 'A CLI recording is already active.' }
+
   try {
-    const session = saveDesktopSession(pp, input)
-    const eng = await getEngine()
-    eng.buildContextIndex(pp)
-    return { success: true, session }
-  } catch (err: any) {
-    return { success: false, error: err.message }
+    const recorderId = `recorder-${Date.now().toString(36)}`
+    const child = spawnCli(pp, ['record'])
+    cliRecorders.set(recorderId, child)
+
+    const emit = (channel: string, payload: Record<string, unknown>) => {
+      mainWindow?.webContents.send(channel, { recorderId, ...payload })
+    }
+    child.stdout.on('data', (chunk) => emit('contextvault:recorder-output', { stream: 'stdout', data: chunk.toString() }))
+    child.stderr.on('data', (chunk) => emit('contextvault:recorder-output', { stream: 'stderr', data: chunk.toString() }))
+    child.on('error', (error) => emit('contextvault:recorder-output', { stream: 'stderr', data: `${error.message}\n` }))
+    child.on('close', async (code) => {
+      cliRecorders.delete(recorderId)
+      try {
+        const eng = await getEngine()
+        eng.buildContextIndex(pp)
+      } catch { /* the recorder exit still needs to reach the UI */ }
+      emit('contextvault:recorder-exit', { exitCode: code ?? 1 })
+    })
+
+    const title = cleanCliValue(input?.title, 200) || 'Untitled desktop session'
+    const source = cleanCliValue(input?.source, 80) || 'desktop'
+    child.stdin.write(`/title ${title}\n`)
+    child.stdin.write(`/source ${source}\n`)
+    return { success: true, recorderId }
+  } catch (error) {
+    return { success: false, error: error instanceof Error ? error.message : String(error) }
   }
+})
+
+ipcMain.handle('contextvault:recorder-send', async (_e, recorderId: string, command: string) => {
+  const child = cliRecorders.get(recorderId)
+  if (!child || child.stdin.destroyed) return { success: false, error: 'Recorder is not active.' }
+  const line = cleanCliValue(command, 1_000_000)
+  if (!line || line === '/end') return { success: false, error: 'Use Finish & save to end the recording.' }
+  child.stdin.write(`${line}\n`)
+  return { success: true }
+})
+
+ipcMain.handle('contextvault:recorder-finish', async (_e, recorderId: string) => {
+  const child = cliRecorders.get(recorderId)
+  if (!child || child.stdin.destroyed) return { success: false, error: 'Recorder is not active.' }
+  return new Promise((resolve) => {
+    child.once('close', (code) => resolve({ success: code === 0, exitCode: code ?? 1, error: code === 0 ? '' : `Recorder exited with code ${code}` }))
+    child.once('error', (error) => resolve({ success: false, exitCode: 1, error: error.message }))
+    child.stdin.write('/end\n')
+    child.stdin.end()
+  })
+})
+
+ipcMain.handle('contextvault:recorder-cancel', async (_e, recorderId: string) => {
+  const child = cliRecorders.get(recorderId)
+  if (!child) return { success: true }
+  child.kill()
+  cliRecorders.delete(recorderId)
+  return { success: true }
 })
 
 ipcMain.handle('contextvault:get-settings', async () => getSettings())
@@ -579,6 +721,7 @@ app.whenReady().then(async () => {
       const eng = await getEngine()
       eng.ensureEngineStorage(global.__projectPath)
       eng.buildContextIndex(global.__projectPath)
+      watchActiveVault(global.__projectPath)
     } catch (error) {
       console.error('Failed to initialize ContextVault engine:', error)
     }
@@ -592,4 +735,11 @@ app.whenReady().then(async () => {
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
+})
+
+app.on('before-quit', () => {
+  vaultWatcher?.close()
+  if (vaultRefreshTimer) clearTimeout(vaultRefreshTimer)
+  for (const child of cliRecorders.values()) child.kill()
+  cliRecorders.clear()
 })

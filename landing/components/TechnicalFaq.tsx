@@ -37,7 +37,12 @@ const questions = [
   {
     question: 'How do I start recording in the Desktop app?',
     answer:
-      'Add or select a project, then click the red Start recording button on the Dashboard or Record Session in the sidebar. Name the session, choose its source, and write or paste context normally. Desktop classifies every entry locally as User, Agent, Decision, Task, Problem, or Note; a compact override remains available. Finish & save writes compatible Markdown under that project\'s .contextvault/sessions directory and rebuilds the local index.',
+      'Add or select a project, then click Start recording. Desktop launches the bundled contextvault record process with that project as its working directory. Entries are sent to the real CLI, and Finish & save ends the process so its Markdown appears under .contextvault/sessions and in the Sessions screen.',
+  },
+  {
+    question: 'Is Desktop a separate implementation from the npm package?',
+    answer:
+      'No. Desktop launches the bundled vault-terminal.mjs for recording and exposes every package command through visible controls. Existing .contextvault sessions are read directly, so there is no migration or parallel database.',
   },
   {
     question: 'Does automatic Desktop classification send my text to an AI service?',
@@ -52,7 +57,7 @@ const questions = [
   {
     question: 'Does it automatically record every terminal or coding agent?',
     answer:
-      'No. Vault Terminal records the context you explicitly enter. Automatic Codex, Claude Code, Cursor, VS Code, and MCP adapters are future integrations. This boundary avoids hidden interception and keeps the current behavior predictable.',
+      'No. The bundled contextvault record command reads explicit stdin, whether used from a terminal or through the Desktop GUI. Silent interception of an external Codex, Claude Code, Cursor, VS Code, or MCP process requires a separate adapter and is not claimed by the current release.',
   },
   {
     question: 'What is the source of truth?',
