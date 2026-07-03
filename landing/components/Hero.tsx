@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import DesktopWalkthrough from './DesktopWalkthrough'
 
 const demos = [
   {
@@ -57,8 +58,8 @@ export default function Hero() {
             index, and prepares portable context for the next model or coding agent.
           </p>
 
-          <div className="mt-8 text-left">
-            <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+<div className="mt-8 text-center">
+            <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-center">
               <div>
                 <span className="inline-flex rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.16em] text-emerald-300">
                   New · Package-powered Desktop GUI
@@ -67,21 +68,10 @@ export default function Hero() {
               </div>
               <p className="text-xs text-neutral-500">Record · Watch · History · Retrieve · Prepare · Export</p>
             </div>
-            <div className="overflow-hidden rounded-2xl border border-vault-500/30 bg-dark-900 p-2 shadow-2xl shadow-vault-500/15">
-              <video
-                className="aspect-video w-full rounded-xl bg-dark-800 object-cover"
-                controls
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="ContextVault Desktop product walkthrough"
-              >
-                <source src="/demo/contextvault-desktop-demo.mp4" type="video/mp4" />
-                Your browser does not support the ContextVault Desktop demo video.
-              </video>
-            </div>
+<DesktopWalkthrough />
+            <p className="mt-3 text-center text-[11px] text-neutral-600">
+              Real Desktop UI · step-by-step walkthrough · no edits, no mockups
+            </p>
           </div>
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
@@ -130,7 +120,7 @@ export default function Hero() {
               rel="noopener noreferrer"
               className="block w-fit rounded-lg border border-dark-500 bg-dark-900 px-4 py-2 text-sm text-neutral-300 transition-colors hover:border-vault-500/50 hover:text-white"
             >
-              Browser Extension
+              Extension on GitHub
             </a>
           </div>
         </motion.div>

@@ -25,7 +25,40 @@ export default function DesktopSection() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-2">
+<div className="mt-12 rounded-2xl border border-vault-500/30 bg-gradient-to-br from-vault-500/10 via-dark-800/40 to-purple-500/5 p-6 sm:p-10">
+          <div className="grid gap-8 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+            <div>
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-vault-300">Start in under a minute</span>
+              <h3 className="mt-3 text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                Recording is a visible, explicit action
+              </h3>
+              <p className="mt-4 text-base leading-relaxed text-neutral-300 sm:text-lg">
+                ContextVault never watches your screen or terminal in the background. You decide what becomes durable project memory.
+              </p>
+              <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-neutral-500">
+                <span className="rounded-full border border-vault-500/25 bg-vault-500/10 px-3 py-1 font-semibold text-vault-300">No background capture</span>
+                <span className="rounded-full border border-dark-500 bg-dark-700/60 px-3 py-1">Local-only</span>
+                <span className="rounded-full border border-dark-500 bg-dark-700/60 px-3 py-1">Package-powered</span>
+              </div>
+            </div>
+
+            <ol className="grid gap-4 sm:grid-cols-3">
+              {[
+                ['1', 'Add a project', 'Choose a local folder. Add more later and switch from the sidebar.'],
+                ['2', 'Start recording', 'Name the session and choose Codex, Claude Code, Cursor, or another source.'],
+                ['3', 'Work visually', 'Use filters and result screens; sessions written by CLI or integrated agents appear live.'],
+              ].map(([step, title, description]) => (
+                <li key={step} className="relative rounded-2xl border border-dark-500 bg-dark-800/80 p-5">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-vault-500 text-base font-bold text-white shadow-lg shadow-vault-500/30">{step}</span>
+                  <h4 className="mt-4 text-base font-semibold text-white">{title}</h4>
+                  <p className="mt-1.5 text-sm leading-6 text-neutral-400">{description}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </div>
+
+        <div className="mt-6 grid gap-6 lg:grid-cols-2">
           <figure className="overflow-hidden rounded-2xl border border-dark-500 bg-dark-900 shadow-2xl shadow-vault-500/5">
             <img
               src="/demo/contextvault-desktop-recorder.png"
@@ -49,31 +82,6 @@ export default function DesktopSection() {
               <p className="mt-1 text-xs leading-5 text-neutral-500">Dedicated History, Decisions, Problems, Tasks, Retrieve, Search, and Prepare screens with copy/export. Raw arguments stay under Advanced CLI Mode.</p>
             </figcaption>
           </figure>
-        </div>
-
-        <div className="mt-8 rounded-2xl border border-vault-500/25 bg-gradient-to-r from-vault-500/10 to-purple-500/5 p-6 sm:p-8">
-          <div className="grid gap-6 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-[0.18em] text-vault-300">Start in under a minute</span>
-              <h3 className="mt-2 text-2xl font-bold text-white">Recording is a visible, explicit action</h3>
-              <p className="mt-3 text-sm leading-6 text-neutral-400">
-                ContextVault never watches your screen or terminal in the background. You decide what becomes durable project memory.
-              </p>
-            </div>
-            <ol className="grid gap-3 sm:grid-cols-3">
-              {[
-                ['1', 'Add a project', 'Choose a local folder. Add more later and switch from the sidebar.'],
-                ['2', 'Start recording', 'Name the session and choose Codex, Claude Code, Cursor, or another source.'],
-                ['3', 'Work visually', 'Use filters and result screens; sessions written by CLI or integrated agents appear live.'],
-              ].map(([step, title, description]) => (
-                <li key={step} className="rounded-xl border border-dark-500 bg-dark-800/70 p-4">
-                  <span className="flex h-7 w-7 items-center justify-center rounded-full bg-vault-500 text-xs font-bold text-white">{step}</span>
-                  <h4 className="mt-3 text-sm font-semibold text-white">{title}</h4>
-                  <p className="mt-1 text-xs leading-5 text-neutral-500">{description}</p>
-                </li>
-              ))}
-            </ol>
-          </div>
         </div>
 
         <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">

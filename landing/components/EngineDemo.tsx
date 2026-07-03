@@ -16,11 +16,11 @@ export default function EngineDemo() {
         <video
           className="mt-12 aspect-video w-full border border-dark-500 bg-dark-900"
           controls
-          autoPlay
           loop
           muted
           playsInline
           preload="metadata"
+          poster="/demo/context-engine-demo.gif"
         >
           <source src="/demo/context-engine-demo.mp4" type="video/mp4" />
           <img src="/demo/context-engine-demo.gif" alt="ContextVault unified Context Engine workflow demo" />
