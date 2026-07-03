@@ -36,7 +36,9 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: installer-windows
-          path: desktop/dist/ContextVault-Setup-*.exe
+          path: |
+            desktop/dist/ContextVault-Setup-*.exe
+            desktop/dist/latest.yml
 
   build-macos:
     runs-on: macos-latest
@@ -118,37 +120,8 @@ jobs:
           pattern: installer-*
           merge-multiple: true
         continue-on-error: true
-      - name: List downloaded files
-        run: find . -type f -name "*.exe" -o -name "*.dmg" -o -name "*.AppImage" 2>/dev/null || echo "No installer files found"
-      - name: Generate update metadata
-        shell: bash
-        run: |
-          VERSION="${GITHUB_REF_NAME#v}"
-          EXE_FILE=""
-          for f in ContextVault-Setup-*.exe; do
-            if [ -f "$f" ]; then
-              EXE_FILE="$f"
-              break
-            fi
-          done
-          if [ -n "$EXE_FILE" ]; then
-            echo "Found: $EXE_FILE"
-            SHA=$(sha256sum "$EXE_FILE" | cut -d' ' -f1)
-            SIZE=$(stat -c%s "$EXE_FILE")
-            cat > latest.yml << EOF
-            version: $VERSION
-            path: $EXE_FILE
-            sha512: $SHA
-            releaseDate: $(date -u +%Y-%m-%dT%H:%M:%S.000Z)
-            files:
-              - url: $EXE_FILE
-                sha512: $SHA
-                size: $SIZE
-            EOF
-            cat latest.yml
-          else
-            echo "No .exe found, skipping latest.yml"
-          fi
+      - name: List artifacts
+        run: ls -la *.exe *.dmg *.AppImage latest.yml 2>/dev/null || echo "No installers found"
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
@@ -161,17 +134,12 @@ jobs:
             - [macOS](https://context-vault-two.vercel.app/download/macos)
             - [Linux](https://context-vault-two.vercel.app/download/linux)
 
-            ### Download
-            | Platform | File |
-            |----------|------|
-            | Windows | ContextVault-Setup-${{ github.ref_name }}.exe |
-            | macOS | ContextVault-${{ github.ref_name }}-x64.dmg (Intel) |
-            | macOS | ContextVault-${{ github.ref_name }}-arm64.dmg (Apple Silicon) |
-            | Linux | ContextVault-${{ github.ref_name }}.AppImage |
+            ### Changelog
+            See the commits for details.
           files: |
             *.exe
             *.dmg
             *.AppImage
-            latest.yml
           generate_release_notes: true
           fail_on_unmatched_files: false
+          make_latest: true
