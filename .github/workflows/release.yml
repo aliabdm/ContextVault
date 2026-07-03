@@ -132,8 +132,13 @@ jobs:
           pattern: installer-*
           merge-multiple: true
         continue-on-error: true
-      - name: List artifacts
-        run: ls -la *.exe *.dmg *.AppImage latest.yml 2>/dev/null || echo "No installers found"
+      - name: Move artifacts to root
+        run: |
+          find . -name "*.exe" -exec mv {} . \; 2>/dev/null || true
+          find . -name "*.dmg" -exec mv {} . \; 2>/dev/null || true
+          find . -name "*.AppImage" -exec mv {} . \; 2>/dev/null || true
+          find . -name "latest.yml" -exec mv {} . \; 2>/dev/null || true
+          ls -la *.exe *.dmg *.AppImage latest.yml 2>/dev/null || echo "No installers found in root"
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
