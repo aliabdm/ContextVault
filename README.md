@@ -350,6 +350,18 @@ docker compose --profile testing up dev test-server  # + ChatGPT mock on :8080
 | Medium | [@aliabdm](https://medium.com/@aliabdm) |
 | Dev.to | [@maliano63717738](https://dev.to/maliano63717738) |
 
+### Articles
+
+**Dev.to:**
+- [The Code Was in Git. The AI Conversations to Implement It Were Gone](https://dev.to/maliano63717738/the-code-was-in-git-the-ai-conversations-to-implement-itwas-gone-142m)
+- [ContextVault: Own Your AI Context Across Models, Agents, and Time](https://dev.to/maliano63717738/contextvault-own-your-ai-context-across-models-agents-and-time-555i)
+- [Your AI Chats Are Locked in Corporate Silos — I Built an Open-Source Vault to Rescue Them](https://dev.to/maliano63717738/your-ai-chats-are-locked-in-corporate-silos-i-built-an-open-source-vault-to-rescue-them-3nhk)
+
+**Medium:**
+- [The Code Was in Git. The AI Conversations to Implement It Were Gone](https://medium.com/p/082a0c8c6e37)
+- [ContextVault: Own Your AI Context Across Models, Agents, and Time](https://medium.com/p/7e42ca975e6b)
+- [Your AI Chats Are Locked in Corporate Silos. I Built an Open-Source Vault to Rescue Them.](https://medium.com/p/d7643c726ded)
+
 ### Community
 
 - [GitHub Discussions](https://github.com/aliabdm/ContextVault/discussions) — ask questions, share workflows
