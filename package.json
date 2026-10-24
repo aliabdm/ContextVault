@@ -1,7 +1,36 @@
 {
   "name": "@aliabdm/contextvault",
-  "version": "1.3.2",
-  "description": "A local-first context platform for AI chats, coding agents, and project memory.",
+  "version": "1.3.3",
+  "description": "Local-first CLI to capture, search, and reuse AI conversations, coding-agent sessions, decisions, and project context.",
+  "keywords": [
+    "ai",
+    "ai-context",
+    "ai-memory",
+    "agent-memory",
+    "coding-agent",
+    "chat-history",
+    "conversation-history",
+    "context-engine",
+    "context-management",
+    "developer-tools",
+    "knowledge-management",
+    "llm",
+    "llm-memory",
+    "local-first",
+    "project-memory",
+    "session-recording",
+    "terminal",
+    "cli"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aliabdm/ContextVault.git"
+  },
+  "homepage": "https://github.com/aliabdm/ContextVault#readme",
+  "bugs": {
+    "url": "https://github.com/aliabdm/ContextVault/issues"
+  },
   "type": "module",
   "files": [
     "scripts/context-engine.mjs",
