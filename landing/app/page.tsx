@@ -12,7 +12,7 @@ import Footer from '@/components/Footer'
 
 export default function Home() {
   return (
-    <>
+    <div id="top">
       <Hero />
       <Problem />
       <Solution />
@@ -24,6 +24,6 @@ export default function Home() {
       <Privacy />
       <CtaSection />
       <Footer />
-    </>
+    </div>
   )
 }

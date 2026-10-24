@@ -16,6 +16,8 @@
   &middot;
   <a href="https://context-vault-two.vercel.app/stats"><strong>Download Stats</strong></a>
   &middot;
+  <a href="docs/DEPLOYMENT.md"><strong>Deployment Guide</strong></a>
+  &middot;
   <a href="#roadmap"><strong>Roadmap</strong></a>
 </p>
 

@@ -1,5 +1,4 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
 import TechnicalFaq from '@/components/TechnicalFaq'
 import Footer from '@/components/Footer'
 
@@ -13,8 +12,11 @@ export default function FaqPage() {
     <>
       <div className="border-b border-dark-600 px-6 py-4">
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
-          <Link href="/" className="text-sm font-semibold text-white">ContextVault</Link>
-          <Link href="/" className="text-sm text-neutral-400 transition-colors hover:text-white">Back to overview</Link>
+          <a href="/" className="text-sm font-semibold text-white">ContextVault</a>
+          <div className="flex items-center gap-4">
+            <a href="/docs.html" className="text-sm font-semibold text-vault-200 transition-colors hover:text-white">Documentation</a>
+            <a href="/" className="text-sm text-neutral-400 transition-colors hover:text-white">Back to overview</a>
+          </div>
         </div>
       </div>
       <TechnicalFaq />

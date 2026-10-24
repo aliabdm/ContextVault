@@ -53,7 +53,7 @@ export default function StatsPage() {
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-4">
           <Link href="/" className="text-sm font-semibold text-white">ContextVault</Link>
           <div className="flex items-center gap-5 text-sm">
-            <Link href="/download" className="font-medium text-vault-400 transition-colors hover:text-vault-300">Download</Link>
+            <a href="/download.html" className="font-medium text-vault-400 transition-colors hover:text-vault-300">Download</a>
             <Link href="/" className="text-neutral-400 transition-colors hover:text-white">Back to overview</Link>
           </div>
         </div>

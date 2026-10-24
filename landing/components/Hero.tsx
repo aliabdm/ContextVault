@@ -42,6 +42,12 @@ export default function Hero() {
           transition={{ duration: 0.5 }}
           className="mx-auto max-w-3xl text-center"
         >
+          <nav aria-label="Explore ContextVault" className="mb-7 inline-flex items-center gap-1 rounded-full border border-dark-500 bg-dark-900/90 p-1 shadow-lg shadow-black/20">
+            <a href="#top" aria-current="page" className="rounded-full bg-dark-700 px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-dark-600">Home</a>
+            <a href="/faq.html" className="rounded-full px-3.5 py-2 text-xs font-medium text-neutral-400 transition hover:bg-dark-700 hover:text-white">FAQ</a>
+            <a href="/docs.html" className="rounded-full border border-vault-500/20 bg-vault-500/10 px-4 py-2 text-xs font-bold text-vault-100 shadow-[0_0_18px_rgba(99,102,241,0.16)] transition hover:border-vault-400/40 hover:bg-vault-500/20">Documentation</a>
+          </nav>
+
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-vault-500/20 bg-vault-500/10 px-3.5 py-1 text-xs font-medium tracking-wide text-vault-300">
             Local-first context platform
           </div>
@@ -76,13 +82,22 @@ export default function Hero() {
 
           <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
             <a
-              href="/download"
+              href="/download.html"
               className="group inline-flex h-12 items-center justify-center gap-2.5 rounded-xl bg-vault-500 px-7 text-sm font-semibold text-white shadow-lg shadow-vault-500/30 transition-all hover:bg-vault-600 hover:shadow-vault-500/40 active:scale-[0.97]"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.5 13.5l-5-3v-5" />
               </svg>
               Download Desktop App
+            </a>
+            <a
+              href="/docs.html"
+              className="inline-flex h-12 items-center justify-center gap-2 rounded-xl border border-vault-400/40 bg-vault-500/10 px-6 text-sm font-semibold text-vault-200 transition-all hover:border-vault-300/60 hover:bg-vault-500/20 active:scale-[0.97]"
+            >
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 6.5c-2-1.5-4.5-1.5-8-1.5v13c3.5 0 6-.2 8 1.5m0-13c2-1.5 4.5-1.5 8-1.5v13c-3.5 0-6-.2-8 1.5m0-13v13" />
+              </svg>
+              Documentation
             </a>
             <a
               href="#capture-surfaces"

@@ -16,7 +16,7 @@ export default function MacosDownload() {
           <a href="https://github.com/aliabdm/ContextVault#desktop-app-recommended" target="_blank" rel="noopener noreferrer" className="inline-flex h-10 items-center rounded-xl bg-vault-500 px-5 text-sm font-semibold text-white hover:bg-vault-600">
             Build Instructions
           </a>
-          <a href="/download" className="inline-flex h-10 items-center rounded-xl border border-dark-600 bg-dark-700 px-5 text-sm font-medium text-neutral-300 hover:bg-dark-600">
+          <a href="/download.html" className="inline-flex h-10 items-center rounded-xl border border-dark-600 bg-dark-700 px-5 text-sm font-medium text-neutral-300 hover:bg-dark-600">
             Other Platforms
           </a>
         </div>

@@ -1,5 +1,7 @@
 # ContextVault release process
 
+For the complete deployment guide, workflow behavior, commands, required secrets, and manual Chrome Web Store steps, see [`docs/DEPLOYMENT.md`](../docs/DEPLOYMENT.md).
+
 ContextVault has two independently versioned deliverables.
 
 ## Desktop releases
