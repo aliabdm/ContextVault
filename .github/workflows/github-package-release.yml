@@ -1,0 +1,36 @@
+name: Publish GitHub npm package
+
+on:
+  push:
+    tags:
+      - 'github-package-v*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: '@aliabdm'
+          cache: npm
+      - name: Verify tag matches package version
+        run: node -e "const p=require('./package.json'); if ('github-package-v'+p.version !== process.env.GITHUB_REF_NAME) { console.error('Tag must be github-package-v'+p.version); process.exit(1) }"
+      - name: Install dependencies
+        run: npm ci
+      - name: Test
+        run: npm test
+      - name: Build extension and package sources
+        run: npm run build
+      - name: Publish package to GitHub Packages
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
