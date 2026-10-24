@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="landing/public/icons/icon128.png" width="88" height="88" alt="ContextVault logo" />
+  <img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/icons/icon128.png" width="88" height="88" alt="ContextVault logo" />
 </p>
 
 <h1 align="center">ContextVault</h1>
@@ -98,13 +98,13 @@ The Record button launches the bundled `contextvault record` process. Desktop ne
 
 <table>
   <tr>
-    <td width="50%"><img src="landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop recorder with automatic classification" /></td>
-    <td width="50%"><img src="landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop GUI screens with filters and results" /></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop recorder with automatic classification" /></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop GUI screens with filters and results" /></td>
   </tr>
 </table>
 
 <p align="center">
-  <img src="landing/public/demo/desktop-walkthrough/step-11.png" alt="ContextVault Desktop dashboard with full project context" width="720" />
+  <img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/desktop-walkthrough/step-11.png" alt="ContextVault Desktop dashboard with full project context" width="720" />
 </p>
 
 ### Terminal
@@ -149,26 +149,26 @@ Supported filters: `--type`, `--source`, `--since` (`24h`, `14d`, `2w`, or ISO d
   <tr>
     <td width="50%">
       <h3 align="center">Browser Capture</h3>
-      <p align="center"><img src="landing/public/demo/contextvault-demo.gif" alt="ContextVault capturing a browser LLM conversation" /></p>
+      <p align="center"><img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/contextvault-demo.gif" alt="ContextVault capturing a browser LLM conversation" /></p>
     </td>
     <td width="50%">
       <h3 align="center">Terminal Capture</h3>
-      <p align="center"><img src="landing/public/demo/vault-terminal-demo.gif" alt="ContextVault Vault Terminal recording a coding-agent session" /></p>
+      <p align="center"><img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/vault-terminal-demo.gif" alt="ContextVault Vault Terminal recording a coding-agent session" /></p>
     </td>
   </tr>
 </table>
 
 <p align="center">
-  <img src="landing/public/demo/context-engine-demo.gif" alt="ContextVault unified Context Engine workflow: import, index, retrieve, prepare" />
+  <img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/context-engine-demo.gif" alt="ContextVault unified Context Engine workflow: import, index, retrieve, prepare" />
 </p>
 
 <table>
   <tr>
-    <td width="50%"><img src="landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop recorder with automatic classification" /></td>
-    <td width="50%"><img src="landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop GUI screens with filters and results" /></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/contextvault-desktop-recorder.png" alt="ContextVault Desktop recorder with automatic classification" /></td>
+    <td width="50%"><img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/contextvault-desktop-commands.png" alt="ContextVault Desktop GUI screens with filters and results" /></td>
   </tr>
   <tr>
-    <td colspan="2" align="center"><img src="landing/public/demo/desktop-walkthrough/step-11.png" alt="ContextVault Desktop dashboard with full project context" width="720" /></td>
+    <td colspan="2" align="center"><img src="https://raw.githubusercontent.com/aliabdm/ContextVault/main/landing/public/demo/desktop-walkthrough/step-11.png" alt="ContextVault Desktop dashboard with full project context" width="720" /></td>
   </tr>
 </table>
 
