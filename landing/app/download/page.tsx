@@ -25,9 +25,9 @@ export default function DownloadPage() {
           Redirecting to the correct installer or macOS build instructions.
         </p>
         <div className="mt-6 flex justify-center gap-4 text-sm text-neutral-500">
-          <a href="/download/windows.html" className="text-vault-400 hover:underline">Windows</a>
-          <a href="/download/macos.html" className="text-vault-400 hover:underline">macOS source</a>
-          <a href="/download/linux.html" className="text-vault-400 hover:underline">Linux</a>
+          <a href="/download/windows" className="text-vault-400 hover:underline">Windows</a>
+          <a href="/download/macos" className="text-vault-400 hover:underline">macOS source</a>
+          <a href="/download/linux" className="text-vault-400 hover:underline">Linux</a>
         </div>
       </div>
     </div>

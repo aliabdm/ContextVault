@@ -72,13 +72,13 @@ export default function Footer() {
         </div>
 
         <div className="flex items-center gap-4">
-          <a href="/docs.html" className="text-sm font-medium text-neutral-400 transition-colors hover:text-white">
+          <a href="/docs" className="text-sm font-medium text-neutral-400 transition-colors hover:text-white">
             Documentation
           </a>
-          <a href="/stats.html" className="text-sm font-medium text-neutral-400 transition-colors hover:text-white">
+          <a href="/stats" className="text-sm font-medium text-neutral-400 transition-colors hover:text-white">
             Download stats
           </a>
-          <a href="/faq.html" className="text-sm font-medium text-neutral-400 transition-colors hover:text-white">
+          <a href="/faq" className="text-sm font-medium text-neutral-400 transition-colors hover:text-white">
             Technical FAQ
           </a>
           {links.map((link) => (

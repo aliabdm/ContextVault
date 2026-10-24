@@ -1,4 +1,4 @@
-export const docsPath = (slug = '') => (slug && slug !== 'docs' ? `/docs/${slug}.html` : '/docs.html')
+export const docsPath = (slug = '') => (slug && slug !== 'docs' ? `/docs/${slug}` : '/docs')
 
 export const docsSlugs = [
   'quickstart',

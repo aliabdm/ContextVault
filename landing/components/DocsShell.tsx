@@ -60,7 +60,7 @@ export default function DocsShell({ children }: { children: React.ReactNode }) {
                 <h2 className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.16em] text-neutral-600">{group.title}</h2>
                 <div className="space-y-1">
                   {group.items.map((item) => {
-                    const active = pathname === item.href || pathname === `${item.href}.html`
+                    const active = pathname === item.href
                     return (
                       <a key={item.href} href={docsPath(item.href.split('/').at(-1))} aria-current={active ? 'page' : undefined} className={`group flex items-start gap-3 rounded-xl px-3 py-2.5 transition ${active ? 'border border-vault-500/20 bg-vault-500/10 text-white' : 'border border-transparent text-neutral-400 hover:bg-dark-700 hover:text-white'}`}>
                         <span className={`mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-lg font-mono text-[11px] ${active ? 'bg-vault-500/15 text-vault-200' : 'bg-dark-700 text-neutral-500 group-hover:text-neutral-300'}`}>{item.icon}</span>
@@ -75,10 +75,10 @@ export default function DocsShell({ children }: { children: React.ReactNode }) {
           <div className="border-t border-dark-600 p-4">
             <div className="mb-3 grid grid-cols-3 gap-1 rounded-lg border border-dark-600 bg-dark-800 p-1">
               <a href="/" className="rounded-md px-2 py-1.5 text-center text-[10px] font-medium text-neutral-500 transition hover:bg-dark-700 hover:text-white">Home</a>
-              <a href="/faq.html" className="rounded-md px-2 py-1.5 text-center text-[10px] font-medium text-neutral-500 transition hover:bg-dark-700 hover:text-white">FAQ</a>
+              <a href="/faq" className="rounded-md px-2 py-1.5 text-center text-[10px] font-medium text-neutral-500 transition hover:bg-dark-700 hover:text-white">FAQ</a>
               <a href={docsPath()} aria-current="page" className="rounded-md bg-vault-500/10 px-2 py-1.5 text-center text-[10px] font-semibold text-vault-200">Docs</a>
             </div>
-            <a href="/faq.html" className="flex items-center justify-between rounded-xl border border-dark-500 bg-dark-800 px-3 py-2.5 text-xs text-neutral-400 transition hover:border-dark-400 hover:text-white"><span>Read the technical FAQ</span><span aria-hidden="true">↗</span></a>
+            <a href="/faq" className="flex items-center justify-between rounded-xl border border-dark-500 bg-dark-800 px-3 py-2.5 text-xs text-neutral-400 transition hover:border-dark-400 hover:text-white"><span>Read the technical FAQ</span><span aria-hidden="true">↗</span></a>
           </div>
         </aside>
 
@@ -88,7 +88,7 @@ export default function DocsShell({ children }: { children: React.ReactNode }) {
               <span>{groups.flatMap((group) => group.items).find((item) => item.href === pathname)?.label || 'Documentation menu'}</span><span aria-hidden="true">{mobileOpen ? '−' : '+'}</span>
             </button>
             {mobileOpen && <nav id="docs-mobile-navigation" aria-label="Documentation navigation" className="mt-3 grid gap-4 rounded-xl border border-dark-600 bg-dark-900 p-4 sm:grid-cols-2">
-              {groups.map((group) => <div key={group.title}><h2 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-neutral-600">{group.title}</h2><div className="space-y-1">{group.items.map((item) => { const active = pathname === item.href || pathname === `${item.href}.html`; return <a key={item.href} onClick={() => setMobileOpen(false)} href={docsPath(item.href.split('/').at(-1))} aria-current={active ? 'page' : undefined} className={`block rounded-md px-2 py-2 text-xs ${active ? 'bg-vault-500/10 text-vault-200' : 'text-neutral-400 hover:bg-dark-700 hover:text-white'}`}>{item.label}<span className="ml-2 text-[10px] text-neutral-600">{item.description}</span></a>})}</div></div>)}
+              {groups.map((group) => <div key={group.title}><h2 className="mb-2 text-[10px] font-bold uppercase tracking-wider text-neutral-600">{group.title}</h2><div className="space-y-1">{group.items.map((item) => { const active = pathname === item.href; return <a key={item.href} onClick={() => setMobileOpen(false)} href={docsPath(item.href.split('/').at(-1))} aria-current={active ? 'page' : undefined} className={`block rounded-md px-2 py-2 text-xs ${active ? 'bg-vault-500/10 text-vault-200' : 'text-neutral-400 hover:bg-dark-700 hover:text-white'}`}>{item.label}<span className="ml-2 text-[10px] text-neutral-600">{item.description}</span></a>})}</div></div>)}
             </nav>}
           </div>
           <div className="min-h-[calc(100vh-56px)]">{children}</div>
