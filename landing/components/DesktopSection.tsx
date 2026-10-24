@@ -116,21 +116,21 @@ export default function DesktopSection() {
 
           <div className="flex flex-wrap items-center justify-center gap-3">
             <a
-              href="/download/windows"
+              href="/download/windows/"
               className="inline-flex h-11 items-center gap-2 rounded-xl bg-vault-500 px-6 text-sm font-semibold text-white shadow-lg shadow-vault-500/30 transition-all hover:bg-vault-600 active:scale-[0.97]"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm3.5 13.5l-5-3v-5" /></svg>
               Download for Windows
             </a>
             <a
-              href="/download/macos"
+              href="/download/macos/"
               className="inline-flex h-11 items-center gap-2 rounded-xl border border-dark-500 bg-dark-700/50 px-6 text-sm font-semibold text-neutral-200 transition-all hover:bg-dark-600 active:scale-[0.97]"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M22.527 17.043c-.472 1.068-1.032 2.056-1.683 2.961-.89 1.236-1.618 2.092-2.188 2.57-.873.803-1.809 1.214-2.805 1.232-.718 0-1.585-.205-2.599-.614-1.015-.41-1.949-.613-2.8-.613-.887 0-1.844.203-2.872.613-1.028.409-1.86.625-2.498.646-1.276.043-2.245-.382-2.907-1.275C1.694 21.136.5 19.22.5 16.514c0-1.902.564-3.498 1.693-4.784.886-1.002 2.032-1.516 3.438-1.542 1.04 0 2.044.386 2.996 1.154.266.216.533.324.8.324.23 0 .519-.12.867-.363.345-.243.643-.442.893-.597.981-.62 2.229-.877 3.742-.772 1.868.142 3.296.868 4.276 2.177-1.706 1.014-2.55 2.434-2.533 4.257.016 1.418.557 2.598 1.622 3.537.47.443.999.785 1.587 1.028-.139.394-.28.758-.424 1.092z" /></svg>
               Build for macOS
             </a>
             <a
-              href="/download/linux"
+              href="/download/linux/"
               className="inline-flex h-11 items-center gap-2 rounded-xl border border-dark-500 bg-dark-700/50 px-6 text-sm font-semibold text-neutral-200 transition-all hover:bg-dark-600 active:scale-[0.97]"
             >
               <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15l-5-5 1.41-1.41L11 14.17l7.59-7.59L20 8l-9 9z" /></svg>

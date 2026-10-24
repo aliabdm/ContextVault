@@ -6,11 +6,11 @@ export default function DownloadPage() {
   useEffect(() => {
     const ua = navigator.userAgent.toLowerCase()
     if (ua.includes('win')) {
-      window.location.href = '/download/windows'
+      window.location.href = '/download/windows/'
     } else if (ua.includes('mac')) {
-      window.location.href = '/download/macos'
+      window.location.href = '/download/macos/'
     } else {
-      window.location.href = '/download/linux'
+      window.location.href = '/download/linux/'
     }
   }, [])
 
@@ -25,9 +25,9 @@ export default function DownloadPage() {
           Redirecting to the correct installer or macOS build instructions.
         </p>
         <div className="mt-6 flex justify-center gap-4 text-sm text-neutral-500">
-          <a href="/download/windows" className="text-vault-400 hover:underline">Windows</a>
-          <a href="/download/macos" className="text-vault-400 hover:underline">macOS source</a>
-          <a href="/download/linux" className="text-vault-400 hover:underline">Linux</a>
+          <a href="/download/windows/" className="text-vault-400 hover:underline">Windows</a>
+          <a href="/download/macos/" className="text-vault-400 hover:underline">macOS source</a>
+          <a href="/download/linux/" className="text-vault-400 hover:underline">Linux</a>
         </div>
       </div>
     </div>

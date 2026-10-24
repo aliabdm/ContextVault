@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: titles[slug],
     description: `ContextVault documentation: ${titles[slug]} guide and step-by-step examples.`,
-    alternates: { canonical: `/docs/${slug}` },
+    alternates: { canonical: `/docs/${slug}/` },
   }
 }
 

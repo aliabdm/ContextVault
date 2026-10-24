@@ -26,13 +26,13 @@ export default function CtaSection() {
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
           <a
-            href="/download"
+            href="/download/"
             className="inline-flex h-12 items-center rounded-xl bg-vault-500 px-7 text-sm font-semibold text-white shadow-lg shadow-vault-500/30 transition-all hover:bg-vault-600 active:scale-[0.97]"
           >
             Download Desktop App
           </a>
           <a
-            href="/docs"
+            href="/docs/"
             className="inline-flex h-12 items-center rounded-xl border border-vault-400/40 bg-vault-500/10 px-6 text-sm font-semibold text-vault-200 transition-all hover:bg-vault-500/20 active:scale-[0.97]"
           >
             Read the documentation
@@ -59,7 +59,7 @@ export default function CtaSection() {
           Browser Capture + Terminal Capture + Desktop App - Open source - MIT license
         </p>
 
-        <a href="/faq" className="mt-5 inline-block text-sm font-medium text-vault-300 transition-colors hover:text-white">
+        <a href="/faq/" className="mt-5 inline-block text-sm font-medium text-vault-300 transition-colors hover:text-white">
           Read the technical FAQ
         </a>
       </motion.div>

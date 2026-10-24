@@ -14,7 +14,7 @@ export default function FaqPage() {
         <div className="mx-auto flex max-w-4xl items-center justify-between gap-4">
           <a href="/" className="text-sm font-semibold text-white">ContextVault</a>
           <div className="flex items-center gap-4">
-            <a href="/docs" className="text-sm font-semibold text-vault-200 transition-colors hover:text-white">Documentation</a>
+            <a href="/docs/" className="text-sm font-semibold text-vault-200 transition-colors hover:text-white">Documentation</a>
             <a href="/" className="text-sm text-neutral-400 transition-colors hover:text-white">Back to overview</a>
           </div>
         </div>
